@@ -239,24 +239,31 @@
             </filter>
           </defs>
           <!-- Charger -->
-          <rect x="20" y="80" width="80" height="44" rx="7" fill="#0C2340" stroke="#00B0E4" stroke-width="1.5"/>
-          <text x="60" y="99" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#e6edf3" font-weight="600">EV Charger</text>
-          <text x="60" y="115" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#00B0E4">+ mTLS cert</text>
+          <rect x="10" y="80" width="70" height="44" rx="7" fill="#0C2340" stroke="#00B0E4" stroke-width="1.5"/>
+          <text x="45" y="99" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#e6edf3" font-weight="600">Charger</text>
+          <text x="45" y="115" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#00B0E4">OCPP WS</text>
+          <!-- Pi Gateway -->
+          <rect x="95" y="78" width="62" height="48" rx="7" fill="#0C2340" stroke="#00B0E4" stroke-width="1.5"/>
+          <text x="126" y="96" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#e6edf3" font-weight="600">🥧 Pi</text>
+          <text x="126" y="110" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#00B0E4">Gateway</text>
+          <text x="126" y="119" text-anchor="middle" font-family="Inter, sans-serif" font-size="7" fill="#00B0E4">+ mTLS</text>
+          <!-- Arrow: Charger → Pi -->
+          <line x1="80" y1="102" x2="93" y2="102" stroke="#00B0E4" stroke-width="1.5" marker-end="url(#arrow-green)"/>
           <!-- WireGuard tunnel -->
-          <rect x="115" y="72" width="150" height="60" rx="10" fill="rgba(132,189,0,0.07)" stroke="#84BD00" stroke-width="1.5" stroke-dasharray="4,2"/>
-          <text x="190" y="97" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#84BD00" font-weight="700">WireGuard Mesh</text>
-          <text x="190" y="113" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#84BD00">Tailscale &bull; Zero-config VPN</text>
+          <rect x="168" y="72" width="110" height="60" rx="10" fill="rgba(132,189,0,0.07)" stroke="#84BD00" stroke-width="1.5" stroke-dasharray="4,2"/>
+          <text x="223" y="97" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#84BD00" font-weight="700">WireGuard</text>
+          <text x="223" y="113" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#84BD00">Tailscale Mesh</text>
           <!-- Your infrastructure -->
-          <rect x="280" y="80" width="80" height="44" rx="7" fill="#0C2340" stroke="#84BD00" stroke-width="1.5" filter="url(#glow-green)"/>
-          <text x="320" y="97" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#e6edf3" font-weight="600">Your Infra</text>
-          <text x="320" y="111" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#84BD00">Private &amp; yours</text>
+          <rect x="290" y="80" width="74" height="44" rx="7" fill="#0C2340" stroke="#84BD00" stroke-width="1.5" filter="url(#glow-green)"/>
+          <text x="327" y="97" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#e6edf3" font-weight="600">Your Infra</text>
+          <text x="327" y="111" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#84BD00">Private &amp; yours</text>
           <!-- Arrows through tunnel -->
-          <line x1="100" y1="102" x2="113" y2="102" stroke="#84BD00" stroke-width="2" marker-end="url(#arrow-green)"/>
-          <line x1="267" y1="102" x2="278" y2="102" stroke="#84BD00" stroke-width="2" marker-end="url(#arrow-green)"/>
+          <line x1="157" y1="102" x2="166" y2="102" stroke="#84BD00" stroke-width="2" marker-end="url(#arrow-green)"/>
+          <line x1="280" y1="102" x2="288" y2="102" stroke="#84BD00" stroke-width="2" marker-end="url(#arrow-green)"/>
           <!-- Attacker blocked -->
-          <text x="192" y="165" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#84BD00">✓ No public endpoint. Hackers can't attack what they can't find.</text>
+          <text x="192" y="160" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#84BD00">✓ Pi gateway at site. No public endpoint. Invisible on internet.</text>
           <!-- Label -->
-          <text x="192" y="26" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#84BD00" font-weight="600">✓ Invisible on internet &nbsp;✓ Per-device certs &nbsp;✓ Mutual TLS</text>
+          <text x="192" y="26" text-anchor="middle" font-family="Inter, sans-serif" font-size="8" fill="#84BD00" font-weight="600">✓ Pi gateway per site &nbsp;✓ Per-device certs &nbsp;✓ Mutual TLS</text>
         </svg>
       </div>
     </div>
@@ -279,8 +286,8 @@
           </svg>
         </div>
         <h3>Tailscale Native Integration</h3>
-        <p>Designed for deployment over WireGuard mesh VPN (e.g. Tailscale). No public endpoints. No open ports. Chargers are <strong>invisible on the internet</strong>. Hackers can't attack what they can't find.</p>
-        <div class="zt-badge">WireGuard • Mesh VPN</div>
+        <p>Designed for deployment over WireGuard mesh VPN (e.g. Tailscale). A lightweight gateway — a Raspberry Pi at each site — bridges chargers into the private mesh. No public endpoints. No open ports. Chargers are <strong>invisible on the internet</strong>.</p>
+        <div class="zt-badge">WireGuard • Pi Gateway • Mesh VPN</div>
       </div>
 
       <div class="zt-card reveal reveal-delay-2">
