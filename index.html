@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenCPO — The Open Source EV Charging Platform</title>
+  <meta name="description" content="The first complete open source EV charging platform. Backend, admin panel, driver app, testing tools. Deploy and run your own Charge Point Operator." />
+  <meta name="keywords" content="OCPP, EV charging, open source, CPO, charge point operator, OCPI, electric vehicle" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="OpenCPO — The Open Source EV Charging Platform" />
+  <meta property="og:description" content="Everything you need to run a Charge Point Operator — from protocol to driver app." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://opencpo.org" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="OpenCPO — The Open Source EV Charging Platform" />
+  <meta name="twitter:description" content="Everything you need to run a Charge Point Operator — from protocol to driver app." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ===== NAVIGATION ===== -->
+<nav id="nav" role="navigation" aria-label="Main navigation">
+  <div class="container">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo" aria-label="OpenCPO Home">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="32" height="32" rx="7" fill="#0C2340"/>
+          <path d="M16 5 L9 11 L9 21 L16 27 L23 21 L23 11 Z" stroke="#00B0E4" stroke-width="1.5" fill="none"/>
+          <path d="M16 10 L12 14 L12 19 L16 23 L20 19 L20 14 Z" fill="rgba(0,176,228,0.2)"/>
+          <path d="M14 16 L16 11 L16 17 L18 17 L16 22 L16 17 Z" fill="#84BD00"/>
+        </svg>
+        Open<span class="logo-text">CPO</span>
+      </a>
+
+      <ul class="nav-links" id="nav-links" role="list">
+        <li><a href="#stack">The Stack</a></li>
+        <li><a href="#why">Why OpenCPO</a></li>
+        <li><a href="#quickstart">Quick Start</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#community">Community</a></li>
+        <li><a href="https://github.com/opencpo/opencpo" class="nav-cta" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+
+      <button
+        class="nav-mobile-toggle"
+        id="nav-toggle"
+        aria-label="Toggle navigation"
+        aria-expanded="false"
+        aria-controls="nav-links"
+      >
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+          <rect y="4" width="22" height="2" rx="1" fill="currentColor"/>
+          <rect y="10" width="22" height="2" rx="1" fill="currentColor"/>
+          <rect y="16" width="22" height="2" rx="1" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ===== HERO ===== -->
+<section id="hero" aria-label="Hero">
+  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-badge" role="status">Open Source &bull; Apache 2.0</div>
+
+      <h1 class="hero-title">OpenCPO</h1>
+      <p class="hero-subtitle">The first complete open source EV charging platform</p>
+      <p class="hero-desc">
+        Everything you need to run a Charge Point Operator — from protocol to driver app.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#quickstart" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M8 1L15 8L8 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="1" y1="8" x2="15" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          Get Started
+        </a>
+        <a href="https://github.com/opencpo/opencpo" class="btn btn-secondary" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+          </svg>
+          GitHub
+        </a>
+        <a href="#community" class="btn btn-outline">Join Community</a>
+      </div>
+
+      <div class="hero-stats" role="list" aria-label="Project statistics">
+        <div class="hero-stat" role="listitem">
+          <span class="hero-stat-num">5</span>
+          <span class="hero-stat-label">Components</span>
+        </div>
+        <div class="hero-stat" role="listitem">
+          <span class="hero-stat-num">OCPP 2.0.1</span>
+          <span class="hero-stat-label">Latest Protocol</span>
+        </div>
+        <div class="hero-stat" role="listitem">
+          <span class="hero-stat-num">Apache 2.0</span>
+          <span class="hero-stat-label">License</span>
+        </div>
+        <div class="hero-stat" role="listitem">
+          <span class="hero-stat-num">Production</span>
+          <span class="hero-stat-label">Battle-tested</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== THE STACK ===== -->
+<section id="stack" aria-labelledby="stack-title">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-label">What You Get</p>
+      <h2 class="section-title" id="stack-title">The Complete Stack</h2>
+      <p class="section-desc">Five purpose-built components. One platform. No gaps.</p>
+    </div>
+
+    <div class="stack-grid">
+      <article class="stack-card reveal reveal-delay-1">
+        <span class="stack-icon" aria-hidden="true">⚡</span>
+        <h3 class="stack-name">OpenCPO Core</h3>
+        <p class="stack-desc">OCPP 1.6 + 2.0.1 Central System with profile-driven charger compatibility. The engine everything else runs on.</p>
+        <a href="https://github.com/opencpo/opencpo-core" class="stack-link" target="_blank" rel="noopener">
+          View repo
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 10L10 2M10 2H5M10 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </a>
+      </article>
+
+      <article class="stack-card reveal reveal-delay-2">
+        <span class="stack-icon" aria-hidden="true">🖥️</span>
+        <h3 class="stack-name">OpenCPO Admin</h3>
+        <p class="stack-desc">Network management dashboard — chargers, sessions, tariffs, and a live OCPP message viewer.</p>
+        <a href="https://github.com/opencpo/opencpo-admin" class="stack-link" target="_blank" rel="noopener">
+          View repo
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 10L10 2M10 2H5M10 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </a>
+      </article>
+
+      <article class="stack-card reveal reveal-delay-3">
+        <span class="stack-icon" aria-hidden="true">📱</span>
+        <h3 class="stack-name">OpenCPO Charge</h3>
+        <p class="stack-desc">Driver-facing PWA — scan QR, charge, pay. No app store needed. Works on any device with a browser.</p>
+        <a href="https://github.com/opencpo/opencpo-charge" class="stack-link" target="_blank" rel="noopener">
+          View repo
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 10L10 2M10 2H5M10 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </a>
+      </article>
+
+      <article class="stack-card reveal reveal-delay-4">
+        <span class="stack-icon" aria-hidden="true">🧪</span>
+        <h3 class="stack-name">OpenCPO Tester</h3>
+        <p class="stack-desc">Automated OCPP compliance testing with branded reports and a web UI. Test chargers before production.</p>
+        <a href="https://github.com/opencpo/opencpo-tester" class="stack-link" target="_blank" rel="noopener">
+          View repo
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 10L10 2M10 2H5M10 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </a>
+      </article>
+
+      <article class="stack-card reveal">
+        <span class="stack-icon" aria-hidden="true">🏗️</span>
+        <h3 class="stack-name">OpenCPO Farm</h3>
+        <p class="stack-desc">Virtual charger simulator with 17 stress test scenarios. Simulate entire networks without hardware.</p>
+        <a href="https://github.com/opencpo/opencpo-farm" class="stack-link" target="_blank" rel="noopener">
+          View repo
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M2 10L10 2M10 2H5M10 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </a>
+      </article>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== WHY OPENCPO ===== -->
+<section id="why" aria-labelledby="why-title">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-label">Why OpenCPO</p>
+      <h2 class="section-title" id="why-title">Built Different</h2>
+      <p class="section-desc">Most EV projects give you a library. We give you a platform.</p>
+    </div>
+
+    <div class="why-grid">
+      <div class="why-card reveal reveal-delay-1">
+        <div class="why-icon blue" aria-hidden="true">🧩</div>
+        <h3 class="why-title">Complete</h3>
+        <p class="why-desc">
+          Not a library. Not a framework. A full platform. Backend, admin panel, driver app, testing tools, simulator. Deploy and run. No missing pieces, no "build the rest yourself."
+        </p>
+      </div>
+
+      <div class="why-card reveal reveal-delay-2">
+        <div class="why-icon green" aria-hidden="true">🔓</div>
+        <h3 class="why-title">Open</h3>
+        <p class="why-desc">
+          Apache 2.0. No vendor lock-in, ever. Bring your own payment provider, branding, and chargers. Fork it, modify it, deploy it commercially. Your infrastructure, your rules.
+        </p>
+      </div>
+
+      <div class="why-card reveal reveal-delay-3">
+        <div class="why-icon navy" aria-hidden="true">⚙️</div>
+        <h3 class="why-title">Battle-tested</h3>
+        <p class="why-desc">
+          Built by an actual CPO, tested against real hardware across multiple charger manufacturers. Not theoretical — production-proven code that handles the edge cases that kill other implementations.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== QUICK START ===== -->
+<section id="quickstart" aria-labelledby="quickstart-title">
+  <div class="container">
+    <div class="quickstart-inner">
+      <div>
+        <p class="section-label">Quick Start</p>
+        <h2 class="section-title" id="quickstart-title">Up in 3 Commands</h2>
+        <p style="margin-bottom: 2rem;">No complex setup. No configuration maze. Clone, setup, compose.</p>
+
+        <div class="qs-steps">
+          <div class="qs-step reveal reveal-delay-1">
+            <div class="qs-step-num" aria-hidden="true">1</div>
+            <div>
+              <div class="qs-step-title">Clone the repository</div>
+              <div class="qs-step-desc">The mono-repo includes all five components and a shared docker-compose.</div>
+            </div>
+          </div>
+
+          <div class="qs-step reveal reveal-delay-2">
+            <div class="qs-step-num" aria-hidden="true">2</div>
+            <div>
+              <div class="qs-step-title">Run setup</div>
+              <div class="qs-step-desc">The setup script generates your config, creates secrets, and checks dependencies.</div>
+            </div>
+          </div>
+
+          <div class="qs-step reveal reveal-delay-3">
+            <div class="qs-step-num" aria-hidden="true">3</div>
+            <div>
+              <div class="qs-step-title">Compose up</div>
+              <div class="qs-step-desc">Docker pulls images and starts all services. Core, Admin, Charge — everything.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="qs-ready reveal">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <circle cx="9" cy="9" r="8" stroke="#84BD00" stroke-width="1.5"/>
+            <path d="M5.5 9L7.5 11L12.5 6.5" stroke="#84BD00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Open <strong style="color: #84BD00;">http://localhost:8080</strong> — your CPO admin panel is ready.
+        </div>
+      </div>
+
+      <div class="code-block reveal" role="region" aria-label="Quick start code example">
+        <div class="code-header">
+          <div class="code-dots" aria-hidden="true">
+            <div class="code-dot code-dot-red"></div>
+            <div class="code-dot code-dot-yellow"></div>
+            <div class="code-dot code-dot-green"></div>
+          </div>
+          <div class="code-title">bash</div>
+        </div>
+        <div class="code-body">
+          <div><span class="code-comment"># Clone OpenCPO</span></div>
+          <div><span class="code-prompt">$ </span><span class="code-cmd">git clone <span class="code-string">https://github.com/opencpo/opencpo</span></span></div>
+          <div>&nbsp;</div>
+          <div><span class="code-comment"># Run setup</span></div>
+          <div><span class="code-prompt">$ </span><span class="code-cmd">cd opencpo &amp;&amp; ./setup.sh</span></div>
+          <div><span class="code-output">✓ Checking dependencies...</span></div>
+          <div><span class="code-output">✓ Generating config...</span></div>
+          <div><span class="code-output">✓ Setup complete</span></div>
+          <div>&nbsp;</div>
+          <div><span class="code-comment"># Launch the platform</span></div>
+          <div><span class="code-prompt">$ </span><span class="code-cmd">docker compose up</span></div>
+          <div><span class="code-output">⚡ opencpo-core started on :9000</span></div>
+          <div><span class="code-output">🖥  opencpo-admin started on :8080</span></div>
+          <div><span class="code-output">📱 opencpo-charge started on :3000</span></div>
+          <div><span class="code-output">🧪 opencpo-tester started on :8081</span></div>
+          <div>&nbsp;</div>
+          <div><span class="code-comment"># Your CPO platform is live ✓</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== ARCHITECTURE ===== -->
+<section id="architecture" aria-labelledby="arch-title">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-label">Architecture</p>
+      <h2 class="section-title" id="arch-title">How It Connects</h2>
+      <p class="section-desc">Clean separation. Event-driven. Built to scale.</p>
+    </div>
+
+    <div class="arch-diagram reveal" role="img" aria-label="Architecture diagram showing OpenCPO component connections">
+      <div class="arch-svg-container">
+        <svg viewBox="0 0 860 420" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+          <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#00B0E4" opacity="0.8"/>
+            </marker>
+            <marker id="arrow-dim" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#6e7681"/>
+            </marker>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+
+          <!-- CHARGERS (left) -->
+          <g transform="translate(30, 140)">
+            <rect x="0" y="0" width="110" height="52" rx="8" fill="#1c2333" stroke="#30363d" stroke-width="1.5"/>
+            <text x="55" y="20" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#e6edf3" font-weight="600">EV Charger</text>
+            <text x="55" y="36" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8b949e">OCPP 1.6/2.0.1</text>
+          </g>
+          <g transform="translate(30, 210)">
+            <rect x="0" y="0" width="110" height="52" rx="8" fill="#1c2333" stroke="#30363d" stroke-width="1.5"/>
+            <text x="55" y="20" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#e6edf3" font-weight="600">EV Charger</text>
+            <text x="55" y="36" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8b949e">OCPP 1.6/2.0.1</text>
+          </g>
+          <g transform="translate(30, 280)">
+            <rect x="0" y="0" width="110" height="52" rx="8" fill="#1c2333" stroke="#30363d" stroke-width="1.5"/>
+            <text x="55" y="20" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#e6edf3" font-weight="600">EV Charger</text>
+            <text x="55" y="36" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8b949e">OCPP 1.6/2.0.1</text>
+          </g>
+          <text x="85" y="352" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#6e7681">WebSocket</text>
+
+          <!-- Arrows: Chargers → Core -->
+          <line x1="140" y1="166" x2="255" y2="205" stroke="#00B0E4" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow)" opacity="0.7"/>
+          <line x1="140" y1="236" x2="255" y2="236" stroke="#00B0E4" stroke-width="1.5" marker-end="url(#arrow)" opacity="0.9"/>
+          <line x1="140" y1="306" x2="255" y2="265" stroke="#00B0E4" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow)" opacity="0.7"/>
+
+          <!-- OPENCPO CORE (center) -->
+          <g transform="translate(256, 180)">
+            <rect x="0" y="0" width="140" height="110" rx="10" fill="#0C2340" stroke="#00B0E4" stroke-width="2" filter="url(#glow)"/>
+            <text x="70" y="30" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" fill="#00B0E4" font-weight="700" letter-spacing="0.08em">OpenCPO</text>
+            <text x="70" y="48" text-anchor="middle" font-family="Inter, sans-serif" font-size="16" fill="#e6edf3" font-weight="800">Core</text>
+            <rect x="15" y="62" width="110" height="20" rx="4" fill="rgba(0,176,228,0.1)"/>
+            <text x="70" y="76" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9" fill="#00B0E4">Event Bus</text>
+            <text x="70" y="100" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8b949e">OCPP Central System</text>
+          </g>
+
+          <!-- Vertical divider label -->
+          <text x="326" y="155" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#6e7681">:9000</text>
+
+          <!-- Arrow: Core → Admin -->
+          <line x1="396" y1="216" x2="490" y2="140" stroke="#00B0E4" stroke-width="1.5" marker-end="url(#arrow)" opacity="0.85"/>
+
+          <!-- ADMIN -->
+          <g transform="translate(490, 100)">
+            <rect x="0" y="0" width="150" height="72" rx="10" fill="#1c2333" stroke="#00B0E4" stroke-width="1.5"/>
+            <text x="20" y="26" font-family="Inter, sans-serif" font-size="10" fill="#00B0E4" font-weight="700">🖥</text>
+            <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" fill="#e6edf3" font-weight="700">Admin Panel</text>
+            <text x="15" y="46" font-family="Inter, sans-serif" font-size="9" fill="#8b949e">Network management &amp;</text>
+            <text x="15" y="60" font-family="Inter, sans-serif" font-size="9" fill="#8b949e">live OCPP viewer</text>
+          </g>
+
+          <!-- Arrow: Core → Charge -->
+          <line x1="396" y1="236" x2="490" y2="236" stroke="#00B0E4" stroke-width="1.5" marker-end="url(#arrow)" opacity="0.85"/>
+
+          <!-- CHARGE -->
+          <g transform="translate(490, 210)">
+            <rect x="0" y="0" width="150" height="72" rx="10" fill="#1c2333" stroke="#00B0E4" stroke-width="1.5"/>
+            <text x="20" y="26" font-family="Inter, sans-serif" font-size="10" fill="#00B0E4" font-weight="700">📱</text>
+            <text x="38" y="26" font-family="Inter, sans-serif" font-size="12" fill="#e6edf3" font-weight="700">Charge App</text>
+            <text x="15" y="46" font-family="Inter, sans-serif" font-size="9" fill="#8b949e">PWA for drivers — QR</text>
+            <text x="15" y="60" font-family="Inter, sans-serif" font-size="9" fill="#8b949e">scan, charge, pay</text>
+          </g>
+
+          <!-- Arrow: Charge → Driver -->
+          <line x1="640" y1="246" x2="700" y2="246" stroke="#84BD00" stroke-width="1.5" marker-end="url(#arrow)" opacity="0.8" marker-end="url(#arrow)"/>
+          <defs>
+            <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+              <polygon points="0 0, 10 3.5, 0 7" fill="#84BD00" opacity="0.8"/>
+            </marker>
+          </defs>
+          <line x1="640" y1="246" x2="700" y2="246" stroke="#84BD00" stroke-width="1.5" marker-end="url(#arrow-green)" opacity="0.8"/>
+
+          <!-- Driver -->
+          <g transform="translate(700, 220)">
+            <rect x="0" y="0" width="110" height="52" rx="8" fill="#1c2333" stroke="#84BD00" stroke-width="1.5"/>
+            <text x="55" y="22" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#84BD00" font-weight="700">Driver</text>
+            <text x="55" y="38" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#8b949e">Any browser</text>
+          </g>
+
+          <!-- Arrow: Tester → Core -->
+          <line x1="490" y1="340" x2="400" y2="295" stroke="#6e7681" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-dim)" opacity="0.7"/>
+
+          <!-- TESTER -->
+          <g transform="translate(490, 318)">
+            <rect x="0" y="0" width="150" height="60" rx="10" fill="#1c2333" stroke="#30363d" stroke-width="1.5" stroke-dasharray="5,3"/>
+            <text x="20" y="24" font-family="Inter, sans-serif" font-size="10" fill="#8b949e" font-weight="700">🧪</text>
+            <text x="38" y="24" font-family="Inter, sans-serif" font-size="11" fill="#8b949e" font-weight="700">Tester</text>
+            <text x="15" y="46" font-family="Inter, sans-serif" font-size="9" fill="#6e7681">OCPP compliance testing</text>
+          </g>
+
+          <!-- Arrow: Farm → Core (bottom) -->
+          <line x1="256" y1="340" x2="300" y2="290" stroke="#6e7681" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-dim)" opacity="0.7"/>
+
+          <!-- FARM -->
+          <g transform="translate(110, 318)">
+            <rect x="0" y="0" width="150" height="60" rx="10" fill="#1c2333" stroke="#30363d" stroke-width="1.5" stroke-dasharray="5,3"/>
+            <text x="20" y="24" font-family="Inter, sans-serif" font-size="10" fill="#8b949e" font-weight="700">🏗️</text>
+            <text x="38" y="24" font-family="Inter, sans-serif" font-size="11" fill="#8b949e" font-weight="700">Farm</text>
+            <text x="15" y="46" font-family="Inter, sans-serif" font-size="9" fill="#6e7681">Virtual charger simulator</text>
+          </g>
+
+          <!-- Legend -->
+          <g transform="translate(30, 26)">
+            <line x1="0" y1="8" x2="22" y2="8" stroke="#00B0E4" stroke-width="1.5" marker-end="url(#arrow)"/>
+            <text x="28" y="12" font-family="Inter, sans-serif" font-size="9" fill="#8b949e">Live traffic</text>
+            <line x1="100" y1="8" x2="122" y2="8" stroke="#6e7681" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow-dim)"/>
+            <text x="128" y="12" font-family="Inter, sans-serif" font-size="9" fill="#8b949e">Dev / test</text>
+            <line x1="200" y1="8" x2="222" y2="8" stroke="#84BD00" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+            <text x="228" y="12" font-family="Inter, sans-serif" font-size="9" fill="#8b949e">Driver-facing</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== FEATURES ===== -->
+<section id="features" aria-labelledby="features-title">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-label">Features</p>
+      <h2 class="section-title" id="features-title">Everything Included</h2>
+      <p class="section-desc">No premium tier. No feature flags. Everything in the open source release.</p>
+    </div>
+
+    <div class="features-grid reveal">
+      <div class="feature-item">
+        <div class="feature-check" aria-hidden="true">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#84BD00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="feature-name">OCPP 1.6j + 2.0.1</div>
+          <div class="feature-desc">Full protocol support including security extensions</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-check" aria-hidden="true">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#84BD00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="feature-name">Profile-driven compatibility</div>
+          <div class="feature-desc">Quirk profiles for real-world charger behaviour</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-check" aria-hidden="true">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#84BD00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="feature-name">V2G PKI &amp; Plug&amp;Charge</div>
+          <div class="feature-desc">ISO 15118 certificate management built in</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-check" aria-hidden="true">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#84BD00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="feature-name">OCPI 2.2.1 roaming</div>
+          <div class="feature-desc">Connect to roaming networks and eMSPs</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-check" aria-hidden="true">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#84BD00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="feature-name">Real-time OCPP viewer</div>
+          <div class="feature-desc">Live message stream in the admin panel</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-check" aria-hidden="true">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#84BD00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="feature-name">Smart Charging</div>
+          <div class="feature-desc">OCPP Smart Charging profile with dynamic limits</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-check" aria-hidden="true">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#84BD00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="feature-name">Payment providers</div>
+          <div class="feature-desc">Mollie, Stripe, Adyen — or bring your own</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-check" aria-hidden="true">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#84BD00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="feature-name">Custom skins &amp; plugins</div>
+          <div class="feature-desc">White-label ready, plugin architecture</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-check" aria-hidden="true">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#84BD00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="feature-name">Automated compliance testing</div>
+          <div class="feature-desc">OCPP test suites with branded HTML reports</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-check" aria-hidden="true">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#84BD00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="feature-name">Stress testing &amp; simulation</div>
+          <div class="feature-desc">17 scenarios, simulate hundreds of chargers</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-check" aria-hidden="true">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#84BD00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="feature-name">Docker one-command deploy</div>
+          <div class="feature-desc">Production-ready compose stack included</div>
+        </div>
+      </div>
+
+      <div class="feature-item">
+        <div class="feature-check" aria-hidden="true">
+          <svg viewBox="0 0 12 12" fill="none"><path d="M2 6L5 9L10 3" stroke="#84BD00" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div>
+          <div class="feature-name">Full documentation</div>
+          <div class="feature-desc">Architecture docs, API reference, deployment guides</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== COMMUNITY ===== -->
+<section id="community" aria-labelledby="community-title">
+  <div class="container">
+    <div class="text-center reveal">
+      <p class="section-label">Community</p>
+      <h2 class="section-title" id="community-title">Join the Network</h2>
+      <p class="section-desc">Build the open EV charging ecosystem together.</p>
+    </div>
+
+    <div class="community-grid">
+      <div>
+        <div class="community-channels" role="list">
+          <a
+            href="https://discord.gg/opencpo"
+            class="community-channel reveal reveal-delay-1"
+            target="_blank"
+            rel="noopener"
+            role="listitem"
+          >
+            <div class="channel-icon discord" aria-hidden="true">💬</div>
+            <div>
+              <div class="channel-name">Discord</div>
+              <p class="channel-desc">Real-time chat. Get help, share what you're building, join discussions about OCPP and EV charging.</p>
+            </div>
+          </a>
+
+          <a
+            href="https://github.com/opencpo/opencpo/discussions"
+            class="community-channel reveal reveal-delay-2"
+            target="_blank"
+            rel="noopener"
+            role="listitem"
+          >
+            <div class="channel-icon github" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="#e6edf3" aria-hidden="true">
+                <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="channel-name">GitHub Discussions</div>
+              <p class="channel-desc">Long-form conversations, feature requests, RFC proposals, and Q&amp;A — all tracked in the open.</p>
+            </div>
+          </a>
+
+          <a
+            href="https://github.com/opencpo/opencpo/blob/main/CONTRIBUTING.md"
+            class="community-channel reveal reveal-delay-3"
+            target="_blank"
+            rel="noopener"
+            role="listitem"
+          >
+            <div class="channel-icon docs" aria-hidden="true">📖</div>
+            <div>
+              <div class="channel-name">Contributing</div>
+              <p class="channel-desc">We welcome contributions. Bug fixes, new charger profiles, protocol improvements — see CONTRIBUTING.md in any repo.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="community-side reveal">
+        <div class="newsletter-box">
+          <div class="newsletter-title">Stay Updated</div>
+          <p class="newsletter-desc">Get notified about releases, protocol updates, and community news. No spam.</p>
+          <form class="newsletter-form" action="mailto:hello@opencpo.org" method="get" onsubmit="return handleNewsletter(this)">
+            <input
+              type="email"
+              class="newsletter-input"
+              name="subject"
+              placeholder="your@email.com"
+              required
+              aria-label="Email address"
+            />
+            <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">
+              Subscribe
+            </button>
+          </form>
+        </div>
+
+        <div class="testimonial-box">
+          <p class="testimonial-quote">
+            "Finally — an EV charging backend that doesn't lock you in. We deployed OpenCPO on our first 20 chargers and it just worked. The live OCPP viewer alone saved us hours of debugging."
+          </p>
+          <div class="testimonial-author">Early Adopter</div>
+          <div class="testimonial-role">Charge Point Operator, Netherlands</div>
+        </div>
+
+        <div class="contributing-box">
+          <strong>Open Source, Open Governance.</strong><br/>
+          We welcome contributions to all repos. See <code style="font-size:0.85em;background:rgba(255,255,255,0.08);padding:1px 4px;border-radius:3px;">CONTRIBUTING.md</code> in any repository to get started.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ===== FOOTER ===== -->
+<footer role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo" aria-label="OpenCPO Home">
+          <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="32" height="32" rx="7" fill="#0C2340"/>
+            <path d="M16 5 L9 11 L9 21 L16 27 L23 21 L23 11 Z" stroke="#00B0E4" stroke-width="1.5" fill="none"/>
+            <path d="M16 10 L12 14 L12 19 L16 23 L20 19 L20 14 Z" fill="rgba(0,176,228,0.2)"/>
+            <path d="M14 16 L16 11 L16 17 L18 17 L16 22 L16 17 Z" fill="#84BD00"/>
+          </svg>
+          Open<span class="logo-text">CPO</span>
+        </a>
+        <p>The first complete open source EV charging platform. Deploy anywhere.</p>
+        <span class="footer-license">Apache 2.0</span>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Platform</div>
+        <ul class="footer-links" role="list">
+          <li><a href="https://github.com/opencpo/opencpo-core" target="_blank" rel="noopener">Core</a></li>
+          <li><a href="https://github.com/opencpo/opencpo-admin" target="_blank" rel="noopener">Admin</a></li>
+          <li><a href="https://github.com/opencpo/opencpo-charge" target="_blank" rel="noopener">Charge</a></li>
+          <li><a href="https://github.com/opencpo/opencpo-tester" target="_blank" rel="noopener">Tester</a></li>
+          <li><a href="https://github.com/opencpo/opencpo-farm" target="_blank" rel="noopener">Farm</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Resources</div>
+        <ul class="footer-links" role="list">
+          <li><a href="https://github.com/opencpo/opencpo/wiki" target="_blank" rel="noopener">Documentation</a></li>
+          <li><a href="https://github.com/opencpo/opencpo" target="_blank" rel="noopener">GitHub</a></li>
+          <li><a href="https://github.com/opencpo/opencpo/releases" target="_blank" rel="noopener">Releases</a></li>
+          <li><a href="https://github.com/opencpo/opencpo/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a></li>
+          <li><a href="https://github.com/opencpo/opencpo/blob/main/CHANGELOG.md" target="_blank" rel="noopener">Changelog</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="footer-col-title">Community</div>
+        <ul class="footer-links" role="list">
+          <li><a href="https://discord.gg/opencpo" target="_blank" rel="noopener">Discord</a></li>
+          <li><a href="https://github.com/opencpo/opencpo/discussions" target="_blank" rel="noopener">Discussions</a></li>
+          <li><a href="https://github.com/opencpo/opencpo/issues" target="_blank" rel="noopener">Issue Tracker</a></li>
+          <li><a href="https://github.com/opencpo/opencpo/blob/main/SECURITY.md" target="_blank" rel="noopener">Security</a></li>
+          <li><a href="https://github.com/opencpo/opencpo/blob/main/CODE_OF_CONDUCT.md" target="_blank" rel="noopener">Code of Conduct</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>
+        &copy; 2024 OpenCPO &bull;
+        <a href="https://github.com/opencpo/opencpo/blob/main/LICENSE" target="_blank" rel="noopener">Apache 2.0 License</a>
+      </p>
+      <p>Made by <a href="https://stroomlijnen.nu" target="_blank" rel="noopener">Stroomlijnen B.V.</a></p>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+  // ===== NAV SCROLL EFFECT =====
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // ===== MOBILE NAV TOGGLE =====
+  const toggle = document.getElementById('nav-toggle');
+  const navLinks = document.getElementById('nav-links');
+
+  toggle.addEventListener('click', () => {
+    const isOpen = navLinks.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', isOpen);
+  });
+
+  // Close nav on link click
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // ===== SCROLL REVEAL =====
+  const reveals = document.querySelectorAll('.reveal');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.1,
+    rootMargin: '0px 0px -40px 0px'
+  });
+
+  reveals.forEach(el => observer.observe(el));
+
+  // ===== SMOOTH ACTIVE NAV HIGHLIGHT =====
+  const sections = document.querySelectorAll('section[id]');
+  const navLinksAll = document.querySelectorAll('.nav-links a');
+
+  const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinksAll.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + entry.target.id) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  }, {
+    threshold: 0.4
+  });
+
+  sections.forEach(section => sectionObserver.observe(section));
+
+  // ===== NEWSLETTER =====
+  function handleNewsletter(form) {
+    const email = form.querySelector('input[type=email]').value;
+    if (email) {
+      window.location.href = `mailto:hello@opencpo.org?subject=Newsletter Signup&body=Please subscribe me to the OpenCPO newsletter.%0A%0AEmail: ${encodeURIComponent(email)}`;
+    }
+    return false;
+  }
+
+  // ===== ACTIVE NAV LINK CSS =====
+  const style = document.createElement('style');
+  style.textContent = `
+    .nav-links a.active {
+      color: #e6edf3;
+    }
+    .nav-links a.active:not(.nav-cta) {
+      color: #00B0E4;
+    }
+  `;
+  document.head.appendChild(style);
+</script>
+
+</body>
+</html>
