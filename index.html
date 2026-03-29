@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>OpenCPO — Zero Trust EV Charging Platform</title>
-  <meta name="description" content="The only EV charging platform where chargers are invisible on the internet. Zero trust networking, built-in PKI, ISO 15118 Plug & Charge. Enterprise-grade security. Open source. No compromise." />
+  <meta name="description" content="Open source EV charging platform designed for zero trust deployment. Built-in PKI, WireGuard mesh networking, ISO 15118 foundations, OCPP 1.6 + 2.0.1. Enterprise-grade security, Apache 2.0." />
   <meta name="keywords" content="OCPP, EV charging, open source, CPO, charge point operator, zero trust, Tailscale, WireGuard, PKI, NIS2, ISO 15118, Plug and Charge" />
 
   <!-- Open Graph -->
@@ -79,7 +79,7 @@
     <div class="hero-content">
       <div class="hero-badge" role="status">
         <span class="badge-dot" aria-hidden="true"></span>
-        Open Source &bull; Apache 2.0 &bull; NIS2 Ready
+        Open Source &bull; Apache 2.0 &bull; Zero Trust
       </div>
 
       <h1 class="hero-title">OpenCPO</h1>
@@ -122,7 +122,7 @@
         </div>
         <div class="hero-stat" role="listitem">
           <span class="hero-stat-num">NIS2</span>
-          <span class="hero-stat-label">Compliant by Design</span>
+          <span class="hero-stat-label">Aligned by Design</span>
         </div>
       </div>
     </div>
@@ -278,7 +278,7 @@
           </svg>
         </div>
         <h3>Tailscale Native Integration</h3>
-        <p>Every charger connects via WireGuard mesh VPN. No public endpoints. No open ports. Chargers are <strong>invisible on the internet</strong>. Hackers can't attack what they can't find.</p>
+        <p>Designed for deployment over WireGuard mesh VPN (e.g. Tailscale). No public endpoints. No open ports. Chargers are <strong>invisible on the internet</strong>. Hackers can't attack what they can't find.</p>
         <div class="zt-badge">WireGuard • Mesh VPN</div>
       </div>
 
@@ -320,7 +320,7 @@
           </svg>
         </div>
         <h3>ISO 15118 Plug &amp; Charge</h3>
-        <p>Driver plugs in. Car authenticates via certificate chain. Charging starts. No app. No RFID card. No QR code. The future of EV charging, deployable today.</p>
+        <p>Full PKI hierarchy for ISO 15118: Root CA, CPO Sub-CA, MO Sub-CA. SECC cert signing and contract cert provisioning handlers built into the OCPP 2.0.1 stack. The foundation for app-less, card-less charging.</p>
         <div class="zt-badge">ISO 15118 • V2G PKI</div>
       </div>
 
@@ -336,7 +336,7 @@
           </svg>
         </div>
         <h3>NIS2 Compliant by Design</h3>
-        <p>Full audit trail, encrypted communications, verified device identity. The EU critical infrastructure directive isn't a checkbox — it's a design principle. OpenCPO is ready. Most competitors aren't.</p>
+        <p>Encrypted communications, verified device identity, audit logging. OpenCPO is designed with the EU's critical infrastructure directive in mind — so you're building on the right foundation from day one.</p>
         <div class="zt-badge">EU NIS2 • Critical Infra</div>
       </div>
 
@@ -348,8 +348,8 @@
           </svg>
         </div>
         <h3>Full Audit Trail</h3>
-        <p>Every command, every session, every authentication event — logged with cryptographic integrity. Who authorized what, when, and from which verified device. No gaps.</p>
-        <div class="zt-badge">Immutable Logs • Forensics</div>
+        <p>Every command, every session, every authentication event — logged and queryable. Who authorized what, when, and from which verified device. Built for forensics and compliance reporting.</p>
+        <div class="zt-badge">Structured Logs • Forensics</div>
       </div>
     </div>
   </div>
@@ -393,7 +393,7 @@
       <article class="stack-card reveal reveal-delay-3">
         <span class="stack-icon" aria-hidden="true">📱</span>
         <h3 class="stack-name">OpenCPO Charge</h3>
-        <p class="stack-desc">Driver-facing PWA — scan QR, charge, pay. No app store needed. Works on any device with a browser. Or skip it entirely with Plug &amp; Charge.</p>
+        <p class="stack-desc">Driver-facing PWA — scan QR, charge, pay. No app store needed. Works on any device with a browser.</p>
         <a href="https://github.com/opencpo/opencpo-charge" class="stack-link" target="_blank" rel="noopener">
           View repo
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -417,7 +417,7 @@
       <article class="stack-card reveal">
         <span class="stack-icon" aria-hidden="true">🏗️</span>
         <h3 class="stack-name">OpenCPO Farm</h3>
-        <p class="stack-desc">Virtual charger simulator with 17 stress test scenarios. Simulate entire networks without hardware. Load test before you deploy.</p>
+        <p class="stack-desc">Virtual charger simulator with 18 stress test scenarios. Simulate entire networks without hardware. Load test before you deploy.</p>
         <a href="https://github.com/opencpo/opencpo-farm" class="stack-link" target="_blank" rel="noopener">
           View repo
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -487,11 +487,11 @@
             <td><span class="cross" aria-label="No">✗</span></td>
           </tr>
           <tr>
-            <td>NIS2 ready by design</td>
+            <td>NIS2-aligned architecture</td>
             <td class="col-opencpo"><span class="check" aria-label="Yes">✓</span></td>
-            <td><span class="cross" aria-label="No">✗</span></td>
-            <td><span class="cross" aria-label="No">✗</span></td>
-            <td><span class="cross" aria-label="No">✗</span></td>
+            <td><span class="partial" aria-label="Unknown">?</span></td>
+            <td><span class="partial" aria-label="Unknown">?</span></td>
+            <td><span class="partial" aria-label="Unknown">?</span></td>
           </tr>
           <tr>
             <td>No vendor lock-in</td>
@@ -542,7 +542,7 @@
       <div class="impact-card reveal reveal-delay-1">
         <div class="impact-who">For Small CPOs</div>
         <h3>Enterprise Security, Zero Budget</h3>
-        <p>The security stack in OpenCPO — PKI, mTLS, zero trust networking — would cost €500K+ to build from scratch. It's free and open source. Small operators now have the same security baseline as banks.</p>
+        <p>Building a PKI, mTLS, and zero trust networking stack from scratch takes significant engineering investment. OpenCPO gives you that foundation for free. Small operators get the same security architecture as enterprise players.</p>
       </div>
 
       <div class="impact-card reveal reveal-delay-2">
@@ -566,8 +566,8 @@
 
     <div class="impact-callout reveal">
       <div class="impact-stat">
-        <span class="impact-stat-num">€500K+</span>
-        <span class="impact-stat-label">Cost to build equivalent security in-house</span>
+        <span class="impact-stat-num">5</span>
+        <span class="impact-stat-label">Production-ready components</span>
       </div>
       <div class="impact-divider" aria-hidden="true"></div>
       <div class="impact-stat">
@@ -701,11 +701,11 @@
         <div class="practitioners-facts">
           <div class="pf-item">
             <div class="pf-check" aria-hidden="true">✓</div>
-            <div>Tested against multiple charger manufacturers — Alpitronic, Zaptec, Wallbox, and more</div>
+            <div>Tested against real charger hardware in the field — with a profile-driven compatibility system designed to scale to any manufacturer</div>
           </div>
           <div class="pf-item">
             <div class="pf-check" aria-hidden="true">✓</div>
-            <div>Profile-driven compatibility system handles real-world firmware quirks that kill generic implementations</div>
+            <div>Profile-driven compatibility system handles real-world firmware quirks that kill generic implementations — contribute profiles for your hardware</div>
           </div>
           <div class="pf-item">
             <div class="pf-check" aria-hidden="true">✓</div>
@@ -713,7 +713,7 @@
           </div>
           <div class="pf-item">
             <div class="pf-check" aria-hidden="true">✓</div>
-            <div>NIS2 compliance requirements driven by actual regulatory obligations, not marketing copy</div>
+            <div>Designed with NIS2 requirements in mind — encrypted communications, device identity, audit logging</div>
           </div>
         </div>
       </div>
@@ -843,11 +843,11 @@
             What's Next
           </div>
           <ul class="roadmap-list">
-            <li>OCPI 2.2.1 roaming support</li>
-            <li>Smart Charging / OCPP 2.0.1 profile</li>
+            <li>Full ISO 15118 EXI encode/decode</li>
             <li>Kubernetes Helm chart</li>
             <li>Automated certificate renewal</li>
             <li>V2G (vehicle-to-grid) extensions</li>
+            <li>More charger vendor profiles</li>
           </ul>
         </div>
       </div>
