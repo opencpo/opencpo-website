@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenCPO Architecture</title>
+<style>
+  body { margin:0; background:#0a0f1a; display:flex; justify-content:center; padding:2rem; font-family:Inter,sans-serif; }
+  .diagram-wrap { width:100%; max-width:1100px; }
+  .diagram-wrap svg { width:100%; height:auto; }
+
+  .particle { animation: flow 4s linear infinite; }
+  .particle:nth-child(2) { animation-delay: -0.8s; }
+  .particle:nth-child(3) { animation-delay: -1.6s; }
+  .particle:nth-child(4) { animation-delay: -2.4s; }
+  .particle:nth-child(5) { animation-delay: -3.2s; }
+  @keyframes flow {
+    from { transform: translateX(0); opacity:0; }
+    10%  { opacity:1; }
+    90%  { opacity:1; }
+    to   { transform: translateX(420px); opacity:0; }
+  }
+
+  .tunnel { stroke-dasharray: 12 6; animation: dash 2s linear infinite; }
+  @keyframes dash { to { stroke-dashoffset: -36; } }
+
+  .bastion { animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 50% { filter: brightness(1.15); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="diagram-wrap">
+<svg viewBox="0 0 1100 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="OpenCPO platform architecture">
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-strong">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Security layer bands (background) -->
+  <rect x="0" y="0"   width="1100" height="125" fill="#8B5CF6" opacity="0.05"/>
+  <rect x="0" y="125" width="1100" height="125" fill="#00CED1" opacity="0.05"/>
+  <rect x="0" y="250" width="1100" height="125" fill="#00B0E4" opacity="0.05"/>
+  <rect x="0" y="375" width="1100" height="125" fill="#84BD00" opacity="0.05"/>
+
+  <!-- Band labels -->
+  <text x="1085" y="62"  text-anchor="end" font-size="10" fill="#8B5CF6" opacity="0.6" font-family="Inter,sans-serif">Monitoring</text>
+  <text x="1085" y="187" text-anchor="end" font-size="10" fill="#00CED1" opacity="0.6" font-family="Inter,sans-serif">Authorization</text>
+  <text x="1085" y="312" text-anchor="end" font-size="10" fill="#00B0E4" opacity="0.6" font-family="Inter,sans-serif">Identity</text>
+  <text x="1085" y="437" text-anchor="end" font-size="10" fill="#84BD00" opacity="0.6" font-family="Inter,sans-serif">Network</text>
+
+  <!-- ═══════════════ LEFT ZONE — Charging Site ═══════════════ -->
+  <text x="180" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#8b949e" font-family="Inter,sans-serif">Charging Site</text>
+
+  <!-- Charger 1 -->
+  <rect x="40"  y="42" width="60" height="30" rx="4" fill="#0f1729" stroke="#84BD00" stroke-width="1.5"/>
+  <text x="70"  y="62" text-anchor="middle" font-size="10" fill="#84BD00" font-family="Inter,sans-serif">OCPP</text>
+
+  <!-- Charger 2 -->
+  <rect x="145" y="42" width="60" height="30" rx="4" fill="#0f1729" stroke="#84BD00" stroke-width="1.5"/>
+  <text x="175" y="62" text-anchor="middle" font-size="10" fill="#84BD00" font-family="Inter,sans-serif">OCPP</text>
+
+  <!-- Charger 3 -->
+  <rect x="250" y="42" width="60" height="30" rx="4" fill="#0f1729" stroke="#84BD00" stroke-width="1.5"/>
+  <text x="280" y="62" text-anchor="middle" font-size="10" fill="#84BD00" font-family="Inter,sans-serif">OCPP</text>
+
+  <!-- Camera (LPR) -->
+  <text x="55"  y="130" font-size="16" fill="#e6edf3" font-family="Inter,sans-serif">📷</text>
+  <text x="75"  y="133" font-size="10" fill="#8b949e" font-family="Inter,sans-serif">LPR</text>
+
+  <!-- Sensor -->
+  <text x="230" y="130" font-size="16" fill="#e6edf3" font-family="Inter,sans-serif">🌡️</text>
+  <text x="250" y="133" font-size="10" fill="#8b949e" font-family="Inter,sans-serif">Sensors</text>
+
+  <!-- Lines from devices to Bastion -->
+  <line x1="70"  y1="72"  x2="100" y2="195" stroke="#1e293b" stroke-width="1.2"/>
+  <line x1="175" y1="72"  x2="180" y2="195" stroke="#1e293b" stroke-width="1.2"/>
+  <line x1="280" y1="72"  x2="260" y2="195" stroke="#1e293b" stroke-width="1.2"/>
+  <line x1="68"  y1="130" x2="120" y2="195" stroke="#1e293b" stroke-width="1"/>
+  <line x1="238" y1="120" x2="220" y2="195" stroke="#1e293b" stroke-width="1"/>
+
+  <!-- BASTION HA shadow -->
+  <rect x="26" y="201" width="282" height="80" rx="8" fill="#0f1729" stroke="#1e293b" stroke-width="1.5"/>
+  <!-- BASTION main box -->
+  <rect x="20" y="195" width="282" height="80" rx="8" fill="#0f1729" stroke="#84BD00" stroke-width="2" class="bastion"/>
+  <text x="161" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#e6edf3" font-family="Inter,sans-serif">🏰 OpenCPO Bastion</text>
+  <text x="161" y="238" text-anchor="middle" font-size="10" fill="#8b949e" font-family="Inter,sans-serif">OCPP Proxy • Cert Vault • LPR • 4G</text>
+  <!-- HA badge -->
+  <rect x="240" y="255" width="58" height="16" rx="3" fill="#84BD00" opacity="0.15" stroke="#84BD00" stroke-width="1"/>
+  <text x="269" y="267" text-anchor="middle" font-size="9" fill="#84BD00" font-family="Inter,sans-serif">HA Pair</text>
+
+  <!-- ═══════════════ CENTER — WireGuard Tunnel ═══════════════ -->
+  <text x="550" y="255" text-anchor="middle" font-size="11" font-weight="600" fill="#00B0E4" font-family="Inter,sans-serif">WireGuard Mesh — Encrypted</text>
+
+  <!-- Main tunnel line -->
+  <line x1="302" y1="275" x2="762" y2="275" stroke="#00B0E4" stroke-width="2.5" class="tunnel" filter="url(#glow)"/>
+
+  <!-- 4G failover line -->
+  <line x1="302" y1="295" x2="762" y2="295" stroke="#8b949e" stroke-width="1" stroke-dasharray="6 4" opacity="0.5"/>
+  <text x="550" y="310" text-anchor="middle" font-size="9" fill="#8b949e" font-family="Inter,sans-serif">4G Failover</text>
+
+  <!-- Animated particles -->
+  <g>
+    <circle class="particle" cx="302" cy="275" r="5" fill="#00B0E4" filter="url(#glow-strong)"/>
+    <circle class="particle" cx="302" cy="275" r="5" fill="#00B0E4" filter="url(#glow-strong)"/>
+    <circle class="particle" cx="302" cy="275" r="5" fill="#00B0E4" filter="url(#glow-strong)"/>
+    <circle class="particle" cx="302" cy="275" r="5" fill="#00B0E4" filter="url(#glow-strong)"/>
+    <circle class="particle" cx="302" cy="275" r="5" fill="#00B0E4" filter="url(#glow-strong)"/>
+  </g>
+
+  <!-- ═══════════════ RIGHT ZONE — Your Infrastructure ═══════════════ -->
+  <text x="920" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#8b949e" font-family="Inter,sans-serif">Your Infrastructure</text>
+
+  <!-- OpenCPO Core box -->
+  <rect x="770" y="40" width="300" height="80" rx="8" fill="#0f1729" stroke="#00B0E4" stroke-width="2"/>
+  <text x="920" y="68" text-anchor="middle" font-size="15" font-weight="700" fill="#e6edf3" font-family="Inter,sans-serif">⚡ OpenCPO Core</text>
+  <text x="920" y="88" text-anchor="middle" font-size="10" fill="#8b949e" font-family="Inter,sans-serif">OCPP 1.6 + 2.0.1 • PKI • Events</text>
+
+  <!-- Line from Core to tunnel -->
+  <line x1="770" y1="275" x2="920" y2="120" stroke="#1e293b" stroke-width="1.2"/>
+
+  <!-- 2x2 Service boxes -->
+  <!-- Admin -->
+  <rect x="770" y="175" width="130" height="50" rx="6" fill="#0f1729" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="835" y="197" text-anchor="middle" font-size="11" font-weight="600" fill="#e6edf3" font-family="Inter,sans-serif">⚙️ Admin</text>
+  <text x="835" y="213" text-anchor="middle" font-size="9" fill="#8b949e" font-family="Inter,sans-serif">Portal + API</text>
+
+  <!-- Charge App -->
+  <rect x="940" y="175" width="130" height="50" rx="6" fill="#0f1729" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="1005" y="197" text-anchor="middle" font-size="11" font-weight="600" fill="#e6edf3" font-family="Inter,sans-serif">📱 Charge App</text>
+  <text x="1005" y="213" text-anchor="middle" font-size="9" fill="#8b949e" font-family="Inter,sans-serif">Driver UX</text>
+
+  <!-- Tester + AI -->
+  <rect x="770" y="240" width="130" height="50" rx="6" fill="#0f1729" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="835" y="262" text-anchor="middle" font-size="11" font-weight="600" fill="#e6edf3" font-family="Inter,sans-serif">🧪 Tester+AI</text>
+  <text x="835" y="278" text-anchor="middle" font-size="9" fill="#8b949e" font-family="Inter,sans-serif">OCPP Testing</text>
+
+  <!-- Farm -->
+  <rect x="940" y="240" width="130" height="50" rx="6" fill="#0f1729" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="1005" y="262" text-anchor="middle" font-size="11" font-weight="600" fill="#e6edf3" font-family="Inter,sans-serif">🌾 Farm</text>
+  <text x="1005" y="278" text-anchor="middle" font-size="9" fill="#8b949e" font-family="Inter,sans-serif">Sim Fleet</text>
+
+  <!-- DB + Profiles bottom row -->
+  <rect x="800" y="315" width="100" height="36" rx="5" fill="#0f1729" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="850" y="338" text-anchor="middle" font-size="10" fill="#8b949e" font-family="Inter,sans-serif">🗄️ DB</text>
+
+  <rect x="940" y="315" width="120" height="36" rx="5" fill="#0f1729" stroke="#1e293b" stroke-width="1.5"/>
+  <text x="1000" y="338" text-anchor="middle" font-size="10" fill="#8b949e" font-family="Inter,sans-serif">👤 Profiles</text>
+
+</svg>
+</div>
+</body>
+</html>
