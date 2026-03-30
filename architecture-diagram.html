@@ -3,158 +3,275 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenCPO Architecture</title>
+<title>OpenCPO — Secure by Design</title>
 <style>
-  body { margin:0; background:#0a0f1a; display:flex; justify-content:center; padding:2rem; font-family:Inter,sans-serif; }
-  .diagram-wrap { width:100%; max-width:1100px; }
-  .diagram-wrap svg { width:100%; height:auto; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0f1a;display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:Inter,sans-serif}
+.wrap{width:100%;max-width:1100px;padding:20px}
+svg{width:100%;height:auto;display:block}
 
-  .particle { animation: flow 4s linear infinite; }
-  .particle:nth-child(2) { animation-delay: -0.8s; }
-  .particle:nth-child(3) { animation-delay: -1.6s; }
-  .particle:nth-child(4) { animation-delay: -2.4s; }
-  .particle:nth-child(5) { animation-delay: -3.2s; }
-  @keyframes flow {
-    from { transform: translateX(0); opacity:0; }
-    10%  { opacity:1; }
-    90%  { opacity:1; }
-    to   { transform: translateX(420px); opacity:0; }
-  }
+@keyframes flow{
+  0%  {transform:translateX(0);opacity:0}
+  8%  {opacity:.9}
+  92% {opacity:.9}
+  100%{transform:translateX(392px);opacity:0}
+}
+.p1{animation:flow 3.2s  0.0s  linear infinite}
+.p2{animation:flow 3.2s -0.53s linear infinite}
+.p3{animation:flow 3.2s -1.07s linear infinite}
+.p4{animation:flow 3.2s -1.60s linear infinite}
+.p5{animation:flow 3.2s -2.13s linear infinite}
+.p6{animation:flow 3.2s -2.67s linear infinite}
 
-  .tunnel { stroke-dasharray: 12 6; animation: dash 2s linear infinite; }
-  @keyframes dash { to { stroke-dashoffset: -36; } }
+@keyframes chargeGlow{0%,100%{opacity:.35}50%{opacity:.85}}
+.cg{animation:chargeGlow 2s ease-in-out infinite}
 
-  .bastion { animation: pulse 3s ease-in-out infinite; }
-  @keyframes pulse { 50% { filter: brightness(1.15); } }
+@keyframes cableFlow{from{stroke-dashoffset:24}to{stroke-dashoffset:0}}
+.cable{stroke-dasharray:5 8;animation:cableFlow 1.3s linear infinite}
 
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation: none !important; }
-  }
+@keyframes shimmer{0%,100%{opacity:.12}50%{opacity:.3}}
+.ch{animation:shimmer 4s ease-in-out infinite}
+
+@keyframes ring1{0%,100%{opacity:.12}50%{opacity:.38}}
+@keyframes ring2{0%,100%{opacity:.22}50%{opacity:.55}}
+.hr1{animation:ring1 3.5s ease-in-out infinite}
+.hr2{animation:ring2 3.5s ease-in-out -1.75s infinite}
+
+@keyframes hubBreath{0%,100%{opacity:.8}50%{opacity:1}}
+.hex{animation:hubBreath 3s ease-in-out infinite}
+
+@keyframes iconGlow{0%,100%{opacity:.6}50%{opacity:1}}
+.ic1{animation:iconGlow 3s ease-in-out  0.0s  infinite}
+.ic2{animation:iconGlow 3s ease-in-out -0.75s infinite}
+.ic3{animation:iconGlow 3s ease-in-out -1.5s  infinite}
+.ic4{animation:iconGlow 3s ease-in-out -2.25s infinite}
+
+@media(prefers-reduced-motion:reduce){
+  .p1,.p2,.p3,.p4,.p5,.p6,.cg,.cable,.ch,.hr1,.hr2,.hex,.ic1,.ic2,.ic3,.ic4{animation:none!important}
+}
 </style>
 </head>
 <body>
-<div class="diagram-wrap">
-<svg viewBox="0 0 1100 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="OpenCPO platform architecture">
-  <defs>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="3" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <filter id="glow-strong">
-      <feGaussianBlur stdDeviation="5" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-  </defs>
+<div class="wrap">
+<svg viewBox="0 0 1100 450" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <radialGradient id="cGlow" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#84BD00" stop-opacity=".55"/>
+    <stop offset="100%" stop-color="#84BD00" stop-opacity="0"/>
+  </radialGradient>
+  <radialGradient id="hGlow" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="#00B0E4" stop-opacity=".22"/>
+    <stop offset="100%" stop-color="#00B0E4" stop-opacity="0"/>
+  </radialGradient>
+  <linearGradient id="chanGrad" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0%"   stop-color="#84BD00" stop-opacity=".28"/>
+    <stop offset="50%"  stop-color="#84BD00" stop-opacity=".07"/>
+    <stop offset="100%" stop-color="#84BD00" stop-opacity=".28"/>
+  </linearGradient>
+  <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+    <feGaussianBlur stdDeviation="3.5" result="b"/>
+    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <clipPath id="cc">
+    <rect x="340" y="173" width="396" height="46" rx="23"/>
+  </clipPath>
+</defs>
 
-  <!-- Security layer bands (background) -->
-  <rect x="0" y="0"   width="1100" height="125" fill="#8B5CF6" opacity="0.05"/>
-  <rect x="0" y="125" width="1100" height="125" fill="#00CED1" opacity="0.05"/>
-  <rect x="0" y="250" width="1100" height="125" fill="#00B0E4" opacity="0.05"/>
-  <rect x="0" y="375" width="1100" height="125" fill="#84BD00" opacity="0.05"/>
+<!-- Background -->
+<rect width="1100" height="450" fill="#0a0f1a"/>
 
-  <!-- Band labels -->
-  <text x="1085" y="62"  text-anchor="end" font-size="10" fill="#8B5CF6" opacity="0.6" font-family="Inter,sans-serif">Monitoring</text>
-  <text x="1085" y="187" text-anchor="end" font-size="10" fill="#00CED1" opacity="0.6" font-family="Inter,sans-serif">Authorization</text>
-  <text x="1085" y="312" text-anchor="end" font-size="10" fill="#00B0E4" opacity="0.6" font-family="Inter,sans-serif">Identity</text>
-  <text x="1085" y="437" text-anchor="end" font-size="10" fill="#84BD00" opacity="0.6" font-family="Inter,sans-serif">Network</text>
+<!-- ════════════ LEFT: CHARGING SITE ════════════ -->
 
-  <!-- ═══════════════ LEFT ZONE — Charging Site ═══════════════ -->
-  <text x="180" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#8b949e" font-family="Inter,sans-serif">Charging Site</text>
+<!-- Building silhouette -->
+<rect x="20" y="90" width="290" height="207" fill="#0c1424" rx="2" stroke="#1e293b" stroke-width="1"/>
+<!-- Windows row -->
+<rect x="40" y="112" width="38" height="28" fill="#111d35" rx="1.5"/>
+<rect x="94" y="112" width="38" height="28" fill="#111d35" rx="1.5"/>
+<rect x="148" y="112" width="38" height="28" fill="#111d35" rx="1.5"/>
+<rect x="202" y="112" width="38" height="28" fill="#111d35" rx="1.5"/>
+<!-- Loading bay door -->
+<rect x="52" y="210" width="95" height="87" fill="#080d1a" rx="1.5"/>
+<line x1="99" y1="210" x2="99" y2="297" stroke="#111d35" stroke-width="1"/>
+<line x1="52" y1="253" x2="147" y2="253" stroke="#111d35" stroke-width="1"/>
 
-  <!-- Charger 1 -->
-  <rect x="40"  y="42" width="60" height="30" rx="4" fill="#0f1729" stroke="#84BD00" stroke-width="1.5"/>
-  <text x="70"  y="62" text-anchor="middle" font-size="10" fill="#84BD00" font-family="Inter,sans-serif">OCPP</text>
+<!-- Camera (subtle, top-right corner of building) -->
+<g opacity=".4" transform="translate(269,100)">
+  <rect x="0" y="2" width="14" height="9" rx="1.5" fill="#1e2f4a"/>
+  <polygon points="14,1 23,0 23,13 14,12" fill="#1e2f4a"/>
+</g>
 
-  <!-- Charger 2 -->
-  <rect x="145" y="42" width="60" height="30" rx="4" fill="#0f1729" stroke="#84BD00" stroke-width="1.5"/>
-  <text x="175" y="62" text-anchor="middle" font-size="10" fill="#84BD00" font-family="Inter,sans-serif">OCPP</text>
+<!-- Ground line -->
+<line x1="0" y1="297" x2="1100" y2="297" stroke="#1e293b" stroke-width="1.5"/>
 
-  <!-- Charger 3 -->
-  <rect x="250" y="42" width="60" height="30" rx="4" fill="#0f1729" stroke="#84BD00" stroke-width="1.5"/>
-  <text x="280" y="62" text-anchor="middle" font-size="10" fill="#84BD00" font-family="Inter,sans-serif">OCPP</text>
+<!-- ── Truck silhouette ── -->
+<!-- Cargo box -->
+<rect x="58" y="225" width="152" height="72" fill="#101d30" rx="2" stroke="#1e293b" stroke-width="1"/>
+<!-- Cargo ribbing (vertical) -->
+<line x1="107" y1="225" x2="107" y2="297" stroke="#0c1525" stroke-width="1.5"/>
+<line x1="156" y1="225" x2="156" y2="297" stroke="#0c1525" stroke-width="1.5"/>
+<!-- Cargo ribbing (horizontal mid) -->
+<line x1="58" y1="261" x2="210" y2="261" stroke="#0c1525" stroke-width="1"/>
+<!-- Cab (right side, facing right) -->
+<path d="M208,250 L254,250 Q260,250 260,256 L260,297 L208,297 Z" fill="#101d30" stroke="#1e293b" stroke-width="1"/>
+<!-- Windshield -->
+<rect x="211" y="254" width="45" height="28" rx="1" fill="#07101e"/>
+<!-- Chassis rail -->
+<rect x="54" y="290" width="212" height="9" fill="#0e1d30" rx="1"/>
+<!-- Wheels -->
+<circle cx="100" cy="305" r="13" fill="#0c1424" stroke="#1e293b" stroke-width="1.5"/>
+<circle cx="100" cy="305" r="5" fill="#182a40"/>
+<circle cx="216" cy="305" r="13" fill="#0c1424" stroke="#1e293b" stroke-width="1.5"/>
+<circle cx="216" cy="305" r="5" fill="#182a40"/>
 
-  <!-- Camera (LPR) -->
-  <text x="55"  y="130" font-size="16" fill="#e6edf3" font-family="Inter,sans-serif">📷</text>
-  <text x="75"  y="133" font-size="10" fill="#8b949e" font-family="Inter,sans-serif">LPR</text>
+<!-- ── DC Charger ── -->
+<!-- Glow halo -->
+<ellipse cx="297" cy="208" rx="30" ry="92" fill="url(#cGlow)" class="cg"/>
+<!-- Charger body -->
+<rect x="282" y="135" width="30" height="158" fill="#0c1424" rx="3" stroke="#84BD00" stroke-width="1.3"/>
+<!-- Screen bezel -->
+<rect x="287" y="146" width="20" height="16" rx="2" fill="#040c1c"/>
+<!-- Lightning on screen -->
+<text x="297" y="158" text-anchor="middle" font-size="11" fill="#84BD00" font-family="sans-serif">⚡</text>
+<!-- Status indicator -->
+<circle cx="297" cy="175" r="3.5" fill="#84BD00" class="cg" filter="url(#glow)"/>
+<!-- Charger base plate -->
+<rect x="276" y="291" width="42" height="8" fill="#152234" rx="2"/>
 
-  <!-- Sensor -->
-  <text x="230" y="130" font-size="16" fill="#e6edf3" font-family="Inter,sans-serif">🌡️</text>
-  <text x="250" y="133" font-size="10" fill="#8b949e" font-family="Inter,sans-serif">Sensors</text>
+<!-- Charging cable (animated dashes flowing toward truck) -->
+<path d="M282,220 C266,230 260,248 257,257" fill="none" stroke="#84BD00" stroke-width="2.5" class="cable" opacity=".85"/>
+<!-- Plug connector -->
+<circle cx="257" cy="257" r="4.5" fill="#84BD00" opacity=".85" filter="url(#glow)"/>
 
-  <!-- Lines from devices to Bastion -->
-  <line x1="70"  y1="72"  x2="100" y2="195" stroke="#1e293b" stroke-width="1.2"/>
-  <line x1="175" y1="72"  x2="180" y2="195" stroke="#1e293b" stroke-width="1.2"/>
-  <line x1="280" y1="72"  x2="260" y2="195" stroke="#1e293b" stroke-width="1.2"/>
-  <line x1="68"  y1="130" x2="120" y2="195" stroke="#1e293b" stroke-width="1"/>
-  <line x1="238" y1="120" x2="220" y2="195" stroke="#1e293b" stroke-width="1"/>
+<!-- Site label -->
+<text x="170" y="326" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#334155" letter-spacing="1.8">CHARGING SITE</text>
 
-  <!-- BASTION HA shadow -->
-  <rect x="26" y="201" width="282" height="80" rx="8" fill="#0f1729" stroke="#1e293b" stroke-width="1.5"/>
-  <!-- BASTION main box -->
-  <rect x="20" y="195" width="282" height="80" rx="8" fill="#0f1729" stroke="#84BD00" stroke-width="2" class="bastion"/>
-  <text x="161" y="218" text-anchor="middle" font-size="14" font-weight="700" fill="#e6edf3" font-family="Inter,sans-serif">🏰 OpenCPO Bastion</text>
-  <text x="161" y="238" text-anchor="middle" font-size="10" fill="#8b949e" font-family="Inter,sans-serif">OCPP Proxy • Cert Vault • LPR • 4G</text>
-  <!-- HA badge -->
-  <rect x="240" y="255" width="58" height="16" rx="3" fill="#84BD00" opacity="0.15" stroke="#84BD00" stroke-width="1"/>
-  <text x="269" y="267" text-anchor="middle" font-size="9" fill="#84BD00" font-family="Inter,sans-serif">HA Pair</text>
+<!-- ════════════ CENTER: SECURE STREAM ════════════ -->
 
-  <!-- ═══════════════ CENTER — WireGuard Tunnel ═══════════════ -->
-  <text x="550" y="255" text-anchor="middle" font-size="11" font-weight="600" fill="#00B0E4" font-family="Inter,sans-serif">WireGuard Mesh — Encrypted</text>
+<!-- Data channel tube -->
+<rect x="340" y="173" width="396" height="46" rx="23" fill="url(#chanGrad)" class="ch"/>
+<rect x="340" y="173" width="396" height="46" rx="23" fill="none" stroke="#84BD00" stroke-width="1" opacity=".38"/>
 
-  <!-- Main tunnel line -->
-  <line x1="302" y1="275" x2="762" y2="275" stroke="#00B0E4" stroke-width="2.5" class="tunnel" filter="url(#glow)"/>
+<!-- Flowing particles (clipped inside channel) -->
+<g clip-path="url(#cc)">
+  <circle class="p1" cx="346" cy="196" r="5.5" fill="#84BD00" filter="url(#glow)"/>
+  <circle class="p2" cx="346" cy="196" r="5.5" fill="#84BD00" filter="url(#glow)"/>
+  <circle class="p3" cx="346" cy="196" r="5.5" fill="#84BD00" filter="url(#glow)"/>
+  <circle class="p4" cx="346" cy="196" r="5.5" fill="#84BD00" filter="url(#glow)"/>
+  <circle class="p5" cx="346" cy="196" r="5.5" fill="#84BD00" filter="url(#glow)"/>
+  <circle class="p6" cx="346" cy="196" r="5.5" fill="#84BD00" filter="url(#glow)"/>
+</g>
 
-  <!-- 4G failover line -->
-  <line x1="302" y1="295" x2="762" y2="295" stroke="#8b949e" stroke-width="1" stroke-dasharray="6 4" opacity="0.5"/>
-  <text x="550" y="310" text-anchor="middle" font-size="9" fill="#8b949e" font-family="Inter,sans-serif">4G Failover</text>
+<!-- Shield at channel entry -->
+<g transform="translate(320,182)">
+  <circle cx="13" cy="13" r="15" fill="#0c1424" stroke="#84BD00" stroke-width="1.3"/>
+  <!-- Shield path -->
+  <path d="M13,5 L20,8.5 L20,14.5 Q20,18.5 13,21 Q6,18.5 6,14.5 L6,8.5 Z" fill="none" stroke="#84BD00" stroke-width="1.4"/>
+  <!-- Lock mark -->
+  <line x1="13" y1="10.5" x2="13" y2="15" stroke="#84BD00" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="13" cy="16.5" r="1.5" fill="#84BD00"/>
+</g>
 
-  <!-- Animated particles -->
-  <g>
-    <circle class="particle" cx="302" cy="275" r="5" fill="#00B0E4" filter="url(#glow-strong)"/>
-    <circle class="particle" cx="302" cy="275" r="5" fill="#00B0E4" filter="url(#glow-strong)"/>
-    <circle class="particle" cx="302" cy="275" r="5" fill="#00B0E4" filter="url(#glow-strong)"/>
-    <circle class="particle" cx="302" cy="275" r="5" fill="#00B0E4" filter="url(#glow-strong)"/>
-    <circle class="particle" cx="302" cy="275" r="5" fill="#00B0E4" filter="url(#glow-strong)"/>
-  </g>
+<!-- Bastion label above shield -->
+<text x="325" y="170" font-size="13" font-family="sans-serif" opacity=".65">🏰</text>
 
-  <!-- ═══════════════ RIGHT ZONE — Your Infrastructure ═══════════════ -->
-  <text x="920" y="28" text-anchor="middle" font-size="13" font-weight="600" fill="#8b949e" font-family="Inter,sans-serif">Your Infrastructure</text>
+<!-- Stream label -->
+<text x="538" y="244" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#334155" letter-spacing="1.2">ZERO TRUST  •  ENCRYPTED  •  INVISIBLE</text>
 
-  <!-- OpenCPO Core box -->
-  <rect x="770" y="40" width="300" height="80" rx="8" fill="#0f1729" stroke="#00B0E4" stroke-width="2"/>
-  <text x="920" y="68" text-anchor="middle" font-size="15" font-weight="700" fill="#e6edf3" font-family="Inter,sans-serif">⚡ OpenCPO Core</text>
-  <text x="920" y="88" text-anchor="middle" font-size="10" fill="#8b949e" font-family="Inter,sans-serif">OCPP 1.6 + 2.0.1 • PKI • Events</text>
+<!-- ════════════ RIGHT: OPENCPO PLATFORM ════════════ -->
 
-  <!-- Line from Core to tunnel -->
-  <line x1="770" y1="275" x2="920" y2="120" stroke="#1e293b" stroke-width="1.2"/>
+<!-- Radial glow -->
+<circle cx="928" cy="196" r="108" fill="url(#hGlow)" class="hr1"/>
+<!-- Pulse rings -->
+<circle cx="928" cy="196" r="88" fill="none" stroke="#00B0E4" stroke-width=".6" class="hr1"/>
+<circle cx="928" cy="196" r="68" fill="none" stroke="#00B0E4" stroke-width=".6" class="hr2"/>
 
-  <!-- 2x2 Service boxes -->
-  <!-- Admin -->
-  <rect x="770" y="175" width="130" height="50" rx="6" fill="#0f1729" stroke="#1e293b" stroke-width="1.5"/>
-  <text x="835" y="197" text-anchor="middle" font-size="11" font-weight="600" fill="#e6edf3" font-family="Inter,sans-serif">⚙️ Admin</text>
-  <text x="835" y="213" text-anchor="middle" font-size="9" fill="#8b949e" font-family="Inter,sans-serif">Portal + API</text>
+<!-- Hexagon hub outer -->
+<polygon points="928,138 978,167 978,224 928,253 878,224 878,167"
+  fill="#0c1424" stroke="#00B0E4" stroke-width="1.6" class="hex"/>
+<!-- Hexagon hub inner detail -->
+<polygon points="928,148 970,172 970,219 928,243 886,219 886,172"
+  fill="#080d1a" stroke="#00B0E4" stroke-width=".5" opacity=".45"/>
 
-  <!-- Charge App -->
-  <rect x="940" y="175" width="130" height="50" rx="6" fill="#0f1729" stroke="#1e293b" stroke-width="1.5"/>
-  <text x="1005" y="197" text-anchor="middle" font-size="11" font-weight="600" fill="#e6edf3" font-family="Inter,sans-serif">📱 Charge App</text>
-  <text x="1005" y="213" text-anchor="middle" font-size="9" fill="#8b949e" font-family="Inter,sans-serif">Driver UX</text>
+<!-- OpenCPO logotype in hub -->
+<text x="928" y="192" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#00B0E4" letter-spacing=".5">Open</text>
+<text x="928" y="209" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#84BD00" letter-spacing=".5">CPO</text>
 
-  <!-- Tester + AI -->
-  <rect x="770" y="240" width="130" height="50" rx="6" fill="#0f1729" stroke="#1e293b" stroke-width="1.5"/>
-  <text x="835" y="262" text-anchor="middle" font-size="11" font-weight="600" fill="#e6edf3" font-family="Inter,sans-serif">🧪 Tester+AI</text>
-  <text x="835" y="278" text-anchor="middle" font-size="9" fill="#8b949e" font-family="Inter,sans-serif">OCPP Testing</text>
+<!-- Spoke lines to icons -->
+<line x1="928" y1="138" x2="928" y2="108" stroke="#00B0E4" stroke-width=".8" opacity=".3"/>
+<line x1="978" y1="196" x2="1022" y2="196" stroke="#00B0E4" stroke-width=".8" opacity=".3"/>
+<line x1="966" y1="232" x2="1008" y2="262" stroke="#00B0E4" stroke-width=".8" opacity=".3"/>
+<line x1="878" y1="196" x2="836" y2="196" stroke="#84BD00" stroke-width=".8" opacity=".3"/>
 
-  <!-- Farm -->
-  <rect x="940" y="240" width="130" height="50" rx="6" fill="#0f1729" stroke="#1e293b" stroke-width="1.5"/>
-  <text x="1005" y="262" text-anchor="middle" font-size="11" font-weight="600" fill="#e6edf3" font-family="Inter,sans-serif">🌾 Farm</text>
-  <text x="1005" y="278" text-anchor="middle" font-size="9" fill="#8b949e" font-family="Inter,sans-serif">Sim Fleet</text>
+<!-- Dashboard icon — top -->
+<g class="ic1" transform="translate(908,80)">
+  <rect x="0" y="0" width="40" height="28" rx="2.5" fill="#0c1424" stroke="#00B0E4" stroke-width="1"/>
+  <rect x="3" y="3" width="34" height="17" fill="#050c1c" rx="1"/>
+  <!-- Mini bar chart inside screen -->
+  <rect x="7"  y="12" width="5" height="5" fill="#00B0E4" rx=".5" opacity=".9"/>
+  <rect x="14" y="8"  width="5" height="9" fill="#00B0E4" rx=".5" opacity=".7"/>
+  <rect x="21" y="10" width="5" height="7" fill="#00B0E4" rx=".5" opacity=".5"/>
+  <rect x="28" y="6"  width="5" height="11" fill="#00B0E4" rx=".5" opacity=".8"/>
+  <!-- Stand -->
+  <rect x="16" y="26" width="8" height="3" fill="#1e293b"/>
+  <text x="20" y="38" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" fill="#475569">Dashboard</text>
+</g>
 
-  <!-- DB + Profiles bottom row -->
-  <rect x="800" y="315" width="100" height="36" rx="5" fill="#0f1729" stroke="#1e293b" stroke-width="1.5"/>
-  <text x="850" y="338" text-anchor="middle" font-size="10" fill="#8b949e" font-family="Inter,sans-serif">🗄️ DB</text>
+<!-- Driver App icon — right -->
+<g class="ic2" transform="translate(1028,180)">
+  <rect x="0" y="0" width="22" height="34" rx="3.5" fill="#0c1424" stroke="#00B0E4" stroke-width="1"/>
+  <rect x="3" y="5" width="16" height="20" fill="#050c1c" rx="1"/>
+  <!-- Screen content lines -->
+  <line x1="6" y1="10" x2="17" y2="10" stroke="#00B0E4" stroke-width="1" opacity=".7"/>
+  <line x1="6" y1="14" x2="14" y2="14" stroke="#00B0E4" stroke-width="1" opacity=".5"/>
+  <line x1="6" y1="18" x2="17" y2="18" stroke="#00B0E4" stroke-width="1" opacity=".4"/>
+  <circle cx="11" cy="30" r="2" fill="#182a40"/>
+  <text x="11" y="44" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" fill="#475569">App</text>
+</g>
 
-  <rect x="940" y="315" width="120" height="36" rx="5" fill="#0f1729" stroke="#1e293b" stroke-width="1.5"/>
-  <text x="1000" y="338" text-anchor="middle" font-size="10" fill="#8b949e" font-family="Inter,sans-serif">👤 Profiles</text>
+<!-- Analytics icon — bottom right -->
+<g class="ic3" transform="translate(1007,252)">
+  <rect x="0" y="0" width="38" height="28" rx="2.5" fill="#0c1424" stroke="#00B0E4" stroke-width="1"/>
+  <!-- Bar chart bars -->
+  <rect x="5"  y="16" width="6" height="8"  fill="#00B0E4" rx=".5" opacity=".9"/>
+  <rect x="13" y="10" width="6" height="14" fill="#00B0E4" rx=".5" opacity=".7"/>
+  <rect x="21" y="13" width="6" height="11" fill="#00B0E4" rx=".5" opacity=".5"/>
+  <rect x="29" y="8"  width="5" height="16" fill="#84BD00" rx=".5" opacity=".8"/>
+  <text x="19" y="38" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" fill="#475569">Analytics</text>
+</g>
+
+<!-- PKI icon — left -->
+<g class="ic4" transform="translate(806,183)">
+  <rect x="0" y="0" width="32" height="28" rx="2.5" fill="#0c1424" stroke="#84BD00" stroke-width="1"/>
+  <!-- Lock body -->
+  <path d="M11,13 L11,10 Q11,5.5 16,5.5 Q21,5.5 21,10 L21,13" fill="none" stroke="#84BD00" stroke-width="1.4"/>
+  <rect x="9" y="13" width="14" height="10" rx="2" fill="#84BD00" opacity=".75"/>
+  <circle cx="16" cy="18" r="2" fill="#0c1424"/>
+  <text x="16" y="38" text-anchor="middle" font-family="Inter,sans-serif" font-size="8.5" fill="#475569">PKI</text>
+</g>
+
+<!-- Platform label -->
+<text x="928" y="280" text-anchor="middle" font-family="Inter,sans-serif" font-size="10.5" fill="#334155" letter-spacing="1.8">OPENCPO PLATFORM</text>
+
+<!-- ════════════ STATS ROW ════════════ -->
+<g transform="translate(0,348)">
+  <!-- Separator lines -->
+  <line x1="270" y1="2" x2="270" y2="58" stroke="#1e293b" stroke-width="1"/>
+  <line x1="549" y1="2" x2="549" y2="58" stroke="#1e293b" stroke-width="1"/>
+  <line x1="828" y1="2" x2="828" y2="58" stroke="#1e293b" stroke-width="1"/>
+  <!-- Stat 1 -->
+  <text x="135" y="24" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#84BD00">Zero Public Endpoints</text>
+  <text x="135" y="41" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#475569">No open ports on-site</text>
+  <!-- Stat 2 -->
+  <text x="410" y="24" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#84BD00">Per-Device Certificates</text>
+  <text x="410" y="41" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#475569">mTLS for every charger</text>
+  <!-- Stat 3 -->
+  <text x="689" y="24" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#84BD00">&lt; 3s Failover</text>
+  <text x="689" y="41" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#475569">Automatic recovery</text>
+  <!-- Stat 4 -->
+  <text x="964" y="24" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="600" fill="#84BD00">LPR + Face Auth</text>
+  <text x="964" y="41" text-anchor="middle" font-family="Inter,sans-serif" font-size="10" fill="#475569">AI-powered access control</text>
+</g>
 
 </svg>
 </div>
