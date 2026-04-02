@@ -968,9 +968,9 @@ document.getElementById('demo-form').addEventListener('submit', async function(e
   btn.disabled = true;
   
   try {
-    const resp = await fetch('https://demo.opencpo.io/api/invitations', {
+    const resp = await fetch('https://demo.opencpo.io/api/demo-request', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json', 'X-Management-Key': 'opencpo-demo-api-key-2026'},
+      headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         name: form.name.value,
         email: form.email.value,
@@ -979,7 +979,7 @@ document.getElementById('demo-form').addEventListener('submit', async function(e
     });
     
     if (resp.ok) {
-      result.innerHTML = '<span style="color:#84BD00;">Check your email — demo credentials are on the way.</span>';
+      result.innerHTML = '<span style="color:#84BD00;">Request received. You\'ll get demo credentials by email once approved.</span>';
       form.reset();
     } else {
       const data = await resp.json().catch(() => ({}));
