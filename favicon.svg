@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
-  <rect width="64" height="64" rx="12" fill="#0C2340"/>
-  <path d="M32 10 L20 20 L20 36 L32 46 L44 36 L44 20 Z" stroke="#00B0E4" stroke-width="2.5" fill="none"/>
-  <path d="M32 18 L26 24 L26 34 L32 40 L38 34 L38 24 Z" fill="#00B0E4" opacity="0.3"/>
-  <path d="M28 29 L32 22 L32 30 L36 30 L32 38 L32 30 Z" fill="#84BD00"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <rect width="32" height="32" rx="6" fill="#0b1a2e"/>
+  <text x="16" y="23" text-anchor="middle" font-family="-apple-system, 'SF Pro Display', 'Segoe UI', sans-serif" font-size="18" font-weight="700" letter-spacing="-0.5">
+    <tspan fill="#e8edf2">O</tspan><tspan fill="#4a6580">C</tspan>
+  </text>
 </svg>
