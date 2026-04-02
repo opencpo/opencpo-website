@@ -45,6 +45,7 @@
         <li><a href="#ai">AI</a></li>
         <li><a href="#quickstart">Quick Start</a></li>
         <li><a href="#community">Community</a></li>
+        <li><a href="#demo">Demo</a></li>
         <li><a href="https://github.com/opencpo/opencpo" class="nav-cta" target="_blank" rel="noopener">GitHub</a></li>
       </ul>
 
@@ -912,6 +913,86 @@
   </div>
 </section>
 
+
+<!-- ===== REQUEST DEMO ===== -->
+<section id="demo" class="reveal">
+  <div class="container" style="max-width:640px;">
+    <h2 class="section-title" style="text-align:center;">See it in action</h2>
+    <p style="text-align:center;color:#7a8fa6;font-size:15px;line-height:1.7;margin-bottom:40px;">
+      Get access to a live demo environment with 20 simulated chargers running real OCPP sessions. Full admin dashboard, driver app, charger farm, and API — yours to explore.
+    </p>
+
+    <form id="demo-form" style="background:#0b1a2e;border:1px solid #15283f;border-radius:14px;padding:36px 32px;margin-bottom:24px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+        <div>
+          <label style="display:block;font-size:12px;color:#4a6580;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:600;">Name</label>
+          <input type="text" name="name" required placeholder="Your name"
+            style="width:100%;padding:10px 14px;background:#060e1a;border:1px solid #1e3450;border-radius:8px;color:#e8edf2;font-size:14px;outline:none;"
+            onfocus="this.style.borderColor='#00B0E4'" onblur="this.style.borderColor='#1e3450'">
+        </div>
+        <div>
+          <label style="display:block;font-size:12px;color:#4a6580;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:600;">Company</label>
+          <input type="text" name="company" placeholder="Optional"
+            style="width:100%;padding:10px 14px;background:#060e1a;border:1px solid #1e3450;border-radius:8px;color:#e8edf2;font-size:14px;outline:none;"
+            onfocus="this.style.borderColor='#00B0E4'" onblur="this.style.borderColor='#1e3450'">
+        </div>
+      </div>
+      <div style="margin-bottom:24px;">
+        <label style="display:block;font-size:12px;color:#4a6580;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:600;">Email</label>
+        <input type="email" name="email" required placeholder="you@company.com"
+          style="width:100%;padding:10px 14px;background:#060e1a;border:1px solid #1e3450;border-radius:8px;color:#e8edf2;font-size:14px;outline:none;"
+          onfocus="this.style.borderColor='#00B0E4'" onblur="this.style.borderColor='#1e3450'">
+      </div>
+      <button type="submit" id="demo-submit"
+        style="width:100%;padding:13px;background:#00B0E4;color:#060e1a;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:opacity 0.15s;"
+        onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">
+        Request Demo Access
+      </button>
+      <div id="demo-result" style="margin-top:16px;text-align:center;font-size:13px;"></div>
+    </form>
+
+    <p style="text-align:center;color:#2d4a63;font-size:12px;">
+      Or email us directly at <a href="mailto:info@stroomlijnen.nl" style="color:#4a6580;text-decoration:none;">info@stroomlijnen.nl</a>
+    </p>
+  </div>
+</section>
+
+<script>
+document.getElementById('demo-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('demo-submit');
+  const result = document.getElementById('demo-result');
+  const form = e.target;
+  
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  
+  try {
+    const resp = await fetch('https://demo.opencpo.io/api/invitations', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json', 'X-Management-Key': 'opencpo-demo-api-key-2026'},
+      body: JSON.stringify({
+        name: form.name.value,
+        email: form.email.value,
+        company: form.company.value || '',
+      }),
+    });
+    
+    if (resp.ok) {
+      result.innerHTML = '<span style="color:#84BD00;">Check your email — demo credentials are on the way.</span>';
+      form.reset();
+    } else {
+      const data = await resp.json().catch(() => ({}));
+      result.innerHTML = '<span style="color:#f87171;">' + (data.detail || 'Something went wrong. Try again or email us.') + '</span>';
+    }
+  } catch (err) {
+    result.innerHTML = '<span style="color:#f87171;">Connection error. Try emailing us at info@stroomlijnen.nl</span>';
+  }
+  
+  btn.textContent = 'Request Demo Access';
+  btn.disabled = false;
+});
+</script>
 
 <!-- ===== FOOTER ===== -->
 <footer role="contentinfo">
