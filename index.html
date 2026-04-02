@@ -409,19 +409,7 @@
         </a>
       </article>
 
-      <article class="stack-card reveal reveal-delay-4">
-        <span class="stack-icon" aria-hidden="true">🧪</span>
-        <h3 class="stack-name">OpenCPO Tester</h3>
-        <p class="stack-desc">Automated OCPP compliance testing with branded reports and a web UI. Test any charger against the full protocol spec — then let AI analyze the results and generate a ready-to-use charger compatibility profile automatically.</p>
-        <a href="https://github.com/opencpo/opencpo-tester" class="stack-link" target="_blank" rel="noopener">
-          View repo
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-            <path d="M2 10L10 2M10 2H5M10 2V7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </a>
-      </article>
-
-      <article class="stack-card reveal">
+            <article class="stack-card reveal">
         <span class="stack-icon" aria-hidden="true">🏗️</span>
         <h3 class="stack-name">OpenCPO Farm</h3>
         <p class="stack-desc">Virtual charger simulator with 18 stress test scenarios. Simulate entire networks without hardware. Load test before you deploy.</p>
@@ -921,9 +909,19 @@
 <!-- ===== REQUEST DEMO ===== -->
 <section id="demo" class="reveal">
   <div class="container" style="max-width:640px;">
+    <div style="text-align:center;margin-bottom:64px;padding:48px 24px;background:#0b1a2e;border:1px solid #15283f;border-radius:16px;">
+      <h2 class="section-title" style="margin-bottom:12px;">The Complete CPO Handbook</h2>
+      <p style="color:#7a8fa6;font-size:16px;line-height:1.7;max-width:540px;margin:0 auto 20px;">
+        Everything you need to become a Charge Point Operator — from your first charger to multi-site OCPI roaming with Plug & Charge. Technical deep dives, deployment architecture, EU subsidies, and business model guidance. Free with demo access.
+      </p>
+      <p style="color:#4a6580;font-size:13px;line-height:1.6;max-width:480px;margin:0 auto;">
+        Covers OCPP 1.6j + 2.0.1 · ISO 15118 PKI · OCPI 2.2.1 roaming · multi-node HA deployment · financial incentives across 10 EU countries
+      </p>
+    </div>
+
     <h2 class="section-title" style="text-align:center;">See it in action</h2>
     <p style="text-align:center;color:#7a8fa6;font-size:15px;line-height:1.7;margin-bottom:40px;">
-      Get access to a live demo environment with 20 simulated chargers running real OCPP sessions. Full admin dashboard, driver app, charger farm, and API — yours to explore.
+      Get access to a live demo environment with 20 simulated chargers running real OCPP sessions. Full admin dashboard, driver app, charger farm, API, and the complete CPO handbook — yours to explore.
     </p>
 
     <form id="demo-form" style="background:#0b1a2e;border:1px solid #15283f;border-radius:14px;padding:36px 32px;margin-bottom:24px;">
@@ -1019,7 +1017,7 @@ document.getElementById('demo-form').addEventListener('submit', async function(e
           <li><a href="https://github.com/opencpo/opencpo-core" target="_blank" rel="noopener">Core</a></li>
           <li><a href="https://github.com/opencpo/opencpo-admin" target="_blank" rel="noopener">Admin</a></li>
           <li><a href="https://github.com/opencpo/opencpo-charge" target="_blank" rel="noopener">Charge</a></li>
-          <li><a href="https://github.com/opencpo/opencpo-tester" target="_blank" rel="noopener">Tester</a></li>
+
           <li><a href="https://github.com/opencpo/opencpo-farm" target="_blank" rel="noopener">Farm</a></li>
           <li><a href="https://github.com/opencpo/opencpo-bastion" target="_blank" rel="noopener">Gateway</a></li>
           <li><a href="https://github.com/opencpo/opencpo-profiles" target="_blank" rel="noopener">Charger Profiles</a></li>
