@@ -236,33 +236,33 @@
     <!-- Architecture Comparison Diagram -->
     <!-- Architecture Comparison — CSS Grid Diagram -->
     <style>
-      .arch-duo { display: grid; grid-template-columns: 1fr auto 1fr; gap: 24px; align-items: stretch; margin-bottom: 48px; max-width: 1000px; margin-left: auto; margin-right: auto; }
-      @media (max-width: 768px) { .arch-duo { grid-template-columns: 1fr; } .arch-vs-badge { display: none; } }
-      .arch-box { border-radius: 16px; padding: 32px 28px; position: relative; }
+      .arch-duo { display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: stretch; margin-bottom: 48px; max-width: 960px; margin-left: auto; margin-right: auto; }
+      @media (max-width: 820px) { .arch-duo { grid-template-columns: 1fr; gap: 16px; } .arch-vs-badge { display: none; } }
+      .arch-box { border-radius: 16px; padding: 24px 20px; }
       .arch-box-bad { background: #0b1220; border: 1px solid #2a1a1a; }
       .arch-box-good { background: #0b1a2e; border: 1px solid #15283f; }
-      .arch-badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 6px; margin-bottom: 20px; }
+      .arch-badge { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 12px; border-radius: 6px; margin-bottom: 16px; }
       .arch-badge-red { background: rgba(255,107,107,0.12); color: #FF6B6B; border: 1px solid rgba(255,107,107,0.25); }
       .arch-badge-green { background: rgba(132,189,0,0.12); color: #84BD00; border: 1px solid rgba(132,189,0,0.25); }
-      .arch-vs-badge { display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #3a5068; letter-spacing: 0.05em; }
-      .arch-flow { display: flex; align-items: center; gap: 0; justify-content: center; margin: 24px 0 20px; }
-      .arch-node { padding: 14px 18px; border-radius: 10px; text-align: center; flex-shrink: 0; min-width: 90px; }
-      .arch-node-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
-      .arch-node-sub { font-size: 11px; opacity: 0.7; }
+      .arch-vs-badge { display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; color: #3a5068; }
+      .arch-flow { display: flex; align-items: center; gap: 0; justify-content: center; margin: 16px 0; flex-wrap: wrap; }
+      .arch-node { padding: 10px 12px; border-radius: 8px; text-align: center; white-space: nowrap; }
+      .arch-node-title { font-size: 12px; font-weight: 700; margin-bottom: 1px; }
+      .arch-node-sub { font-size: 10px; opacity: 0.65; }
       .arch-node-bad { background: #141424; border: 1.5px solid #333; color: #bbb; }
-      .arch-node-danger { background: rgba(255,107,107,0.06); border: 1.5px dashed #FF6B6B; color: #FF6B6B; border-radius: 50px; padding: 16px 24px; }
+      .arch-node-danger { background: rgba(255,107,107,0.06); border: 1.5px dashed #FF6B6B; color: #FF6B6B; border-radius: 40px; padding: 10px 16px; }
       .arch-node-blue { background: #0C2340; border: 1.5px solid #00B0E4; color: #e6edf3; }
-      .arch-node-tunnel { background: rgba(132,189,0,0.06); border: 1.5px dashed #84BD00; color: #84BD00; border-radius: 14px; padding: 16px 20px; }
-      .arch-node-green { background: #0C2340; border: 1.5px solid #84BD00; color: #e6edf3; box-shadow: 0 0 20px rgba(132,189,0,0.15); }
-      .arch-arrow { font-size: 18px; color: #444; flex-shrink: 0; padding: 0 4px; }
+      .arch-node-tunnel { background: rgba(132,189,0,0.06); border: 1.5px dashed #84BD00; color: #84BD00; border-radius: 10px; padding: 10px 14px; }
+      .arch-node-green { background: #0C2340; border: 1.5px solid #84BD00; color: #e6edf3; box-shadow: 0 0 16px rgba(132,189,0,0.12); }
+      .arch-arrow { font-size: 14px; color: #444; padding: 0 3px; }
       .arch-arrow-red { color: #FF6B6B; }
       .arch-arrow-green { color: #84BD00; }
       .arch-arrow-blue { color: #00B0E4; }
-      .arch-tags { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 16px; }
-      .arch-tag { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+      .arch-tags { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; margin-bottom: 12px; }
+      .arch-tag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; white-space: nowrap; }
       .arch-tag-red { background: rgba(255,107,107,0.1); color: #FF6B6B; border: 1px solid rgba(255,107,107,0.2); }
       .arch-tag-green { background: rgba(132,189,0,0.1); color: #84BD00; border: 1px solid rgba(132,189,0,0.2); }
-      .arch-verdict { text-align: center; font-size: 13px; font-weight: 500; margin-top: 8px; padding: 10px 16px; border-radius: 8px; }
+      .arch-verdict { text-align: center; font-size: 12px; font-weight: 500; margin-top: 12px; padding: 8px 12px; border-radius: 8px; }
       .arch-verdict-red { color: #FF6B6B; background: rgba(255,107,107,0.06); }
       .arch-verdict-green { color: #84BD00; background: rgba(132,189,0,0.06); }
     </style>
