@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skin System Guide — OpenCPO</title>
+  <meta name="description" content="Create custom branded skins for your OpenCPO charge app using Google Stitch. White-label your EV charging experience." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .doc-content { max-width: 800px; margin: 0 auto; padding: 120px 24px 80px; }
+    .doc-content h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 12px; background: linear-gradient(135deg, #e8edf2, #7a8fa6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .doc-content h2 { font-size: 1.5rem; font-weight: 700; color: #e8edf2; margin: 48px 0 16px; padding-top: 24px; border-top: 1px solid #15283f; }
+    .doc-content h3 { font-size: 1.1rem; font-weight: 600; color: #b0c4d8; margin: 32px 0 12px; }
+    .doc-content p, .doc-content li { color: #7a8fa6; font-size: 15px; line-height: 1.8; }
+    .doc-content a { color: #00B0E4; text-decoration: none; }
+    .doc-content a:hover { text-decoration: underline; }
+    .doc-content code { background: #0b1a2e; color: #84BD00; padding: 2px 8px; border-radius: 4px; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+    .doc-content pre { background: #060e1a; border: 1px solid #15283f; border-radius: 10px; padding: 20px; overflow-x: auto; margin: 16px 0 24px; }
+    .doc-content pre code { background: none; padding: 0; color: #e8edf2; display: block; line-height: 1.7; }
+    .doc-content ul, .doc-content ol { padding-left: 24px; margin: 12px 0; }
+    .doc-content li { margin-bottom: 8px; }
+    .doc-content .comment { color: #4a6580; }
+    .doc-content .string { color: #84BD00; }
+    .doc-content .key { color: #00B0E4; }
+    .doc-table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 14px; }
+    .doc-table th { text-align: left; padding: 10px 12px; background: #0b1a2e; color: #b0c4d8; font-weight: 600; border: 1px solid #15283f; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .doc-table td { padding: 8px 12px; border: 1px solid #15283f; color: #7a8fa6; }
+    .doc-table tr:nth-child(even) td { background: #060e1a; }
+    .skin-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin: 24px 0; }
+    .skin-mini { background: #0b1a2e; border: 1px solid #15283f; border-radius: 12px; padding: 20px; }
+    .skin-mini h4 { color: #e8edf2; font-size: 15px; margin-bottom: 6px; }
+    .skin-mini p { font-size: 12px; margin: 0; }
+    .palette { display: flex; gap: 4px; margin: 8px 0; }
+    .palette span { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #15283f; }
+    .step-box { background: #0b1a2e; border: 1px solid #15283f; border-radius: 12px; padding: 24px; margin: 16px 0; }
+    .step-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%; background: #00B0E4; color: #060e1a; font-weight: 700; font-size: 14px; margin-right: 10px; }
+    .tip-box { background: rgba(132,189,0,0.08); border: 1px solid rgba(132,189,0,0.2); border-radius: 10px; padding: 16px 20px; margin: 16px 0; }
+    .tip-box strong { color: #84BD00; }
+  </style>
+</head>
+<body>
+
+<!-- Nav (simplified) -->
+<nav id="nav" role="navigation" style="position:fixed;top:0;width:100%;z-index:100;background:rgba(6,14,26,0.9);backdrop-filter:blur(12px);border-bottom:1px solid #15283f;">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:space-between;height:60px;">
+      <a href="index.html" style="text-decoration:none;display:flex;align-items:center;gap:0;">
+        <span style="font-size:20px;font-weight:600;color:#e8edf2;">Open</span><span style="font-size:20px;font-weight:600;color:#4a6580;">CPO</span>
+      </a>
+      <div style="display:flex;gap:24px;align-items:center;">
+        <a href="index.html#skins" style="color:#7a8fa6;text-decoration:none;font-size:14px;">← Back to Home</a>
+        <a href="https://github.com/opencpo/opencpo-charge" target="_blank" rel="noopener" style="color:#00B0E4;text-decoration:none;font-size:14px;font-weight:600;">GitHub</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="doc-content">
+
+<h1>🎨 Skin System Guide</h1>
+<p style="font-size:18px;color:#4a6580;margin-bottom:40px;">
+  Create custom branded skins for your charge app — from design to deployment, in under 30 minutes.
+</p>
+
+<h2>What Are Skins?</h2>
+<p>
+  OpenCPO's charge app uses a <strong style="color:#e8edf2;">skin system</strong> that separates the charging engine from the visual presentation. The engine handles OCPP, payments, OTP auth, and live sessions. The skin controls colors, typography, layouts, and branding.
+</p>
+<p>
+  Switch skins with a single environment variable. No code changes. No rebuilds. One engine, infinite looks.
+</p>
+
+<pre><code><span class="comment"># Switch to a different skin</span>
+SKIN=voltage-backstage docker compose up
+
+<span class="comment"># Or in your .env file</span>
+SKIN=my-custom-brand</code></pre>
+
+<h2>Available Skins</h2>
+<p>OpenCPO ships with 7 skins out of the box:</p>
+
+<div class="skin-gallery">
+  <div class="skin-mini">
+    <h4>Stroomlijnen</h4>
+    <div class="palette">
+      <span style="background:#00B0E4;"></span>
+      <span style="background:#84BD00;"></span>
+      <span style="background:#0a1628;"></span>
+    </div>
+    <p>🌙 Dark · The original premium theme</p>
+  </div>
+  <div class="skin-mini">
+    <h4>Voltage Backstage</h4>
+    <div class="palette">
+      <span style="background:#6fd2ff;"></span>
+      <span style="background:#9dd82c;"></span>
+      <span style="background:#051424;"></span>
+    </div>
+    <p>🌙 Dark · Theater control room</p>
+  </div>
+  <div class="skin-mini">
+    <h4>Stroom Electron</h4>
+    <div class="palette">
+      <span style="background:#9EDA2D;"></span>
+      <span style="background:#6FD2FF;"></span>
+      <span style="background:#051423;"></span>
+    </div>
+    <p>🌙 Dark · Editorial lime green</p>
+  </div>
+  <div class="skin-mini">
+    <h4>Ion Flux</h4>
+    <div class="palette">
+      <span style="background:#81ecff;"></span>
+      <span style="background:#22c55e;"></span>
+      <span style="background:#0c0e12;"></span>
+    </div>
+    <p>🌙 Dark · Obsidian HUD</p>
+  </div>
+  <div class="skin-mini" style="border-color:rgba(132,189,0,0.3);">
+    <h4>Current Flow</h4>
+    <div class="palette">
+      <span style="background:#006686;"></span>
+      <span style="background:#476800;"></span>
+      <span style="background:#f8fafb;border-color:#ddd;"></span>
+    </div>
+    <p>☀️ Light · Clean Dutch editorial</p>
+  </div>
+  <div class="skin-mini">
+    <h4>Voltage Industrial</h4>
+    <div class="palette">
+      <span style="background:#00daf3;"></span>
+      <span style="background:#40e56c;"></span>
+      <span style="background:#131313;"></span>
+    </div>
+    <p>🌙 Dark · SCADA/HMI terminal</p>
+  </div>
+</div>
+
+<h2>Create Your Own Skin — 3 Steps</h2>
+
+<div class="step-box">
+  <p><span class="step-num">1</span> <strong style="color:#e8edf2;">Design in Google Stitch</strong></p>
+  <p style="margin-top:8px;">
+    Open <a href="https://stitch.withgoogle.com" target="_blank" rel="noopener">stitch.withgoogle.com</a> and use this prompt template (customize the brand details):
+  </p>
+  <pre><code>Design a mobile EV charging app for <span class="string">[YOUR BRAND]</span>, a charge point operator.
+
+Core screens: Map with charger pins, QR scanner, Charger Detail
+(status badge, connector type CCS2, kW rating, step-by-step
+charging guide, pricing per kWh), OTP phone verification,
+Live Charging Session (real-time kW power gauge, kWh delivered,
+cost in euros, SoC battery bar, duration timer, stop button),
+Receipt (energy delivered, tariff breakdown with 21% BTW,
+PDF download).
+
+Design system: <span class="string">[YOUR COLORS AND STYLE]</span>.
+Bottom navigation: Map, Scan, Account.
+<span class="string">[YOUR LANGUAGE]</span> UI. PWA mobile-first, 390px width.</code></pre>
+
+  <div class="tip-box">
+    <strong>💡 Pro tip:</strong> Include real data points (kW, kWh, €/kWh, BTW%) in your prompt. Stitch generates more usable mockups when the content is realistic.
+  </div>
+</div>
+
+<div class="step-box">
+  <p><span class="step-num">2</span> <strong style="color:#e8edf2;">Convert with stitch-to-skin</strong></p>
+  <p style="margin-top:8px;">Export the zip from Stitch, then run the converter:</p>
+  <pre><code><span class="comment"># Install (one-time)</span>
+pip install opencpo-charge-app
+
+<span class="comment"># Convert Stitch export → OpenCPO skin</span>
+python -m opencpo.tools.stitch_to_skin <span class="string">my-brand.zip</span> my-brand
+
+<span class="comment"># Output:</span>
+✓ Found 6 Stitch screen(s)
+✓ Extracted 47 color tokens, 3 font families
+✓ Detected mode: dark
+✓ Skin 'my-brand' created at skins/my-brand/</code></pre>
+  <p>The converter extracts Tailwind design tokens from Stitch HTML, maps them to OpenCPO's CSS custom properties, and generates a complete <code>skin.json</code> + <code>style.css</code>.</p>
+</div>
+
+<div class="step-box">
+  <p><span class="step-num">3</span> <strong style="color:#e8edf2;">Deploy</strong></p>
+  <p style="margin-top:8px;">Drop the skin folder into <code>skins/</code> and set the environment variable:</p>
+  <pre><code><span class="comment"># Test locally</span>
+SKIN=my-brand python main.py
+
+<span class="comment"># Production (Docker)</span>
+SKIN=my-brand docker compose up
+
+<span class="comment"># Or in Admin Dashboard → Skins → Activate</span></code></pre>
+  <p>The admin panel includes a skin gallery where you can preview all available skins and activate them with one click.</p>
+</div>
+
+
+<h2>Skin Architecture</h2>
+
+<h3>Directory structure</h3>
+<pre><code>skins/my-brand/
+├── <span class="key">skin.json</span>          <span class="comment"># Metadata, colors, fonts</span>
+├── static/
+│   └── <span class="key">style.css</span>      <span class="comment"># Complete CSS theme (~19KB)</span>
+├── templates/         <span class="comment"># Optional template overrides</span>
+│   └── charge.html    <span class="comment"># Override any base template</span>
+├── <span class="string">DESIGN.md</span>          <span class="comment"># Design system documentation</span>
+└── previews/          <span class="comment"># Screenshot gallery</span>
+    ├── map.png
+    └── session.png</code></pre>
+
+<h3>skin.json format</h3>
+<pre><code>{
+  <span class="key">"name"</span>: <span class="string">"My Brand"</span>,
+  <span class="key">"version"</span>: <span class="string">"1.0"</span>,
+  <span class="key">"mode"</span>: <span class="string">"dark"</span>,
+  <span class="key">"colors"</span>: {
+    <span class="key">"primary"</span>: <span class="string">"#00B0E4"</span>,
+    <span class="key">"secondary"</span>: <span class="string">"#84BD00"</span>,
+    <span class="key">"background"</span>: <span class="string">"#0a1628"</span>,
+    <span class="key">"card"</span>: <span class="string">"#0f2035"</span>,
+    <span class="key">"border"</span>: <span class="string">"#1a3a5c"</span>
+  },
+  <span class="key">"fonts"</span>: {
+    <span class="key">"headline"</span>: <span class="string">"Space Grotesk"</span>,
+    <span class="key">"body"</span>: <span class="string">"Inter"</span>,
+    <span class="key">"label"</span>: <span class="string">"Space Grotesk"</span>,
+    <span class="key">"mono"</span>: <span class="string">"'Roboto Mono', monospace"</span>
+  }
+}</code></pre>
+
+<h3>CSS Custom Properties</h3>
+<p>Your <code>style.css</code> must define these variables in <code>:root</code>:</p>
+
+<table class="doc-table">
+  <thead>
+    <tr><th>Variable</th><th>Purpose</th><th>Dark example</th><th>Light example</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>--bg</code></td><td>Page background</td><td>#0a1929</td><td>#f8fafb</td></tr>
+    <tr><td><code>--bg2</code></td><td>Secondary background</td><td>#0d2137</td><td>#f2f4f5</td></tr>
+    <tr><td><code>--card</code></td><td>Card background</td><td>#0d2137</td><td>#ffffff</td></tr>
+    <tr><td><code>--border</code></td><td>Border color</td><td>#1e3a5f</td><td>#dde3e8</td></tr>
+    <tr><td><code>--accent</code></td><td>Primary action color</td><td>#00B0E4</td><td>#006686</td></tr>
+    <tr><td><code>--green</code></td><td>Success / available</td><td>#22c55e</td><td>#476800</td></tr>
+    <tr><td><code>--red</code></td><td>Error / danger</td><td>#ef4444</td><td>#ba1a1a</td></tr>
+    <tr><td><code>--text</code></td><td>Primary text</td><td>#f1f5f9</td><td>#191c1d</td></tr>
+    <tr><td><code>--text2</code></td><td>Secondary text</td><td>#94a3b8</td><td>#5f6b72</td></tr>
+    <tr><td><code>--font-headline</code></td><td>Headlines</td><td colspan="2">'Space Grotesk', system-ui</td></tr>
+    <tr><td><code>--font-body</code></td><td>Body text</td><td colspan="2">'Inter', system-ui</td></tr>
+    <tr><td><code>--font-mono</code></td><td>Numbers / data</td><td colspan="2">'Roboto Mono', monospace</td></tr>
+  </tbody>
+</table>
+
+
+<h2>Stitch Prompt Examples</h2>
+
+<h3>Premium Dark (Theater Tech)</h3>
+<pre><code>Design a mobile EV charging app for <span class="string">[BRAND]</span>.
+Dark navy (#0a1929) background, electric cyan (#00B0E4) accent.
+Theater-grade reliability aesthetic. Space Grotesk headings,
+Manrope body. Glow effects on active states.
+Core screens: Map, QR scanner, Charger Detail, OTP, Live Session, Receipt.
+Dutch language UI. PWA mobile-first, 390px.</code></pre>
+
+<h3>Clean Light Mode</h3>
+<pre><code>Design a mobile EV charging app for <span class="string">[BRAND]</span>.
+Light mode, white background, teal (#006686) primary.
+Clean Dutch editorial feel. Manrope headings, Inter body.
+Soft shadows, eco-green accents for sustainability.
+Core screens: Map, QR scanner, Charger Detail, OTP, Live Session, Receipt.
+English language UI. PWA mobile-first, 390px.</code></pre>
+
+<h3>Industrial / Fleet</h3>
+<pre><code>Design a mobile EV charging app for <span class="string">[BRAND]</span>.
+Near-black (#131313) background, neon cyan (#00DAF3) accent.
+HMI/SCADA terminal aesthetic for fleet drivers.
+Monospace numbers, sharp corners, underscore naming.
+Core screens: Map, QR scanner, Charger Detail, OTP, Live Session, Receipt.
+Dutch language UI. PWA mobile-first, 390px.</code></pre>
+
+
+<h2>White-Label Service</h2>
+<p>
+  For CPOs who want a fully branded charging experience without managing the technical details, OpenCPO offers white-label deployment:
+</p>
+<ul>
+  <li><strong>Custom skin</strong> designed to your brand guidelines</li>
+  <li><strong>Custom domain</strong> — charge.yourbrand.com</li>
+  <li><strong>Logo, favicon, PWA manifest</strong> configured</li>
+  <li><strong>Admin panel integration</strong> — switch skins from the dashboard</li>
+  <li><strong>Per-site skins</strong> — different branding for different locations (coming soon)</li>
+</ul>
+<p>
+  Contact us at <a href="mailto:info@stroomlijnen.nl">info@stroomlijnen.nl</a> to discuss white-label deployments.
+</p>
+
+
+<h2>Contributing Skins</h2>
+<p>Built a skin? Share it with the community:</p>
+<ol>
+  <li>Create your skin using Stitch or manually</li>
+  <li>Test it with the charge app</li>
+  <li>Submit a PR to <a href="https://github.com/opencpo/opencpo-charge" target="_blank" rel="noopener">opencpo-charge</a> with your skin directory under <code>skins/</code></li>
+  <li>Include: <code>skin.json</code>, <code>style.css</code>, <code>DESIGN.md</code>, and preview screenshots</li>
+</ol>
+
+<div class="tip-box" style="margin-top:40px;">
+  <strong>🚀 Ready to build?</strong> Clone the repo, pick a skin, and start charging:
+  <pre style="margin:12px 0 0;"><code>git clone https://github.com/opencpo/opencpo
+cd opencpo && SKIN=voltage-backstage docker compose up</code></pre>
+</div>
+
+</div>
+
+<!-- Footer -->
+<footer role="contentinfo" style="margin-top:80px;">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>&copy; 2026 OpenCPO &bull; <a href="https://github.com/opencpo/opencpo/blob/main/LICENSE" target="_blank" rel="noopener">Apache 2.0 License</a></p>
+      <p>Made by <a href="https://stroomlijnen.nu" target="_blank" rel="noopener">Stroomlijnen B.V.</a></p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
