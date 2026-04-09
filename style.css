@@ -80,7 +80,10 @@ p {
 .section-title,
 .section-desc {
   text-align: center;
-  max-width: 720px;
+}
+
+.section-desc {
+  max-width: 640px;
   margin-left: auto;
   margin-right: auto;
 }
