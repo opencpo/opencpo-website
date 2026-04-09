@@ -18,8 +18,50 @@
   <meta name="twitter:title" content="OpenCPO — Zero Trust EV Charging Platform" />
   <meta name="twitter:description" content="The only EV charging platform where chargers are invisible on the internet. Enterprise-grade security, open source." />
 
-  <!-- Favicon -->
+  <!-- Canonical + Favicon -->
+  <link rel="canonical" href="https://opencpo.io/" />
   <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "OpenCPO",
+    "description": "Open source EV charging platform with zero trust architecture. Built-in PKI, mutual TLS, ISO 15118 Plug & Charge, OCPP 1.6 + 2.0.1. The only EV charging platform where chargers are invisible on the internet.",
+    "url": "https://opencpo.io",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Linux",
+    "license": "https://www.apache.org/licenses/LICENSE-2.0",
+    "isAccessibleForFree": true,
+    "codeRepository": "https://github.com/opencpo/opencpo",
+    "programmingLanguage": ["Python", "JavaScript", "HTML", "CSS"],
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "EUR"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Stroomlijnen B.V.",
+      "url": "https://stroomlijnen.nl"
+    },
+    "keywords": ["OCPP", "EV charging", "open source", "CPO", "charge point operator", "zero trust", "PKI", "mTLS", "ISO 15118", "Plug and Charge", "NIS2", "OCPI", "electric vehicle", "charging station", "CSMS"]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "OpenCPO",
+    "url": "https://opencpo.io",
+    "logo": "https://opencpo.io/favicon.svg",
+    "sameAs": [
+      "https://github.com/opencpo",
+      "https://discord.gg/opencpo"
+    ]
+  }
+  </script>
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -719,6 +761,48 @@
             <td><span class="partial" aria-label="Partial">~</span></td>
             <td><span class="partial" aria-label="Partial">~</span></td>
             <td><span class="partial" aria-label="Partial">~</span></td>
+          </tr>
+          <tr>
+            <td>OCPP 1.6 + 2.0.1</td>
+            <td class="col-opencpo"><span class="check" aria-label="Yes">✓</span></td>
+            <td><span class="check" aria-label="Yes">✓</span></td>
+            <td><span class="check" aria-label="Yes">✓</span></td>
+            <td><span class="partial" aria-label="Partial">~</span></td>
+          </tr>
+          <tr>
+            <td>OCPI roaming</td>
+            <td class="col-opencpo"><span class="check" aria-label="Yes">✓</span></td>
+            <td><span class="check" aria-label="Yes">✓</span></td>
+            <td><span class="check" aria-label="Yes">✓</span></td>
+            <td><span class="check" aria-label="Yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>White-label driver app</td>
+            <td class="col-opencpo"><span class="check" aria-label="Yes">✓</span></td>
+            <td><span class="partial" aria-label="Partial">~</span></td>
+            <td><span class="check" aria-label="Yes">✓</span></td>
+            <td><span class="cross" aria-label="No">✗</span></td>
+          </tr>
+          <tr>
+            <td>Skinnable / themeable UI</td>
+            <td class="col-opencpo"><span class="check" aria-label="Yes">✓</span></td>
+            <td><span class="cross" aria-label="No">✗</span></td>
+            <td><span class="cross" aria-label="No">✗</span></td>
+            <td><span class="cross" aria-label="No">✗</span></td>
+          </tr>
+          <tr>
+            <td>Charger simulator included</td>
+            <td class="col-opencpo"><span class="check" aria-label="Yes">✓</span></td>
+            <td><span class="cross" aria-label="No">✗</span></td>
+            <td><span class="cross" aria-label="No">✗</span></td>
+            <td><span class="cross" aria-label="No">✗</span></td>
+          </tr>
+          <tr>
+            <td>Profile-driven compatibility</td>
+            <td class="col-opencpo"><span class="check" aria-label="Yes">✓</span></td>
+            <td><span class="cross" aria-label="No">✗</span></td>
+            <td><span class="cross" aria-label="No">✗</span></td>
+            <td><span class="cross" aria-label="No">✗</span></td>
           </tr>
           <tr>
             <td>Open source</td>

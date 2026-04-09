@@ -1,0 +1,53 @@
+# OpenCPO — Open Source EV Charging Platform
+
+> The only EV charging platform where chargers are invisible on the internet.
+
+OpenCPO is an open source, Apache 2.0 licensed EV charging platform built with zero trust architecture. It provides a complete Charge Point Operator (CPO) stack: OCPP Central System, admin dashboard, driver-facing PWA, site controller, charger simulator, and compliance tester.
+
+## Key Features
+
+- **Zero Trust Networking**: Chargers connect via WireGuard/Tailscale mesh VPN. No public endpoints.
+- **Built-in PKI**: Own Root CA, CPO Sub-CA, MO Sub-CA. Per-device certificates, not shared passwords.
+- **Mutual TLS (mTLS)**: Both sides verify identity on every connection.
+- **ISO 15118 Plug & Charge**: Full PKI hierarchy for app-less, card-less charging.
+- **OCPP 1.6 + 2.0.1**: Dual-protocol Central System with profile-driven charger compatibility.
+- **OCPI Roaming**: Standard roaming protocol support for cross-network charging.
+- **Skinnable Driver App**: PWA with theme system. Create custom skins with Google Stitch.
+- **NIS2 Compliant by Design**: Encrypted comms, verified identity, audit trails.
+- **Charger Simulator**: Virtual charger farm with 18 stress test scenarios.
+- **Self-hosted**: Your infrastructure, your data, no vendor lock-in.
+- **€0 License Cost**: Apache 2.0, free forever.
+
+## Components
+
+- **OpenCPO Core** — OCPP 1.6 + 2.0.1 Central System (Python/FastAPI)
+- **OpenCPO Admin** — CPO admin dashboard (FastAPI + Jinja2 + HTMX)
+- **OpenCPO Charge** — Driver-facing PWA (FastAPI + skinnable themes)
+- **OpenCPO Bastion** — Raspberry Pi site controller (zero-trust bridge)
+- **OpenCPO Farm** — Virtual charger simulator
+- **OpenCPO Tester** — OCPP compliance test suite
+- **OpenCPO Profiles** — Charger compatibility profiles
+
+## Links
+
+- Website: https://opencpo.io
+- GitHub: https://github.com/opencpo
+- Documentation: https://demo.opencpo.io/docs
+- Discord: https://discord.gg/opencpo
+- License: Apache 2.0
+
+## Quick Start
+
+```bash
+git clone https://github.com/opencpo/opencpo
+cd opencpo && ./setup.sh
+docker compose up
+```
+
+## Who Made This
+
+Built by Stroomlijnen B.V. (https://stroomlijnen.nl), a Dutch CPO that deploys DC fast chargers at theater venues and commercial locations. OpenCPO is production code from a team charging real vehicles every day.
+
+## Comparison
+
+OpenCPO is the only platform that combines zero trust networking, built-in PKI, mutual TLS, ISO 15118, and open source licensing. Commercial alternatives (AMPECO, has-to-be, ChargePoint) are closed-source, cloud-only SaaS with shared passwords and exposed endpoints.
