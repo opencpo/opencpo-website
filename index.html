@@ -448,10 +448,13 @@
 
     <!-- Skin showcase with screen previews -->
     <style>
-      .skin-showcase { display: flex; gap: 32px; overflow-x: auto; padding: 8px 0 24px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
-      .skin-showcase::-webkit-scrollbar { height: 6px; }
-      .skin-showcase::-webkit-scrollbar-track { background: transparent; }
-      .skin-showcase::-webkit-scrollbar-thumb { background: #15283f; border-radius: 3px; }
+      .skin-showcase-wrap { overflow: hidden; position: relative; padding: 8px 0 24px; }
+      .skin-showcase-wrap::before, .skin-showcase-wrap::after { content:''; position:absolute; top:0; bottom:0; width:60px; z-index:2; pointer-events:none; }
+      .skin-showcase-wrap::before { left:0; background:linear-gradient(90deg, #060e1a, transparent); }
+      .skin-showcase-wrap::after { right:0; background:linear-gradient(270deg, #060e1a, transparent); }
+      .skin-showcase { display: flex; gap: 32px; width: max-content; animation: skinScroll 40s linear infinite; }
+      .skin-showcase.paused { animation-play-state: paused; }
+      @keyframes skinScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
       .skin-card-wrap { flex: 0 0 320px; scroll-snap-align: start; }
       .skin-card-inner { background: #0b1a2e; border: 1px solid #15283f; border-radius: 16px; padding: 20px; transition: border-color 0.2s, transform 0.2s; }
       .skin-card-inner:hover { border-color: #00B0E4; transform: translateY(-4px); }
@@ -467,7 +470,8 @@
       .skin-lightbox img { max-width:90vw; max-height:90vh; border-radius:12px; box-shadow:0 8px 40px rgba(0,0,0,0.5); }
     </style>
 
-    <div class="skin-showcase reveal">
+    <div class="skin-showcase-wrap reveal">
+    <div class="skin-showcase" id="skinCarousel">
 
       <!-- Voltage Backstage -->
       <div class="skin-card-wrap">
@@ -583,13 +587,39 @@
 
     </div>
 
+    <!-- Duplicated set for seamless loop -->
+    </div><!-- end skin-showcase -->
+    </div><!-- end skin-showcase-wrap -->
+
     <!-- Lightbox -->
     <div class="skin-lightbox" id="skinLB" onclick="this.classList.remove('open')">
       <img id="skinLBimg" src="" alt="Skin preview">
     </div>
     <script>
-    function openSkinLB(src){var lb=document.getElementById('skinLB');document.getElementById('skinLBimg').src=src;lb.classList.add('open');}
+    function openSkinLB(src){
+      var lb=document.getElementById('skinLB');
+      document.getElementById('skinLBimg').src=src;
+      lb.classList.add('open');
+    }
     document.addEventListener('keydown',function(e){if(e.key==='Escape')document.getElementById('skinLB').classList.remove('open');});
+
+    // Auto-scroll carousel: duplicate cards for seamless loop, pause on hover/click
+    (function(){
+      var carousel = document.getElementById('skinCarousel');
+      if(!carousel) return;
+      // Clone all cards for seamless loop
+      var cards = carousel.innerHTML;
+      carousel.innerHTML = cards + cards;
+      // Pause on hover or click
+      carousel.addEventListener('mouseenter', function(){ carousel.classList.add('paused'); });
+      carousel.addEventListener('mouseleave', function(){ carousel.classList.remove('paused'); });
+      carousel.addEventListener('click', function(){ carousel.classList.toggle('paused'); });
+      // Also pause on touch (mobile)
+      carousel.addEventListener('touchstart', function(){ carousel.classList.add('paused'); }, {passive:true});
+      carousel.addEventListener('touchend', function(){
+        setTimeout(function(){ carousel.classList.remove('paused'); }, 3000);
+      }, {passive:true});
+    })();
     </script>
 
     <!-- How it works -->
