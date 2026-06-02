@@ -869,31 +869,31 @@
     <div class="quickstart-inner">
       <div>
         <p class="section-label">Quick Start</p>
-        <h2 class="section-title" id="quickstart-title">Up in 3 Commands</h2>
-        <p style="margin-bottom: 2rem;">No complex setup. No configuration maze. Clone, setup, compose.</p>
+        <h2 class="section-title" id="quickstart-title">One Command to Start</h2>
+        <p style="margin-bottom: 2rem;">Nothing but bash and an internet connection needed. No git, no Python, no Docker — the installer handles it all.</p>
 
         <div class="qs-steps">
           <div class="qs-step reveal reveal-delay-1">
             <div class="qs-step-num" aria-hidden="true">1</div>
             <div>
-              <div class="qs-step-title">Clone the repository</div>
-              <div class="qs-step-desc">The orchestrator clones all component repos and starts everything with docker compose.</div>
+              <div class="qs-step-title">Run the installer</div>
+              <div class="qs-step-desc">One curl command downloads OpenCPO, installs Python/Docker/Compose if needed, clones all components, and builds the images.</div>
             </div>
           </div>
 
           <div class="qs-step reveal reveal-delay-2">
             <div class="qs-step-num" aria-hidden="true">2</div>
             <div>
-              <div class="qs-step-title">Run setup</div>
-              <div class="qs-step-desc">Clones all component repos and builds Docker images.</div>
+              <div class="qs-step-title">Configure (or use defaults)</div>
+              <div class="qs-step-desc">The interactive wizard generates secrets, sets up your organisation name, and creates a ready-to-run .env file.</div>
             </div>
           </div>
 
           <div class="qs-step reveal reveal-delay-3">
             <div class="qs-step-num" aria-hidden="true">3</div>
             <div>
-              <div class="qs-step-title">Compose up</div>
-              <div class="qs-step-desc">Docker pulls images and starts all services. Core, Admin, Charge — everything, including your CA.</div>
+              <div class="qs-step-title">Open the dashboard</div>
+              <div class="qs-step-desc">Point your browser to localhost:8080 — your CPO admin panel, charge app, compliance tester, and charger simulator are all running.</div>
             </div>
           </div>
         </div>
@@ -927,15 +927,16 @@
           <div class="code-title">bash</div>
         </div>
         <div class="code-body">
-          <div><span class="code-comment"># Clone OpenCPO</span></div>
-          <div><span class="code-prompt">$ </span><span class="code-cmd">git clone <span class="code-string">https://github.com/opencpo/opencpo</span></span></div>
-          <div>&nbsp;</div>
-          <div><span class="code-comment"># Clone components and build Docker images</span></div>
-          <div><span class="code-prompt">$ </span><span class="code-cmd">cd opencpo &amp;&amp; ./setup.sh</span></div>
+          <div><span class="code-comment"># One-command install (zero deps — just bash + curl)</span></div>
+          <div><span class="code-prompt">$ </span><span class="code-cmd">curl -fsSL <span class="code-string">https://raw.githubusercontent.com/opencpo/opencpo/main/install.sh</span> | bash</span></div>
+          <div><span class="code-output">✓ Detected: Ubuntu 24.04</span></div>
+          <div><span class="code-output">✓ Installing Python 3...</span></div>
+          <div><span class="code-output">✓ Installing Docker via official script...</span></div>
           <div><span class="code-output">✓ Cloning opencpo-core...</span></div>
-          <div><span class="code-output">✓ Cloning opencpo-admin...</span></div>
           <div><span class="code-output">✓ Building Docker images...</span></div>
-          <div><span class="code-output">✓ Setup complete</span></div>
+          <div>&nbsp;</div>
+          <div><span class="code-comment"># Or with git (if you have it):</span></div>
+          <div><span class="code-prompt">$ </span><span class="code-cmd">git clone <span class="code-string">https://github.com/opencpo/opencpo</span> && cd opencpo && ./setup.sh</span></div>
           <div>&nbsp;</div>
           <div><span class="code-comment"># Launch the platform</span></div>
           <div><span class="code-prompt">$ </span><span class="code-cmd">docker compose up</span></div>
@@ -943,9 +944,6 @@
           <div><span class="code-output">🖥  cpo-admin started on :8080</span></div>
           <div><span class="code-output">📱 charge-app started on :8003</span></div>
           <div><span class="code-output">🛝 charger-farm started on :8087</span></div>
-          <div>&nbsp;</div>
-          <div><span class="code-comment"># Customize configuration (optional)</span></div>
-          <div><span class="code-prompt">$ </span><span class="code-cmd">python3 configure.py</span></div>
         </div>
       </div>
     </div>
