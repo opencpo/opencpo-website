@@ -43,8 +43,8 @@
     },
     "author": {
       "@type": "Organization",
-      "name": "Stroomlijnen B.V.",
-      "url": "https://stroomlijnen.nl"
+      "name": "OpenCPO",
+      "url": "https://opencpo.io"
     },
     "keywords": ["OCPP", "EV charging", "open source", "CPO", "charge point operator", "zero trust", "PKI", "mTLS", "ISO 15118", "Plug and Charge", "NIS2", "OCPI", "electric vehicle", "charging station", "CSMS"]
   }
@@ -877,7 +877,7 @@
             <div class="qs-step-num" aria-hidden="true">1</div>
             <div>
               <div class="qs-step-title">Clone the repository</div>
-              <div class="qs-step-desc">The mono-repo includes all five components and a shared docker-compose.</div>
+              <div class="qs-step-desc">The orchestrator clones all component repos and starts everything with docker compose.</div>
             </div>
           </div>
 
@@ -885,7 +885,7 @@
             <div class="qs-step-num" aria-hidden="true">2</div>
             <div>
               <div class="qs-step-title">Run setup</div>
-              <div class="qs-step-desc">Generates config, creates secrets, initializes your local PKI, and checks dependencies.</div>
+              <div class="qs-step-desc">Clones all component repos and builds Docker images.</div>
             </div>
           </div>
 
@@ -913,7 +913,7 @@
             </svg>
             Production Deployment
           </div>
-          <p>For production, connect chargers via Tailscale — every device gets a WireGuard identity and joins your private mesh automatically. No public endpoints needed. See the <a href="https://github.com/opencpo/opencpo/wiki/production-deployment" target="_blank" rel="noopener">deployment guide</a> for Tailscale integration and certificate provisioning.</p>
+          <p>For production, you can optionally connect chargers via Tailscale or other VPN for zero-trust networking. See the <a href="https://github.com/opencpo/opencpo/blob/main/docs/INSTALL.md" target="_blank" rel="noopener">installation guide</a> for details on deployment and certificate provisioning.</p>
         </div>
       </div>
 
@@ -930,24 +930,22 @@
           <div><span class="code-comment"># Clone OpenCPO</span></div>
           <div><span class="code-prompt">$ </span><span class="code-cmd">git clone <span class="code-string">https://github.com/opencpo/opencpo</span></span></div>
           <div>&nbsp;</div>
-          <div><span class="code-comment"># Run setup (generates PKI + config)</span></div>
+          <div><span class="code-comment"># Clone components and build Docker images</span></div>
           <div><span class="code-prompt">$ </span><span class="code-cmd">cd opencpo &amp;&amp; ./setup.sh</span></div>
-          <div><span class="code-output">✓ Checking dependencies...</span></div>
-          <div><span class="code-output">✓ Generating Root CA...</span></div>
-          <div><span class="code-output">✓ Generating CPO Sub-CA...</span></div>
-          <div><span class="code-output">✓ Generating config...</span></div>
+          <div><span class="code-output">✓ Cloning opencpo-core...</span></div>
+          <div><span class="code-output">✓ Cloning opencpo-admin...</span></div>
+          <div><span class="code-output">✓ Building Docker images...</span></div>
           <div><span class="code-output">✓ Setup complete</span></div>
           <div>&nbsp;</div>
           <div><span class="code-comment"># Launch the platform</span></div>
           <div><span class="code-prompt">$ </span><span class="code-cmd">docker compose up</span></div>
-          <div><span class="code-output">⚡ opencpo-core started on :9000</span></div>
-          <div><span class="code-output">🖥  opencpo-admin started on :8080</span></div>
-          <div><span class="code-output">📱 opencpo-charge started on :3000</span></div>
-          <div><span class="code-output">🔒 pki-service started on :8443</span></div>
+          <div><span class="code-output">⚡ ocpp-core started on :8000</span></div>
+          <div><span class="code-output">🖥  cpo-admin started on :8080</span></div>
+          <div><span class="code-output">📱 charge-app started on :8003</span></div>
+          <div><span class="code-output">🛝 charger-farm started on :8087</span></div>
           <div>&nbsp;</div>
-          <div><span class="code-comment"># For production: add Tailscale</span></div>
-          <div><span class="code-prompt">$ </span><span class="code-cmd">tailscale up --advertise-tags=tag:cpo</span></div>
-          <div><span class="code-output">✓ Chargers are now invisible on internet</span></div>
+          <div><span class="code-comment"># Customize configuration (optional)</span></div>
+          <div><span class="code-prompt">$ </span><span class="code-cmd">python3 configure.py</span></div>
         </div>
       </div>
     </div>
@@ -1181,7 +1179,7 @@
       Want to read first? <a href="https://demo.opencpo.io/docs" style="color:#00B0E4;text-decoration:none;">Read the full CPO guide</a> — installation, pricing, PKI, OCPI roaming, and EU subsidies.
     </p>
     <p style="text-align:center;color:#2d4a63;font-size:12px;">
-      Or email us directly at <a href="mailto:info@stroomlijnen.nl" style="color:#4a6580;text-decoration:none;">info@stroomlijnen.nl</a>
+      Or email us directly at <a href="mailto:hello@opencpo.io" style="color:#4a6580;text-decoration:none;">hello@opencpo.io</a>
     </p>
   </div>
 </section>
@@ -1215,7 +1213,7 @@ document.getElementById('demo-form').addEventListener('submit', async function(e
       result.innerHTML = '<span style="color:#f87171;">' + (data.detail || 'Something went wrong. Try again or email us.') + '</span>';
     }
   } catch (err) {
-    result.innerHTML = '<span style="color:#f87171;">Connection error. Try emailing us at info@stroomlijnen.nl</span>';
+    result.innerHTML = '<span style="color:#f87171;">Connection error. Try emailing us at hello@opencpo.io</span>';
   }
   
   btn.textContent = 'Request Demo Access';
@@ -1276,7 +1274,7 @@ document.getElementById('demo-form').addEventListener('submit', async function(e
         &copy; 2026 OpenCPO &bull;
         <a href="https://github.com/opencpo/opencpo/blob/main/LICENSE" target="_blank" rel="noopener">Apache 2.0 License</a>
       </p>
-      <p>Made by <a href="https://stroomlijnen.nu" target="_blank" rel="noopener">Stroomlijnen B.V.</a></p>
+      <p>OpenCPO — Open Source EV Charging Platform</p>
     </div>
   </div>
 </footer>

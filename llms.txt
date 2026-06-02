@@ -32,7 +32,7 @@ OpenCPO is an open source, Apache 2.0 licensed EV charging platform built with z
 
 - Website: https://opencpo.io
 - GitHub: https://github.com/opencpo
-- Documentation: https://demo.opencpo.io/docs
+- Documentation: https://github.com/opencpo/opencpo-core/tree/main/docs
 - Discord: https://discord.gg/opencpo
 - License: Apache 2.0
 
@@ -46,7 +46,7 @@ docker compose up
 
 ## Who Made This
 
-Built by Stroomlijnen B.V. (https://stroomlijnen.nl), a Dutch CPO that deploys DC fast chargers at theater venues and commercial locations. OpenCPO is production code from a team charging real vehicles every day.
+Built by the [OpenCPO community](https://opencpo.io), a team charging real vehicles every day.
 
 ## Comparison
 

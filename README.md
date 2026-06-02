@@ -73,4 +73,4 @@ Apache 2.0 — same as OpenCPO itself.
 
 ---
 
-Made by [Stroomlijnen B.V.](https://stroomlijnen.nu)
+OpenCPO — Open Source EV Charging Platform
