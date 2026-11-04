@@ -1183,39 +1183,26 @@
 </section>
 
 <script>
-document.getElementById('demo-form').addEventListener('submit', async function(e) {
+document.getElementById('demo-form').addEventListener('submit', function(e) {
   e.preventDefault();
-  const btn = document.getElementById('demo-submit');
-  const result = document.getElementById('demo-result');
   const form = e.target;
-  
-  btn.textContent = 'Sending...';
-  btn.disabled = true;
-  
-  try {
-    const resp = await fetch('https://demo.opencpo.io/api/demo-request', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        name: form.name.value,
-        email: form.email.value,
-        company: form.company.value || '',
-      }),
-    });
-    
-    if (resp.ok) {
-      result.innerHTML = '<span style="color:#84BD00;">Request received. You\'ll get demo credentials by email once approved.</span>';
-      form.reset();
-    } else {
-      const data = await resp.json().catch(() => ({}));
-      result.innerHTML = '<span style="color:#f87171;">' + (data.detail || 'Something went wrong. Try again or email us.') + '</span>';
-    }
-  } catch (err) {
-    result.innerHTML = '<span style="color:#f87171;">Connection error. Try emailing us at hello@opencpo.io</span>';
-  }
-  
-  btn.textContent = 'Request Demo Access';
-  btn.disabled = false;
+  const result = document.getElementById('demo-result');
+  const name = (form.name.value || '').trim();
+  const email = (form.email.value || '').trim();
+  const company = (form.company.value || '').trim();
+  const subject = encodeURIComponent('Demo access request — ' + (company || name || 'opencpo.io'));
+  const body = encodeURIComponent(
+    'Name: ' + name + '
+' +
+    'Email: ' + email + '
+' +
+    'Company: ' + company + '
+
+' +
+    'Requested via opencpo.io'
+  );
+  result.innerHTML = '<span style="color:#84BD00;">Opening your email client… if nothing happens, write to hello@opencpo.io</span>';
+  window.location.href = 'mailto:hello@opencpo.io?subject=' + subject + '&body=' + body;
 });
 </script>
 
