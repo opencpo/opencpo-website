@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stroomlijnen — Hotel Energieconfigurator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0a1628;
+  --navy-light:#111d32;
+  --navy-mid:#1a2a45;
+  --cyan:#00B0E4;
+  --cyan-dark:#0094c0;
+  --cyan-glow:rgba(0,176,228,0.15);
+  --solar:#f59e0b;
+  --battery:#8b5cf6;
+  --ems:#14b8a6;
+  --ev:#0ea5e9;
+  --grid:#22c55e;
+  --hotel:#f97316;
+  --white:#ffffff;
+  --gray-50:#f8fafc;
+  --gray-100:#f1f5f9;
+  --gray-200:#e2e8f0;
+  --gray-300:#cbd5e1;
+  --gray-400:#94a3b8;
+  --gray-500:#64748b;
+  --gray-600:#475569;
+  --gray-700:#334155;
+  --gray-800:#1e293b;
+  --shadow-sm:0 1px 3px rgba(10,22,40,0.08);
+  --shadow-md:0 4px 16px rgba(10,22,40,0.12);
+  --shadow-lg:0 8px 32px rgba(10,22,40,0.16);
+  --shadow-xl:0 16px 48px rgba(10,22,40,0.2);
+  --radius-sm:6px;
+  --radius-md:10px;
+  --radius-lg:16px;
+  --radius-xl:24px;
+  --transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;background:var(--gray-50);color:var(--gray-800);line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-x:hidden}
+a{color:var(--cyan);text-decoration:none}
+img{max-width:100%;height:auto;display:block}
+::selection{background:var(--cyan);color:var(--white)}
+
+/* ===== SCROLL PROGRESS ===== */
+.scroll-progress{position:fixed;top:0;left:0;width:100%;height:3px;z-index:1000;background:transparent}
+.scroll-progress-bar{height:100%;background:linear-gradient(90deg,var(--cyan),var(--battery));width:0%;transition:width 0.1s linear;border-radius:0 2px 2px 0}
+
+/* ===== HEADER ===== */
+.header{position:sticky;top:0;z-index:100;background:rgba(10,22,40,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.06);padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.header-inner{max-width:1280px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between}
+.header-logo{height:32px;width:auto}
+.header-badge{background:var(--cyan);color:var(--navy);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;padding:4px 12px;border-radius:100px}
+
+/* ===== CONTAINER ===== */
+.container{max-width:1280px;margin:0 auto;padding:0 24px}
+
+/* ===== HERO ===== */
+.hero{background:var(--navy);padding:80px 24px 60px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 50%,rgba(0,176,228,0.06),transparent 60%),radial-gradient(ellipse at 70% 50%,rgba(139,92,246,0.04),transparent 60%);pointer-events:none}
+.hero-inner{max-width:800px;margin:0 auto;position:relative;z-index:1}
+.hero-logo{height:48px;margin:0 auto 32px;filter:brightness(0) invert(1)}
+.hero h1{font-size:clamp(36px,5vw,56px);font-weight:800;color:var(--white);line-height:1.12;margin-bottom:16px;letter-spacing:-0.02em}
+.hero h1 span{background:linear-gradient(135deg,var(--cyan),var(--battery));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:clamp(16px,1.3vw,20px);color:var(--gray-400);max-width:600px;margin:0 auto 8px;line-height:1.6}
+.hero .scroll-hint{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);color:var(--gray-500);font-size:12px;letter-spacing:2px;text-transform:uppercase;animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+
+/* ===== SECTION ===== */
+.section{padding:64px 24px}
+.section-header{max-width:720px;margin:0 auto 48px;text-align:center}
+.section-header h2{font-size:clamp(28px,3.2vw,38px);font-weight:800;color:var(--navy);margin-bottom:12px;letter-spacing:-0.02em;line-height:1.2}
+.section-header p{font-size:17px;color:var(--gray-500);line-height:1.6}
+.section-dark{background:var(--navy)}
+.section-dark .section-header h2{color:var(--white)}
+.section-dark .section-header p{color:var(--gray-400)}
+.section-light{background:var(--white)}
+
+/* ===== PROFILE FORM ===== */
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:960px;margin:0 auto}
+@media(max-width:768px){.profile-grid{grid-template-columns:1fr}}
+.form-group{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-md);padding:20px 24px;transition:var(--transition)}
+.form-group:hover{border-color:var(--gray-300);box-shadow:var(--shadow-sm)}
+.form-group label{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;color:var(--gray-700);margin-bottom:10px}
+.form-group label .value-display{font-weight:700;color:var(--cyan);font-size:16px;min-width:60px;text-align:right}
+.form-group label .value-display.unit-euro::before{content:'\20AC'}
+.slider-wrap{position:relative}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--gray-200),var(--gray-200));outline:none;transition:background 0.2s;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--cyan);border:3px solid var(--white);box-shadow:0 1px 4px rgba(0,0,0,0.2);cursor:pointer;transition:var(--transition)}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15);box-shadow:0 0 0 4px var(--cyan-glow)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--cyan);border:3px solid var(--white);box-shadow:0 1px 4px rgba(0,0,0,0.2);cursor:pointer}
+.form-group .hint{font-size:12px;color:var(--gray-400);margin-top:6px}
+
+/* Toggle switch */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0}
+.toggle-label{font-size:14px;font-weight:500;color:var(--gray-700)}
+.toggle{position:relative;width:44px;height:24px;flex-shrink:0;cursor:pointer}
+.toggle input{position:absolute;opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--gray-300);border-radius:12px;transition:var(--transition)}
+.toggle-slider::before{content:'';position:absolute;left:3px;top:3px;width:18px;height:18px;background:var(--white);border-radius:50%;transition:var(--transition);box-shadow:0 1px 3px rgba(0,0,0,0.15)}
+.toggle input:checked+.toggle-slider{background:var(--cyan)}
+.toggle input:checked+.toggle-slider::before{transform:translateX(20px)}
+
+/* Profile summary card */
+.profile-summary{margin-top:32px;background:linear-gradient(135deg,var(--navy),var(--navy-light));border-radius:var(--radius-lg);padding:28px 36px;color:var(--white);display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;max-width:960px;margin-left:auto;margin-right:auto}
+.profile-summary-item{text-align:center}
+.profile-summary-item .num{font-size:28px;font-weight:800;color:var(--cyan);line-height:1.2}
+.profile-summary-item .label{font-size:12px;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.5px;margin-top:4px}
+
+/* ===== DISCLAIMER BADGE ===== */
+.disclaimer-badge{display:inline-flex;align-items:center;gap:6px;background:var(--gray-100);border:1px solid var(--gray-200);border-radius:100px;padding:4px 14px 4px 10px;font-size:12px;color:var(--gray-500);margin-bottom:16px}
+.disclaimer-badge svg{width:14px;height:14px;flex-shrink:0}
+.indicative-tag{font-size:11px;color:var(--gray-400);font-weight:400;margin-left:4px}
+.indicative-tag::before{content:'('}
+.indicative-tag::after{content:')'}
+
+/* ===== LAYER BUILDER ===== */
+.layers{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+.layer-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);overflow:hidden;transition:var(--transition)}
+.layer-card:hover{box-shadow:var(--shadow-md)}
+.layer-card.active{border-color:var(--cyan);box-shadow:0 0 0 1px var(--cyan),var(--shadow-md)}
+.layer-card-header{display:flex;align-items:center;gap:16px;padding:20px 24px;cursor:pointer;-webkit-user-select:none;user-select:none}
+.layer-card-header .layer-toggle{margin-left:auto;flex-shrink:0}
+.layer-card-header .layer-icon{width:40px;height:40px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.layer-card-header .layer-info{flex:1;min-width:0}
+.layer-card-header .layer-info h3{font-size:16px;font-weight:700;color:var(--navy);margin-bottom:2px}
+.layer-card-header .layer-info p{font-size:13px;color:var(--gray-500);line-height:1.4}
+.layer-card-body{padding:0 24px 24px;display:none}
+.layer-card.active .layer-card-body{display:block}
+.layer-card-body .layer-controls{margin-top:16px}
+.layer-card-body .layer-controls .form-group{margin-bottom:12px;border:1px solid var(--gray-100);padding:16px 20px}
+.layer-card-body .layer-math{background:var(--gray-50);border:1px solid var(--gray-100);border-radius:var(--radius-sm);padding:16px 20px;margin-top:12px}
+.layer-card-body .layer-math summary{font-size:13px;font-weight:600;color:var(--gray-600);cursor:pointer;padding:4px 0}
+.layer-card-body .layer-math .math-content{padding-top:12px;font-size:13px;color:var(--gray-600);line-height:1.7}
+.layer-card-body .layer-math .math-content .math-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--gray-100)}
+.layer-card-body .layer-math .math-content .math-row:last-child{border-bottom:none;font-weight:600;color:var(--navy)}
+.financial-result{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-top:12px}
+.financial-result .fin-item{background:var(--gray-50);border-radius:var(--radius-sm);padding:12px 16px;text-align:center}
+.financial-result .fin-item .fin-num{font-size:20px;font-weight:800;color:var(--cyan)}
+.financial-result .fin-item .fin-num.positive{color:var(--grid)}
+.financial-result .fin-item .fin-label{font-size:11px;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.3px;margin-top:2px}
+.financial-result .fin-item .fin-hint{font-size:11px;color:var(--gray-400);margin-top:2px}
+
+/* Layer icon colors */
+.layer-icon.battery{background:rgba(139,92,246,0.12);color:var(--battery)}
+.layer-icon.ems{background:rgba(20,184,166,0.12);color:var(--ems)}
+.layer-icon.solar{background:rgba(245,158,11,0.12);color:var(--solar)}
+.layer-icon.ev{background:rgba(14,165,233,0.12);color:var(--ev)}
+
+/* ===== DASHBOARD ===== */
+.dashboard-wrap{display:grid;grid-template-columns:1fr 320px;gap:32px;align-items:start;max-width:1280px;margin:0 auto}
+@media(max-width:1024px){.dashboard-wrap{grid-template-columns:1fr}}
+.dashboard-main{min-width:0}
+.dashboard-sidebar{position:sticky;top:80px}
+@media(max-width:1024px){.dashboard-sidebar{position:static}}
+.dashboard-panel{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius-lg);padding:28px;box-shadow:var(--shadow-md)}
+.dashboard-panel h3{font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--gray-400);margin-bottom:20px}
+.dashboard-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px}
+.metric-card{background:var(--gray-50);border-radius:var(--radius-md);padding:20px;text-align:center;position:relative;overflow:hidden}
+.metric-card .metric-value{font-size:28px;font-weight:800;color:var(--navy);line-height:1.2;transition:all 0.4s cubic-bezier(0.4,0,0.2,1)}
+.metric-card .metric-value.cyan{color:var(--cyan)}
+.metric-card .metric-value.green{color:var(--grid)}
+.metric-card .metric-value.purple{color:var(--battery)}
+.metric-card .metric-label{font-size:12px;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.3px;margin-top:6px}
+.metric-card .metric-tag{position:absolute;top:8px;right:8px;font-size:9px;background:var(--gray-200);color:var(--gray-500);padding:2px 8px;border-radius:100px;font-weight:500}
+.bar-chart{margin-top:24px}
+.bar-chart .bar-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.bar-chart .bar-label{width:80px;font-size:13px;font-weight:600;color:var(--gray-600);flex-shrink:0;text-align:right}
+.bar-chart .bar-track{flex:1;height:28px;background:var(--gray-100);border-radius:4px;overflow:hidden;position:relative}
+.bar-chart .bar-fill{height:100%;border-radius:4px;transition:width 0.8s cubic-bezier(0.4,0,0.2,1);position:relative}
+.bar-chart .bar-fill .bar-val{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--white);white-space:nowrap}
+.bar-chart .bar-fill.savings-bar{background:linear-gradient(90deg,var(--grid),#4ade80)}
+.bar-chart .bar-fill.revenue-bar{background:linear-gradient(90deg,var(--cyan),#38bdf8)}
+.bar-chart .bar-fill.cost-bar{background:linear-gradient(90deg,var(--gray-400),var(--gray-500))}
+
+/* Projection table */
+.projection-table{width:100%;border-collapse:collapse;margin-top:20px;font-size:14px}
+.projection-table th{text-align:left;padding:10px 16px;font-size:12px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.3px;border-bottom:2px solid var(--gray-200)}
+.projection-table td{padding:12px 16px;border-bottom:1px solid var(--gray-100)}
+.projection-table tr:last-child td{border-bottom:none}
+.projection-table .proj-val{font-weight:700;color:var(--navy)}
+.projection-table .proj-val.cyan{color:var(--cyan)}
+
+/* Energy flow diagram */
+.flow-diagram{background:var(--navy);border-radius:var(--radius-lg);padding:32px 24px;margin-top:24px;position:relative;overflow:hidden}
+.flow-diagram h4{color:var(--white);font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:24px;text-align:center}
+.flow-grid{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.flow-node{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-md);padding:12px 16px;text-align:center;min-width:80px;transition:var(--transition)}
+.flow-node.active{background:rgba(255,255,255,0.1);border-color:rgba(0,176,228,0.3);box-shadow:0 0 20px rgba(0,176,228,0.08)}
+.flow-node .fn-icon{font-size:20px;font-weight:700;margin-bottom:4px}
+.flow-node .fn-label{font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:0.3px;font-weight:500}
+.flow-node .fn-value{font-size:11px;color:var(--cyan);font-weight:600;margin-top:2px}
+.flow-arrow{color:var(--gray-600);font-size:16px;font-weight:300;padding:0 2px}
+.flow-node.hotel .fn-icon{color:var(--hotel)}
+.flow-node.grid .fn-icon{color:var(--grid)}
+.flow-node.battery .fn-icon{color:var(--battery)}
+.flow-node.solar .fn-icon{color:var(--solar)}
+.flow-node.ems .fn-icon{color:var(--ems)}
+.flow-node.ev .fn-icon{color:var(--ev)}
+.flow-node.dim{opacity:0.3}
+
+/* ===== SAFETY SECTION ===== */
+.safety-header{text-align:center;margin-bottom:48px}
+.safety-header h2{font-size:clamp(28px,3.2vw,38px);font-weight:800;color:var(--white);margin-bottom:12px}
+.safety-header p{font-size:17px;color:var(--gray-400);max-width:600px;margin:0 auto;line-height:1.6}
+
+.safety-layers{max-width:900px;margin:0 auto;position:relative}
+.safety-layers::before{content:'';position:absolute;left:40px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--cyan),var(--battery),var(--ems),var(--solar),var(--ev),var(--grid));opacity:0.3}
+@media(max-width:600px){.safety-layers::before{left:24px}}
+
+.safety-layer{display:flex;gap:24px;align-items:flex-start;margin-bottom:24px;position:relative;opacity:0;transform:translateY(20px);transition:all 0.6s cubic-bezier(0.4,0,0.2,1)}
+.safety-layer.visible{opacity:1;transform:translateY(0)}
+.safety-layer-num{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.06);border:2px solid rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;z-index:1;transition:var(--transition)}
+.safety-layer-num span{font-size:28px;font-weight:800;color:var(--white)}
+.safety-layer:nth-child(1) .safety-layer-num{border-color:var(--cyan);background:rgba(0,176,228,0.1)}
+.safety-layer:nth-child(2) .safety-layer-num{border-color:var(--battery);background:rgba(139,92,246,0.1)}
+.safety-layer:nth-child(3) .safety-layer-num{border-color:var(--ems);background:rgba(20,184,166,0.1)}
+.safety-layer:nth-child(4) .safety-layer-num{border-color:var(--solar);background:rgba(245,158,11,0.1)}
+.safety-layer:nth-child(5) .safety-layer-num{border-color:var(--ev);background:rgba(14,165,233,0.1)}
+.safety-layer:nth-child(6) .safety-layer-num{border-color:var(--grid);background:rgba(34,197,94,0.1)}
+@media(max-width:600px){.safety-layer-num{width:48px;height:48px;min-width:48px}}
+@media(max-width:600px){.safety-layer-num span{font-size:18px}}
+
+.safety-layer-content{flex:1;padding-top:18px}
+@media(max-width:600px){.safety-layer-content{padding-top:8px}}
+.safety-layer-content h3{font-size:18px;font-weight:700;color:var(--white);margin-bottom:8px}
+.safety-layer-content p{font-size:14px;color:var(--gray-400);line-height:1.7;margin-bottom:4px}
+.safety-layer-content ul{list-style:none;padding:0}
+.safety-layer-content ul li{font-size:13px;color:var(--gray-400);padding:3px 0;padding-left:16px;position:relative}
+.safety-layer-content ul li::before{content:'';position:absolute;left:0;top:11px;width:6px;height:6px;border-radius:50%;background:var(--cyan);opacity:0.5}
+
+/* Certifications */
+.certs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px;margin-top:32px;max-width:900px;margin-left:auto;margin-right:auto}
+.cert-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-md);padding:20px;text-align:center;transition:var(--transition)}
+.cert-card:hover{background:rgba(255,255,255,0.07);border-color:rgba(0,176,228,0.2);transform:translateY(-2px)}
+.cert-card .cert-code{font-size:14px;font-weight:700;color:var(--white);margin-bottom:4px}
+.cert-card .cert-body{font-size:12px;color:var(--gray-400);line-height:1.4}
+.cert-card .cert-body strong{color:var(--gray-300)}
+.cert-card .cert-badge{display:inline-block;margin-top:8px;background:var(--cyan);color:var(--navy);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.3px;padding:3px 10px;border-radius:100px}
+.cert-card .cert-status{display:inline-block;margin-top:6px;font-size:11px;color:var(--solar);font-weight:500}
+.cert-card .cert-status .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--solar);margin-right:4px;vertical-align:middle}
+
+/* Emergency stop */
+.esto-section{max-width:900px;margin:32px auto 0;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-lg);padding:28px 32px}
+.esto-section h3{font-size:18px;font-weight:700;color:var(--white);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.esto-section h3 .esto-icon{width:28px;height:28px;border-radius:50%;background:#ef4444;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.esto-section h3 .esto-icon svg{width:14px;height:14px;fill:white}
+.esto-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px}
+.esto-item{background:rgba(255,255,255,0.04);border-radius:var(--radius-sm);padding:16px}
+.esto-item .esto-title{font-size:14px;font-weight:600;color:var(--white);margin-bottom:4px}
+.esto-item .esto-desc{font-size:12px;color:var(--gray-400);line-height:1.5}
+.esto-item .esto-code{font-family:monospace;font-size:12px;color:var(--cyan);margin-top:6px;background:rgba(0,176,228,0.08);padding:2px 8px;border-radius:4px;display:inline-block}
+
+/* ===== CTA ===== */
+.cta-section{text-align:center;padding:80px 24px}
+.cta-section h2{font-size:clamp(28px,3.2vw,38px);font-weight:800;color:var(--white);margin-bottom:16px}
+.cta-section p{font-size:17px;color:var(--gray-400);max-width:500px;margin:0 auto 32px;line-height:1.6}
+.cta-button{display:inline-flex;align-items:center;gap:10px;background:var(--cyan);color:var(--navy);font-weight:700;font-size:16px;padding:14px 36px;border-radius:100px;border:none;cursor:pointer;transition:var(--transition);text-decoration:none}
+.cta-button:hover{background:var(--cyan-dark);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,176,228,0.3)}
+.cta-button svg{width:18px;height:18px}
+.cta-secondary{background:transparent!important;color:var(--cyan)!important;border:1.5px solid var(--cyan)!important}
+.cta-secondary:hover{background:rgba(0,176,228,0.1)!important;box-shadow:none!important}
+.cta-disclaimer{margin-top:24px;font-size:13px;color:var(--gray-500);max-width:600px;margin-left:auto;margin-right:auto;line-height:1.6}
+
+/* ===== FOOTER ===== */
+.footer{background:var(--navy);border-top:1px solid rgba(255,255,255,0.06);padding:24px;text-align:center}
+.footer p{font-size:13px;color:var(--gray-500)}
+
+/* ===== RESPONSIVE ===== */
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media print{
+  .header,.scroll-progress,.scroll-hint{display:none!important}
+  .hero{background:var(--navy)!important;padding:40px 24px!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .safety-layer{opacity:1!important;transform:none!important}
+  .section{padding:40px 24px!important}
+  .dashboard-sidebar{position:static!important}
+  .dashboard-panel{break-inside:avoid}
+}
+@media(max-width:768px){
+  .hero{padding:60px 16px 40px}
+  .profile-summary{grid-template-columns:1fr 1fr;padding:20px}
+  .profile-summary-item .num{font-size:22px}
+  .dashboard-metrics{grid-template-columns:1fr 1fr}
+  .metric-card{padding:16px}
+  .metric-card .metric-value{font-size:22px}
+  .flow-grid{gap:4px}
+  .flow-node{padding:8px 10px;min-width:60px}
+  .section{padding:48px 16px}
+  .safety-layer{gap:16px}
+  .certs-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Scroll Progress -->
+<div class="scroll-progress"><div class="scroll-progress-bar" id="scrollBar"></div></div>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <div class="logo-block" style="display:flex;align-items:center;gap:12px">
+      <img class="header-logo" src="https://stroomlijnen.nl/stroomlijnen-logo-transparent-OFFICIAL.png" alt="Stroomlijnen" loading="lazy" style="height:28px;width:auto">
+      <div style="font-size:10px;font-weight:400;color:#00B0E4;text-transform:uppercase;letter-spacing:3px;margin-top:2px">Hospitality</div>
+    </div>
+    <span class="header-badge">Hotel Energieconfigurator</span>
+  </div>
+</header>
+
+<!-- ===== SECTION 1: HERO ===== -->
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin:0 auto 32px">
+      <img src="https://stroomlijnen.nl/stroomlijnen-logo-transparent-OFFICIAL.png" alt="Stroomlijnen" style="height:40px;width:auto;filter:brightness(0) invert(1)">
+      <div style="font-size:10px;font-weight:400;color:#00B0E4;text-transform:uppercase;letter-spacing:3px;margin-top:2px">Hospitality</div>
+    </div>
+    <h1>Configureer de Energiefuture van Uw<br><span>Hotel</span></h1>
+    <p>Een interactieve planningstool voor hoteliers. Verken Stroomlijnen-componenten, voer de werkelijke cijfers van uw hotel in en zie live financiële en functionele feedback terwijl u uw ideale energiesysteem bouwt.</p>
+    <div class="scroll-hint">Scroll om te beginnen</div>
+  </div>
+</section>
+
+<!-- ===== SECTION 2: HOTEL PROFILE ===== -->
+<section class="section section-light" id="profile">
+  <div class="section-header">
+    <h2>Uw Hotelprofiel</h2>
+    <p>Vertel ons over uw pand. Alle cijfers worden direct bijgewerkt — geen formulieren om in te dienen.</p>
+  </div>
+
+  <div class="profile-grid" id="profileForm">
+    <!-- Rooms -->
+    <div class="form-group">
+      <label>Aantal kamers <span class="value-display" id="roomsVal">80</span></label>
+      <div class="slider-wrap">
+        <input type="range" id="rooms" min="10" max="500" value="80" step="1">
+      </div>
+      <div class="hint">Van boutique tot groot resort</div>
+    </div>
+
+    <!-- Annual consumption -->
+    <div class="form-group">
+      <label>Jaarlijks elektriciteitsverbruik <span class="value-display unit-euro" id="consumptionVal">250,000</span><span style="font-size:12px;color:var(--gray-400);font-weight:400;margin-left:4px">kWh</span></label>
+      <div class="slider-wrap">
+        <input type="range" id="consumption" min="50000" max="2000000" value="250000" step="1000">
+      </div>
+      <div class="hint">50.000 - 2.000.000 kWh/jaar</div>
+    </div>
+
+    <!-- Peak demand -->
+    <div class="form-group">
+      <label>Piekvermogen <span class="value-display" id="peakVal">100</span><span style="font-size:12px;color:var(--gray-400);font-weight:400;margin-left:4px">kW</span></label>
+      <div class="slider-wrap">
+        <input type="range" id="peak" min="20" max="500" value="100" step="1">
+      </div>
+      <div class="hint">Uw hoogste 15-minuten gemiddelde belasting</div>
+    </div>
+
+    <!-- Tariff -->
+    <div class="form-group">
+      <label>Stroomtarief <span class="value-display" id="tariffVal">0.30</span><span style="font-size:12px;color:var(--gray-400);font-weight:400;margin-left:4px">/kWh</span></label>
+      <div class="slider-wrap">
+        <input type="range" id="tariff" min="0.15" max="0.45" value="0.30" step="0.01">
+      </div>
+      <div class="hint">All-in commercieel tarief in EUR</div>
+    </div>
+
+    <!-- Grid capacity -->
+    <div class="form-group">
+      <label>Aansluitcapaciteit <span class="value-display" id="gridCapVal">150</span><span style="font-size:12px;color:var(--gray-400);font-weight:400;margin-left:4px">kW</span></label>
+      <div class="slider-wrap">
+        <input type="range" id="gridCap" min="50" max="1000" value="150" step="5">
+      </div>
+      <div class="hint">Uw gecontracteerde aansluitcapaciteit</div>
+    </div>
+
+    <!-- Toggles -->
+    <div class="form-group" style="display:flex;flex-direction:column;gap:8px">
+      <div class="toggle-row">
+        <span class="toggle-label">Bestaande zonnepanelen</span>
+        <label class="toggle"><input type="checkbox" id="hasSolar"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="toggle-row" id="solarKwpRow" style="display:none">
+        <span class="toggle-label" style="font-size:13px;color:var(--gray-500)">Geïnstalleerd vermogen</span>
+        <span class="value-display" id="existingSolarVal" style="font-size:14px">50 kWp</span>
+      </div>
+      <div class="slider-wrap" id="solarKwpSlider" style="display:none;margin-top:4px">
+        <input type="range" id="existingSolarKwp" min="5" max="500" value="50" step="1">
+      </div>
+
+      <div class="toggle-row" style="margin-top:8px;padding-top:12px;border-top:1px solid var(--gray-100)">
+        <span class="toggle-label">Dynamisch energiecontract</span>
+        <label class="toggle"><input type="checkbox" id="dynamicContract"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="hint" style="margin-top:2px">Uurlijks spotprijscontract maakt tariefarbitrage mogelijk</div>
+    </div>
+  </div>
+
+  <!-- Profile Summary -->
+  <div class="profile-summary" id="profileSummary">
+    <div class="profile-summary-item">
+      <div class="num" id="sumConsumption">250,000</div>
+      <div class="label">kWh / jaar</div>
+    </div>
+    <div class="profile-summary-item">
+      <div class="num" id="sumPeak">100</div>
+      <div class="label">kW piekbelasting</div>
+    </div>
+    <div class="profile-summary-item">
+      <div class="num" id="sumCost">75,000</div>
+      <div class="label">EUR / jaar elektriciteitskosten</div>
+    </div>
+    <div class="profile-summary-item">
+      <div class="num" id="sumRooms">80</div>
+      <div class="label">Hotelkamers</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 3 + 4: LAYER BUILDER & DASHBOARD ===== -->
+<section class="section section-light" id="builder" style="padding-top:0">
+  <div class="section-header">
+    <div class="disclaimer-badge">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v3.5M8 10.5v.5"/></svg>
+      Indicatieve schattingen op basis van typische Nederlandse marktomstandigheden
+    </div>
+    <h2>Bouw Uw Systeem</h2>
+    <p>Schakel elke component in om de financiële en operationele impact te zien. Activeer een laag om de bedieningselementen uit te vouwen en de berekening achter de cijfers te bekijken.</p>
+  </div>
+
+  <div class="dashboard-wrap">
+    <div class="dashboard-main">
+      <div class="layers" id="layerContainer">
+        <!-- Card 1: ESS -->
+        <div class="layer-card" data-layer="ess">
+          <div class="layer-card-header" onclick="toggleLayer(this.closest('.layer-card'))">
+            <div class="layer-icon battery">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"/><line x1="21" y1="10" x2="24" y2="10"/><line x1="21" y1="14" x2="24" y2="14"/><line x1="7" y1="10" x2="7" y2="14"/><line x1="12" y1="10" x2="12" y2="14"/><line x1="17" y1="10" x2="17" y2="14"/></svg>
+            </div>
+            <div class="layer-info">
+              <h3>ESS-accuopslag</h3>
+              <p>Laad tegen goedkope daluren, ontlaad tijdens dure piekuren. 261 kWh LFP per eenheid met 125 kW PCS.</p>
+            </div>
+            <label class="toggle layer-toggle" onclick="event.stopPropagation()"><input type="checkbox" id="essToggle" onchange="onToggleChange()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="layer-card-body" id="essBody">
+            <div class="layer-controls">
+              <div class="form-group">
+                <label>Aantal accu-eenheden <span class="value-display" id="essUnitsVal">1</span></label>
+                <div class="slider-wrap">
+                  <input type="range" id="essUnits" min="1" max="5" value="1" step="1" oninput="onToggleChange()">
+                </div>
+                <div class="hint">Per eenheid: 261 kWh accu, 125 kW PCS-omvormer</div>
+              </div>
+            </div>
+            <div class="financial-result" id="essFinancial">
+              <div class="fin-item"><div class="fin-num" id="essSavings">0</div><div class="fin-label">Jaarlijkse besparing pieksnijden</div><div class="fin-hint">indicatieve schatting</div></div>
+              <div class="fin-item"><div class="fin-num" id="essDemand">0</div><div class="fin-label">Verlaging capaciteitstarief</div><div class="fin-hint">indicatieve schatting</div></div>
+              <div class="fin-item"><div class="fin-num" id="essBackup">0</div><div class="fin-label">Waarde noodstroomvoorziening</div><div class="fin-hint">indicatieve schatting</div></div>
+            </div>
+            <details class="layer-math">
+              <summary>Hoe wij dit berekenen</summary>
+              <div class="math-content" id="essMath">
+                <div class="math-row"><span>Tariefverschil (piek - dal)</span><span id="essMathSpread">0.00</span></div>
+                <div class="math-row"><span>Cycli per jaar (LFP @ 90% DoD)</span><span>300</span></div>
+                <div class="math-row"><span>Bruikbare energie per eenheid per cyclus</span><span id="essMathEnergy">235 kWh</span></div>
+                <div class="math-row"><span>Besparing pieksnijden per eenheid</span><span id="essMathPeakSave">0</span></div>
+                <div class="math-row"><span>Verlaging capaciteitstarief per eenheid</span><span id="essMathDemand">0</span></div>
+                <div class="math-row"><span>Waarde noodstroom (verzekering + continuïteit)</span><span id="essMathBackup">0</span></div>
+                <div class="math-row"><span>Totaal per eenheid</span><span id="essMathTotal">0</span></div>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <!-- Card 2: EMS -->
+        <div class="layer-card" data-layer="ems">
+          <div class="layer-card-header" onclick="toggleLayer(this.closest('.layer-card'))">
+            <div class="layer-icon ems">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><line x1="8" y1="9" x2="8" y2="15"/><line x1="12" y1="7" x2="12" y2="17"/><line x1="16" y1="10" x2="16" y2="14"/></svg>
+            </div>
+            <div class="layer-info">
+              <h3>EMS-software</h3>
+              <p>Geautomatiseerde optimalisatie, dynamische tariefrespons en real-time monitoring. Waardevoller met ESS.</p>
+            </div>
+            <label class="toggle layer-toggle" onclick="event.stopPropagation()"><input type="checkbox" id="emsToggle" onchange="onToggleChange()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="layer-card-body" id="emsBody">
+            <div class="financial-result" id="emsFinancial">
+              <div class="fin-item"><div class="fin-num" id="emsSavings">0</div><div class="fin-label">Extra besparing op ESS</div><div class="fin-hint">~15-25% verbetering</div></div>
+              <div class="fin-item"><div class="fin-num" id="emsDynamic">0</div><div class="fin-label">Dynamische tariefarbitrage</div><div class="fin-hint">indicatieve schatting</div></div>
+              <div class="fin-item"><div class="fin-num" id="emsMonitoring">0</div><div class="fin-label">Waarde monitoring en rapportage</div><div class="fin-hint">indicatieve schatting</div></div>
+            </div>
+            <details class="layer-math">
+              <summary>Hoe wij dit berekenen</summary>
+              <div class="math-content">
+                <p>De EMS verbetert de accu-efficiëntie met 15-25% door slimmere laad-/ontlaadplanning. Met een dynamisch contract kan het extra arbitragemogelijkheden benutten tijdens prijspieken. Real-time monitoring biedt operationele transparantie met een geschatte waarde van circa 1-2% van de totale elektriciteitsuitgaven.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <!-- Card 3: Solar -->
+        <div class="layer-card" data-layer="solar">
+          <div class="layer-card-header" onclick="toggleLayer(this.closest('.layer-card'))">
+            <div class="layer-icon solar">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+            </div>
+            <div class="layer-info">
+              <h3>Zonnepanelen / PV</h3>
+              <p>Genereer schone energie en sla het overschot op in de accu. Maximale waarde gerealiseerd met ESS.</p>
+            </div>
+            <label class="toggle layer-toggle" onclick="event.stopPropagation()"><input type="checkbox" id="solarToggle" onchange="onToggleChange()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="layer-card-body" id="solarBody">
+            <div class="layer-controls">
+              <div class="form-group">
+                <label>Installeer vermogen <span class="value-display" id="solarKwpVal">100</span><span style="font-size:12px;color:var(--gray-400);font-weight:400;margin-left:4px">kWp</span></label>
+                <div class="slider-wrap">
+                  <input type="range" id="solarKwp" min="10" max="1000" value="100" step="5" oninput="onToggleChange()">
+                </div>
+                <div class="hint">Nederlandse zonne-opbrengst: ~900 kWh per kWp per jaar</div>
+              </div>
+            </div>
+            <div class="financial-result" id="solarFinancial">
+              <div class="fin-item"><div class="fin-num" id="solarGen">0</div><div class="fin-label">Jaarlijkse waarde zonne-energie</div><div class="fin-hint">indicatieve schatting</div></div>
+              <div class="fin-item"><div class="fin-num" id="solarSelf">0</div><div class="fin-label">Verbetering eigen verbruik</div><div class="fin-hint">met accu</div></div>
+              <div class="fin-item"><div class="fin-num" id="solarGrid">0</div><div class="fin-label">Verminderde netinkoop</div><div class="fin-hint">indicatieve schatting</div></div>
+            </div>
+            <details class="layer-math">
+              <summary>Hoe wij dit berekenen</summary>
+              <div class="math-content" id="solarMath">
+                <div class="math-row"><span>Zonne-opbrengst (kWp x 900 uur)</span><span id="solarMathYield">0 kWh</span></div>
+                <div class="math-row"><span>Waarde van zelfverbruikte zonne-energie</span><span id="solarMathSelf">0</span></div>
+                <div class="math-row"><span>Waarde van geëxporteerde zonne-energie (lage teruglevering)</span><span id="solarMathExport">0</span></div>
+                <div class="math-row"><span>Accu verhoogt eigen verbruik van ~30% naar ~70%</span><span id="solarMathBatteryBoost">+40%</span></div>
+                <div class="math-row"><span>Totale jaarlijkse waarde zonne-energie</span><span id="solarMathTotal">0</span></div>
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <!-- Card 4: EV -->
+        <div class="layer-card" data-layer="ev">
+          <div class="layer-card-header" onclick="toggleLayer(this.closest('.layer-card'))">
+            <div class="layer-icon ev">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <div class="layer-info">
+              <h3>EV-laden</h3>
+              <p>Genereer inkomsten uit gast-EV-laden, aangedreven door opgeslagen zonne-energie. Vereist EMS voor belastingbeheer.</p>
+            </div>
+            <label class="toggle layer-toggle" onclick="event.stopPropagation()"><input type="checkbox" id="evToggle" onchange="onToggleChange()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="layer-card-body" id="evBody">
+            <div class="layer-controls">
+              <div class="form-group">
+                <label>Aantal laadpalen <span class="value-display" id="evChargersVal">2</span></label>
+                <div class="slider-wrap">
+                  <input type="range" id="evChargers" min="1" max="6" value="2" step="1" oninput="onToggleChange()">
+                </div>
+                <div class="hint">Tot 120 kW DC per laadpaal</div>
+              </div>
+              <div class="form-group">
+                <label>Geschatte dagelijkse laadsessies <span class="value-display" id="evSessionsVal">10</span></label>
+                <div class="slider-wrap">
+                  <input type="range" id="evSessions" min="1" max="50" value="10" step="1" oninput="onToggleChange()">
+                </div>
+                <div class="hint">Gemiddeld per laadpaal per dag</div>
+              </div>
+            </div>
+            <div class="financial-result" id="evFinancial">
+              <div class="fin-item"><div class="fin-num" id="evRevenue">0</div><div class="fin-label">Jaarlijkse laadinkomsten</div><div class="fin-hint">indicatieve schatting</div></div>
+              <div class="fin-item"><div class="fin-num" id="evAmenity">0</div><div class="fin-label">Gastvoorzieningswaarde</div><div class="fin-hint">concurrentievoordeel</div></div>
+              <div class="fin-item"><div class="fin-num" id="evGrid">0</div><div class="fin-label">Netverzwaring vermeden</div><div class="fin-hint">indicatieve schatting</div></div>
+            </div>
+            <details class="layer-math">
+              <summary>Hoe wij dit berekenen</summary>
+              <div class="math-content">
+                <p>Inkomsten: dagelijkse sessies x aantal laadpalen x 365 x gem. kWh per sessie (30 kWh) x marge (EUR 0,12/kWh). Gastvoorzieningswaarde geschat op EUR 2.000-5.000 per laadpaal per jaar aan extra boekingen. Belastingbeheer via EMS voorkomt kostbare netverzwaring (EUR 10.000-50.000 vermeden).</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Sidebar -->
+    <div class="dashboard-sidebar">
+      <div class="dashboard-panel">
+        <h3>Live Resultaten Dashboard</h3>
+        <div class="dashboard-metrics">
+          <div class="metric-card">
+            <div class="metric-value cyan" id="dashSavings">0</div>
+            <div class="metric-label">Jaarlijkse besparing</div>
+            <span class="metric-tag">indicatief</span>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value green" id="dashRevenue">0</div>
+            <div class="metric-label">Nieuwe inkomsten</div>
+            <span class="metric-tag">indicatief</span>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="dashTotal">0</div>
+            <div class="metric-label">Totaal jaarlijks voordeel</div>
+            <span class="metric-tag">indicatief</span>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value purple" id="dashCO2">0</div>
+            <div class="metric-label">CO2-reductie (ton/jaar)</div>
+            <span class="metric-tag">indicatief</span>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value cyan" id="dashIndependence">0%</div>
+            <div class="metric-label">Energieonafhankelijkheid</div>
+            <span class="metric-tag">indicatief</span>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value green" id="dashROI">0</div>
+            <div class="metric-label">Geschatte systeemwaarde / jaar</div>
+            <span class="metric-tag">indicatief</span>
+          </div>
+        </div>
+
+        <!-- Bar chart -->
+        <div class="bar-chart">
+          <div class="bar-row">
+            <span class="bar-label">Zonder systeem</span>
+            <div class="bar-track"><div class="bar-fill cost-bar" id="barWithout" style="width:100%"><span class="bar-val" id="barWithoutVal">0</span></div></div>
+          </div>
+          <div class="bar-row">
+            <span class="bar-label">Met systeem</span>
+            <div class="bar-track"><div class="bar-fill savings-bar" id="barWith" style="width:0%"><span class="bar-val" id="barWithVal">0</span></div></div>
+          </div>
+        </div>
+
+        <!-- Projection -->
+        <table class="projection-table">
+          <thead><tr><th>Periode</th><th>Voordeel</th></tr></thead>
+          <tbody>
+            <tr><td>Jaar 1</td><td class="proj-val cyan" id="projY1">0</td></tr>
+            <tr><td>Jaar 5</td><td class="proj-val cyan" id="projY5">0</td></tr>
+            <tr><td>Jaar 10</td><td class="proj-val cyan" id="projY10">0</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Energy Flow Diagram -->
+      <div class="flow-diagram" id="flowDiagram">
+        <h4>Energiestroom</h4>
+        <div class="flow-grid">
+          <div class="flow-node grid active" id="flowGrid"><div class="fn-icon">G</div><div class="fn-label">Net</div><div class="fn-value" id="flowGridVal">100%</div></div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-node hotel active" id="flowHotel"><div class="fn-icon">H</div><div class="fn-label">Hotelbelasting</div><div class="fn-value" id="flowHotelVal">100%</div></div>
+        </div>
+        <div class="flow-grid" style="margin-top:12px" id="flowExtras">
+          <div class="flow-node battery dim" id="flowBattery"><div class="fn-icon">B</div><div class="fn-label">Accu</div><div class="fn-value">0%</div></div>
+          <div class="flow-node solar dim" id="flowSolar"><div class="fn-icon">S</div><div class="fn-label">Zon</div><div class="fn-value">0%</div></div>
+          <div class="flow-node ev dim" id="flowEV"><div class="fn-icon">E</div><div class="fn-label">EV</div><div class="fn-value">0%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 5: SAFETY ===== -->
+<section class="section section-dark" id="safety">
+  <div class="safety-header">
+    <h2>Veiligheid: Ontworpen voor Hospitality</h2>
+    <p>Hotels ontvangen elke nacht honderden gasten. Stroomlijnen's energiesystemen zijn gebouwd met zes onafhankelijke veiligheidslagen — want in hospitality is veiligheid de enige aanvaardbare standaard.</p>
+  </div>
+
+  <div class="safety-layers" id="safetyLayers">
+    <div class="safety-layer" data-delay="0">
+      <div class="safety-layer-num"><span>01</span></div>
+      <div class="safety-layer-content">
+        <h3>LFP-celchemie</h3>
+        <p>De basis. Stroomlijnen gebruikt EVE MB31 prismatische LFP-cellen (Lithium IJzerfosfaat) — de thermisch meest stabiele lithiumchemie die commercieel beschikbaar is.</p>
+        <ul>
+          <li>Geeft geen zuurstof af onder circa 270°C, in tegenstelling tot NMC-chemie</li>
+          <li>Zeer goed bestand tegen thermische runaway onder normale bedrijfsomstandigheden</li>
+          <li>6000+ cycli bij 90% ontladingsdiepte</li>
+          <li>Geen kobalt, geen nikkel — inherent veiligere materiaalchemie</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="safety-layer" data-delay="150">
+      <div class="safety-layer-num"><span>02</span></div>
+      <div class="safety-layer-content">
+        <h3>BMS / Battery Management Systeem</h3>
+        <p>Elke cel wordt individueel bewaakt door het Battery Management Systeem en de Battery Control Unit. Dit is de actieve bewaker van de celveiligheid.</p>
+        <ul>
+          <li>Per-cel spanningsbewaking met automatische balancing</li>
+          <li>Temperatuursensoren op elke cel</li>
+          <li>Automatische uitschakeling bij spannings-, temperatuur- of stroomafwijking</li>
+          <li>CAN-bus communicatie naar de EMS voor real-time supervisie</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="safety-layer" data-delay="300">
+      <div class="safety-layer-num"><span>03</span></div>
+      <div class="safety-layer-content">
+        <h3>Actieve Vloeistofkoeling</h3>
+        <p>In tegenstelling tot passieve luchtgekoelde systemen gebruikt Stroomlijnen actieve vloeistofkoeling om cellen in hun optimale temperatuurbereik te houden.</p>
+        <ul>
+          <li>Voorkomt thermische stress die versnelde degradatie veroorzaakt</li>
+          <li>Handhaaft uniforme temperatuur over alle cellen</li>
+          <li>Effectiever dan passieve systemen in scenario's met veel cycli</li>
+          <li>Verlengt de acculevensduur en behoudt veiligheidsmarges</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="safety-layer" data-delay="450">
+      <div class="safety-layer-num"><span>04</span></div>
+      <div class="safety-layer-content">
+        <h3>Aerosol Brandonderdrukking</h3>
+        <p>Direct ingebouwd in de accukast. In het onwaarschijnlijke geval van een celincident activeert het onderdrukkingssysteem automatisch — zonder menselijke tussenkomst.</p>
+        <ul>
+          <li>Gecondenseerde aërosoltechnologie onderdrukt brand zonder waterschade</li>
+          <li>Automatische thermische detectie activeert de vrijgave</li>
+          <li>Geen bewegende delen, geen onderhoud vereist</li>
+          <li>Zelfstandig in elke accukast</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="safety-layer" data-delay="600">
+      <div class="safety-layer-num"><span>05</span></div>
+      <div class="safety-layer-content">
+        <h3>Guardian Software Controller</h3>
+        <p>De veiligheidsmonitoringslaag op EMS-niveau. Guardian draait continu, bewaakt elke parameter en onderneemt automatisch beschermende actie wanneer nodig.</p>
+        <ul>
+          <li>Real-time bewaking van alle systeemparameters</li>
+          <li>Automatische beschermende acties — ontladingsbeperking, lastafschakeling</li>
+          <li>Externe monitoring en alarmering via het Stroomlijnen-dashboard</li>
+          <li>Continue firmware-updates met veiligheidspatches</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="safety-layer" data-delay="750">
+      <div class="safety-layer-num"><span>06</span></div>
+      <div class="safety-layer-content">
+        <h3>Bidirectionele Brandmeldpaneelintegratie</h3>
+        <p>Het systeem verbindt in beide richtingen met het bestaande brandalarmsysteem van het hotel — ontvangt signalen en verzendt waarschuwingen.</p>
+        <ul>
+          <li>Accuwaarschuwingen kunnen gebouw- en evacuatiealarm activeren</li>
+          <li>Gebouwbrandalarm activeert een nooduitschakeling van de accu</li>
+          <li>Bekabelde AC-schakelaar voor fysieke ontkoppeling</li>
+          <li>API-noodstop op <code>/api/sites/{sid}/control/emergency_stop</code></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Emergency Stop -->
+  <div class="esto-section">
+    <h3>
+      <span class="esto-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      </span>
+      Noodstop — Drie Niveaus van Roodundantie
+    </h3>
+    <div class="esto-grid">
+      <div class="esto-item">
+        <div class="esto-title">Fysieke Noodstop</div>
+        <div class="esto-desc">Rode drukknop op de accukast. Onmiddellijke AC-schakelaar ontkoppeling.</div>
+        <div class="esto-code">Bekabeld</div>
+      </div>
+      <div class="esto-item">
+        <div class="esto-title">Externe Noodstop</div>
+        <div class="esto-desc">Via het Stroomlijnen EMS-dashboard. Uitschakeling met één klik vanaf elk apparaat.</div>
+        <div class="esto-code">Dashboard</div>
+      </div>
+      <div class="esto-item">
+        <div class="esto-title">Brandmelderintegratie</div>
+        <div class="esto-desc">Bekabelde AC-schakelaar aangesloten op het gebouwbrandalarm. Automatische uitschakeling.</div>
+        <div class="esto-code">Bekabeld</div>
+      </div>
+      <div class="esto-item">
+        <div class="esto-title">API-noodstop</div>
+        <div class="esto-desc">Programmatische noodstop voor integratie met gebouwbeheersystemen.</div>
+        <div class="esto-code">POST /api/sites/{sid}/control/emergency_stop</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Certifications -->
+  <div class="safety-header" style="margin-top:64px;margin-bottom:32px">
+    <h2 style="font-size:clamp(24px,2.5vw,30px)">Certificeringen & Naleving</h2>
+    <p>De Stroomlijnen ESS beschikt over internationale certificeringen voor veiligheid, prestaties en omgevingsbestendigheid.</p>
+  </div>
+  <div class="certs-grid">
+    <div class="cert-card">
+      <div class="cert-code">IEC 63056:2020</div>
+      <div class="cert-body"><strong>TUV NORD</strong> — Veiligheidseisen voor secundaire lithiumbatterijen</div>
+      <span class="cert-badge">Gecertificeerd</span>
+    </div>
+    <div class="cert-card">
+      <div class="cert-code">IEC 62933-5-2:2020</div>
+      <div class="cert-body"><strong>TUV NORD</strong> — Veiligheid van aan het net gekoppelde energieopslagsystemen</div>
+      <span class="cert-badge">Gecertificeerd</span>
+    </div>
+    <div class="cert-card">
+      <div class="cert-code">CE EMC + LVD</div>
+      <div class="cert-body"><strong>TUV Rheinland</strong> — Elektromagnetische compatibiliteit en laagspanningsrichtlijn</div>
+      <span class="cert-badge">Gecertificeerd</span>
+    </div>
+    <div class="cert-card">
+      <div class="cert-code">IP55 (IEC 60529)</div>
+      <div class="cert-body">Stofbeschermd en bestand tegen waterstralen. Geschikt voor binnen- en buiteninstallatie.</div>
+      <span class="cert-badge">Gecertificeerd</span>
+    </div>
+    <div class="cert-card">
+      <div class="cert-code">UL 9540A</div>
+      <div class="cert-body"><strong>EVE MB31 cel-niveau</strong> — Getest op thermische runaway-verspreiding</div>
+      <span class="cert-badge">Cel Gecertificeerd</span>
+    </div>
+    <div class="cert-card">
+      <div class="cert-code">UL 1973 / UL 1642</div>
+      <div class="cert-body"><strong>EVE MB31 cel</strong> — Veiligheidsnormen voor stationaire opslag en batterijcellen</div>
+      <span class="cert-badge">Cel Gecertificeerd</span>
+    </div>
+    <div class="cert-card" style="border-color:rgba(245,158,11,0.2)">
+      <div class="cert-code">PGS 37-1</div>
+      <div class="cert-body">Nederlands regelgevingskader voor veiligheid van energieopslag</div>
+      <span class="cert-status"><span class="dot"></span>In uitvoering — ontworpen voor volledige Nederlandse wettelijke conformiteit</span>
+    </div>
+    <div class="cert-card" style="grid-column:span 1">
+      <div class="cert-code" style="font-size:12px">Systeemcertificaathouder</div>
+      <div class="cert-body">Inedge Power Co, Shenzhen — productiepartner met volledige kwaliteitsmanagementsystemen</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 6: CTA ===== -->
+<section class="section section-dark" style="padding-bottom:0">
+  <div class="cta-section">
+    <h2>Klaar om de energie van uw hotel te transformeren?</h2>
+    <p>Deze indicatieve schattingen zijn een startpunt. Een Stroomlijnen-ingenieur zal een gedetailleerd voorstel opstellen, afgestemd op de specifieke indeling, het belastingsprofiel en de energiedoelen van uw pand.</p>
+    <a href="mailto:info@stroomlijnen.nl" class="cta-button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Vraag een Pand-specifiek Assessment aan
+    </a>
+    <button id="sendConfigBtn" class="cta-button cta-secondary" style="cursor:pointer;font-family:inherit;font-size:inherit;margin-top:12px">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Verzend Mijn Configuratie naar Stroomlijnen
+    </button>
+    <p class="cta-disclaimer">De financiële cijfers op deze pagina zijn indicatieve schattingen op basis van typische Nederlandse marktomstandigheden en de door u ingevoerde gegevens. Ze vormen geen formele offerte. Werkelijke resultaten zijn afhankelijk van locatiespecifieke factoren, waaronder maar niet beperkt tot lokale netbeperkingen, installatieomstandigheden, bezettingspatronen en schommelingen op de energiemarkt. Een gecertificeerde Stroomlijnen-ingenieur zal een volledige locatiebeoordeling uitvoeren en een gedetailleerd, bindend voorstel verstrekken.</p>
+  </div>
+</section>
+
+<footer class="footer">
+  <p>Stroomlijnen &mdash; stroomlijnen.nl &mdash; Energiemanagement voor de hospitalitysector</p>
+</footer>
+
+<script>
+// ===== UTILITY =====
+function fmt(n) {
+  if (n === 0 && arguments.length === 1) return '0';
+  return Math.round(n).toLocaleString('nl-NL');
+}
+function fmtEuro(n) {
+  return 'EUR ' + (Math.round(n)).toLocaleString('nl-NL');
+}
+function fmt1(n) {
+  return n.toFixed(2);
+}
+
+// Animate a number element
+function animateValue(el, start, end, duration) {
+  if (!el) return;
+  if (start === end) { el.textContent = fmt(end); return; }
+  let startTime = null;
+  const step = (timestamp) => {
+    if (!startTime) startTime = timestamp;
+    const progress = Math.min((timestamp - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = start + (end - start) * eased;
+    el.textContent = fmt(current);
+    if (progress < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+function animateEuro(el, start, end, duration) {
+  if (!el) return;
+  if (start === end) { el.textContent = fmtEuro(end); return; }
+  let startTime = null;
+  const step = (timestamp) => {
+    if (!startTime) startTime = timestamp;
+    const progress = Math.min((timestamp - startTime) / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = start + (end - start) * eased;
+    el.textContent = fmtEuro(current);
+    if (progress < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
+// ===== LAYER TOGGLE =====
+function toggleLayer(card) {
+  const wasActive = card.classList.contains('active');
+  card.classList.toggle('active');
+  // If user clicked header to expand, don't auto-toggle the checkbox
+  const checkbox = card.querySelector('.layer-toggle input[type=checkbox]');
+  // Only toggle if card wasn't active and checkbox not already checked — or if deactivating
+  if (checkbox && !wasActive) {
+    checkbox.checked = true;
+  }
+  onToggleChange();
+}
+
+// ===== MAIN CALCULATION ENGINE =====
+function calculate() {
+  // Read inputs
+  const rooms = parseFloat(document.getElementById('rooms').value) || 80;
+  const consumption = parseFloat(document.getElementById('consumption').value) || 250000;
+  const peak = parseFloat(document.getElementById('peak').value) || 100;
+  const tariff = parseFloat(document.getElementById('tariff').value) || 0.30;
+  const gridCap = parseFloat(document.getElementById('gridCap').value) || 150;
+  const hasSolar = document.getElementById('hasSolar').checked;
+  const existingSolarKwp = hasSolar ? (parseFloat(document.getElementById('existingSolarKwp').value) || 50) : 0;
+  const dynamicContract = document.getElementById('dynamicContract').checked;
+
+  // Layer toggles
+  const essOn = document.getElementById('essToggle').checked;
+  const emsOn = document.getElementById('emsToggle').checked;
+  const solarOn = document.getElementById('solarToggle').checked;
+  const evOn = document.getElementById('evToggle').checked;
+
+  // Layer values
+  const essUnits = essOn ? (parseFloat(document.getElementById('essUnits').value) || 1) : 0;
+  const solarKwp = solarOn ? (parseFloat(document.getElementById('solarKwp').value) || 100) : 0;
+  const evChargers = evOn ? (parseFloat(document.getElementById('evChargers').value) || 2) : 0;
+  const evSessions = evOn ? (parseFloat(document.getElementById('evSessions').value) || 10) : 0;
+
+  // Update display values
+  document.getElementById('roomsVal').textContent = rooms;
+  document.getElementById('consumptionVal').textContent = consumption.toLocaleString('nl-NL');
+  document.getElementById('peakVal').textContent = peak;
+  document.getElementById('tariffVal').textContent = tariff.toFixed(2);
+  document.getElementById('gridCapVal').textContent = gridCap;
+
+  // Existing solar visibility
+  const solarRow = document.getElementById('solarKwpRow');
+  const solarSlider = document.getElementById('solarKwpSlider');
+  if (hasSolar) {
+    solarRow.style.display = 'flex';
+    solarSlider.style.display = 'block';
+    document.getElementById('existingSolarVal').textContent = existingSolarKwp + ' kWp';
+  } else {
+    solarRow.style.display = 'none';
+    solarSlider.style.display = 'none';
+  }
+
+  document.getElementById('essUnitsVal').textContent = essUnits;
+  document.getElementById('solarKwpVal').textContent = solarKwp;
+  document.getElementById('evChargersVal').textContent = evChargers;
+  document.getElementById('evSessionsVal').textContent = evSessions;
+
+  // ===== FINANCIAL CALCULATIONS =====
+
+  // Constants
+  const BATTERY_CAPACITY = 261; // kWh per unit
+  const BATTERY_PCS = 125; // kW per unit
+  const CYCLES_PER_YEAR = 300;
+  const DOD = 0.90;
+  const SOLAR_HOURS = 900; // full-load hours in NL
+  const FEED_IN_TARIFF = 0.05; // low feed-in rate EUR/kWh
+  const EV_AVG_KWH = 30; // avg kWh per session
+  const EV_MARGIN = 0.12; // EUR/kWh margin
+  const CO2_PER_KWH = 0.35; // kg CO2 per kWh Dutch grid mix
+  const DEMAND_CHARGE_RATE = 12; // EUR/kW/month demand charge (typical NL)
+
+  // Tariff spread (peak vs off-peak)
+  const tariffSpread = dynamicContract ? tariff * 0.50 : tariff * 0.30;
+  // Off-peak rate
+  const offPeakTariff = tariff - tariffSpread;
+
+  // -- ESS --
+  let essPeakShavingSavings = 0;
+  let essDemandReduction = 0;
+  let essBackupValue = 0;
+  let essTotal = 0;
+
+  if (essOn && essUnits > 0) {
+    const usableEnergy = BATTERY_CAPACITY * DOD; // per unit
+    // Peak shaving: charge at off-peak, discharge at peak
+    const energyCycled = usableEnergy * CYCLES_PER_YEAR; // per unit per year
+    const spreadPerUnit = energyCycled * tariffSpread;
+    essPeakShavingSavings = spreadPerUnit * essUnits;
+
+    // Demand charge reduction: battery can shave up to PCS kW from peak
+    const demandShavePerUnit = Math.min(BATTERY_PCS, peak * 0.3); // cap at 30% of peak
+    const demandReductionPerUnit = demandShavePerUnit * DEMAND_CHARGE_RATE * 12;
+    essDemandReduction = demandReductionPerUnit * essUnits * 0.7; // 70% effectiveness
+
+    // Backup power value: insurance value for critical loads
+    essBackupValue = essUnits * 1200; // EUR 1,200/year per unit for backup capability
+
+    essTotal = essPeakShavingSavings + essDemandReduction + essBackupValue;
+  }
+
+  // -- EMS --
+  let emsAdditionalSavings = 0;
+  let emsDynamicValue = 0;
+  let emsMonitoringValue = 0;
+  let emsTotal = 0;
+
+  if (emsOn) {
+    // EMS improves battery savings by 15-25%
+    const essBaseForEms = essTotal;
+    const improvementRate = dynamicContract ? 0.25 : 0.18;
+    emsAdditionalSavings = essBaseForEms * improvementRate;
+
+    // Dynamic tariff arbitrage (only if dynamic contract)
+    if (dynamicContract) {
+      emsDynamicValue = consumption * tariff * 0.08; // 8% additional savings from spot-price optimization
+    }
+
+    // Monitoring and reporting value
+    emsMonitoringValue = consumption * tariff * 0.015; // 1.5% of total electricity spend
+
+    emsTotal = emsAdditionalSavings + emsDynamicValue + emsMonitoringValue;
+  }
+
+  // -- SOLAR --
+  let solarGenValue = 0;
+  let solarSelfConsumptionBoost = 0;
+  let solarGridReduction = 0;
+  let solarTotal = 0;
+
+  if (solarOn && solarKwp > 0) {
+    const annualYield = solarKwp * SOLAR_HOURS;
+
+    // Self-consumption rate depends on battery
+    const selfConsumptionRate = essOn ? 0.70 : 0.30;
+
+    // Value of self-consumed solar (avoids grid purchase at tariff rate)
+    const selfConsumed = annualYield * selfConsumptionRate;
+    const selfValue = selfConsumed * tariff;
+
+    // Value of exported solar (low feed-in rate)
+    const exported = annualYield * (1 - selfConsumptionRate);
+    const exportValue = exported * FEED_IN_TARIFF;
+
+    solarGenValue = selfValue + exportValue;
+
+    // Self-consumption improvement from battery
+    if (essOn) {
+      const withoutBattery = annualYield * 0.30 * tariff;
+      const withBattery = annualYield * 0.70 * tariff;
+      solarSelfConsumptionBoost = withBattery - withoutBattery;
+    } else {
+      solarSelfConsumptionBoost = 0;
+    }
+
+    // Reduced grid purchases = self-consumed value
+    solarGridReduction = selfValue;
+
+    solarTotal = solarGenValue;
+  }
+
+  // -- EV --
+  let evRevenue = 0;
+  let evAmenityValue = 0;
+  let evGridAvoided = 0;
+  let evTotal = 0;
+
+  if (evOn && evChargers > 0 && emsOn) {
+    const totalDailySessions = evSessions * evChargers;
+    const annualkWhCharged = totalDailySessions * 365 * EV_AVG_KWH;
+    evRevenue = annualkWhCharged * EV_MARGIN;
+
+    // Guest amenity value
+    evAmenityValue = evChargers * 3500; // EUR 3,500 per charger per year
+
+    // Grid upgrade avoided
+    evGridAvoided = evChargers * 8000; // EUR 8,000 per charger avoided upgrade cost
+
+    evTotal = evRevenue + evAmenityValue + evGridAvoided;
+  }
+
+  // ===== DASHBOARD TOTALS =====
+  // Solar export value (actual new money from feed-in)
+  const solarExportVal = solarOn ? (solarKwp * SOLAR_HOURS * (essOn ? 0.30 : 0.70) * FEED_IN_TARIFF) : 0;
+
+  const totalSavings = essTotal + emsAdditionalSavings + emsDynamicValue + emsMonitoringValue + solarGridReduction;
+  const totalRevenue = (evOn ? evRevenue : 0) + solarExportVal;
+  const totalBenefit = totalSavings + totalRevenue;
+  const totalCO2 = (consumption * CO2_PER_KWH * (solarOn ? (solarKwp * SOLAR_HOURS / consumption * 0.7) : 0) + (essOn ? (essUnits * BATTERY_CAPACITY * DOD * CYCLES_PER_YEAR * CO2_PER_KWH / 1000) : 0)) / 1000;
+  // Better CO2 calculation
+  let co2Reduction = 0;
+  if (solarOn) {
+    const solarYield = solarKwp * SOLAR_HOURS;
+    co2Reduction += solarYield * 0.7 * CO2_PER_KWH / 1000; // tons
+  }
+  if (essOn) {
+    co2Reduction += essUnits * BATTERY_CAPACITY * DOD * CYCLES_PER_YEAR * 0.3 * CO2_PER_KWH / 1000 / 1000;
+  }
+
+  const energyIndependence = solarOn ? Math.min(100, (solarKwp * SOLAR_HOURS * 0.7) / consumption * 100) : 0;
+
+  // ===== UPDATE UI =====
+
+  // Profile summary
+  const annualCost = consumption * tariff;
+  animateValue(document.getElementById('sumConsumption'), parseFloat(document.getElementById('sumConsumption').getAttribute('data-last') || 0) || consumption, consumption);
+  document.getElementById('sumConsumption').setAttribute('data-last', consumption);
+  document.getElementById('sumPeak').textContent = peak;
+  animateEuro(document.getElementById('sumCost'), parseFloat(document.getElementById('sumCost').getAttribute('data-last-euro') || 0) || annualCost, annualCost);
+  document.getElementById('sumCost').setAttribute('data-last-euro', annualCost);
+  document.getElementById('sumRooms').textContent = rooms;
+
+  // ESS financial
+  const essSavingsEl = document.getElementById('essSavings');
+  const essDemandEl = document.getElementById('essDemand');
+  const essBackupEl = document.getElementById('essBackup');
+  const oldEssS = parseFloat(essSavingsEl.getAttribute('data-last') || 0);
+  animateEuro(essSavingsEl, oldEssS, essPeakShavingSavings, 400);
+  essSavingsEl.setAttribute('data-last', essPeakShavingSavings);
+  const oldEssD = parseFloat(essDemandEl.getAttribute('data-last') || 0);
+  animateEuro(essDemandEl, oldEssD, essDemandReduction, 400);
+  essDemandEl.setAttribute('data-last', essDemandReduction);
+  const oldEssB = parseFloat(essBackupEl.getAttribute('data-last') || 0);
+  animateEuro(essBackupEl, oldEssB, essBackupValue, 400);
+  essBackupEl.setAttribute('data-last', essBackupValue);
+
+  // ESS math details
+  document.getElementById('essMathSpread').textContent = fmtEuro(tariffSpread) + '/kWh';
+  document.getElementById('essMathEnergy').textContent = fmt(BATTERY_CAPACITY * DOD) + ' kWh';
+  document.getElementById('essMathPeakSave').textContent = fmtEuro(essPeakShavingSavings);
+  document.getElementById('essMathDemand').textContent = fmtEuro(essDemandReduction);
+  document.getElementById('essMathBackup').textContent = fmtEuro(essBackupValue);
+  document.getElementById('essMathTotal').textContent = fmtEuro(essTotal);
+
+  // EMS financial
+  const emsSavingsEl = document.getElementById('emsSavings');
+  const emsDynamicEl = document.getElementById('emsDynamic');
+  const emsMonitoringEl = document.getElementById('emsMonitoring');
+  const oldEmsS = parseFloat(emsSavingsEl.getAttribute('data-last') || 0);
+  animateEuro(emsSavingsEl, oldEmsS, emsAdditionalSavings, 400);
+  emsSavingsEl.setAttribute('data-last', emsAdditionalSavings);
+  const oldEmsD = parseFloat(emsDynamicEl.getAttribute('data-last') || 0);
+  animateEuro(emsDynamicEl, oldEmsD, emsDynamicValue, 400);
+  emsDynamicEl.setAttribute('data-last', emsDynamicValue);
+  const oldEmsM = parseFloat(emsMonitoringEl.getAttribute('data-last') || 0);
+  animateEuro(emsMonitoringEl, oldEmsM, emsMonitoringValue, 400);
+  emsMonitoringEl.setAttribute('data-last', emsMonitoringValue);
+
+  // Solar financial
+  const solarGenEl = document.getElementById('solarGen');
+  const solarSelfEl = document.getElementById('solarSelf');
+  const solarGridEl = document.getElementById('solarGrid');
+  const oldSolarG = parseFloat(solarGenEl.getAttribute('data-last') || 0);
+  animateEuro(solarGenEl, oldSolarG, solarGenValue, 400);
+  solarGenEl.setAttribute('data-last', solarGenValue);
+  const oldSolarS = parseFloat(solarSelfEl.getAttribute('data-last') || 0);
+  animateEuro(solarSelfEl, oldSolarS, solarSelfConsumptionBoost, 400);
+  solarSelfEl.setAttribute('data-last', solarSelfConsumptionBoost);
+  const oldSolarGr = parseFloat(solarGridEl.getAttribute('data-last') || 0);
+  animateEuro(solarGridEl, oldSolarGr, solarGridReduction, 400);
+  solarGridEl.setAttribute('data-last', solarGridReduction);
+
+  // Solar math
+  const solarYield = solarKwp * SOLAR_HOURS;
+  document.getElementById('solarMathYield').textContent = fmt(solarYield) + ' kWh';
+  const selfRate = essOn ? 0.70 : 0.30;
+  const selfVal = solarYield * selfRate * tariff;
+  const exportVal = solarYield * (1 - selfRate) * FEED_IN_TARIFF;
+  document.getElementById('solarMathSelf').textContent = fmtEuro(selfVal);
+  document.getElementById('solarMathExport').textContent = fmtEuro(exportVal);
+  document.getElementById('solarMathBatteryBoost').textContent = essOn ? '+40%' : '+0% (geen accu)';
+  document.getElementById('solarMathTotal').textContent = fmtEuro(solarTotal);
+
+  // EV financial
+  const evRevenueEl = document.getElementById('evRevenue');
+  const evAmenityEl = document.getElementById('evAmenity');
+  const evGridEl = document.getElementById('evGrid');
+  const oldEvR = parseFloat(evRevenueEl.getAttribute('data-last') || 0);
+  animateEuro(evRevenueEl, oldEvR, evRevenue, 400);
+  evRevenueEl.setAttribute('data-last', evRevenue);
+  const oldEvA = parseFloat(evAmenityEl.getAttribute('data-last') || 0);
+  animateEuro(evAmenityEl, oldEvA, evAmenityValue, 400);
+  evAmenityEl.setAttribute('data-last', evAmenityValue);
+  const oldEvG = parseFloat(evGridEl.getAttribute('data-last') || 0);
+  animateEuro(evGridEl, oldEvG, evGridAvoided, 400);
+  evGridEl.setAttribute('data-last', evGridAvoided);
+
+  // ===== DASHBOARD =====
+  const dashSavingsEl = document.getElementById('dashSavings');
+  const dashRevenueEl = document.getElementById('dashRevenue');
+  const dashTotalEl = document.getElementById('dashTotal');
+  const dashCO2El = document.getElementById('dashCO2');
+  const dashIndEl = document.getElementById('dashIndependence');
+  const dashROIEl = document.getElementById('dashROI');
+
+  const oldDashSav = parseFloat(dashSavingsEl.getAttribute('data-last') || 0);
+  animateEuro(dashSavingsEl, oldDashSav, totalSavings, 600);
+  dashSavingsEl.setAttribute('data-last', totalSavings);
+
+  const oldDashRev = parseFloat(dashRevenueEl.getAttribute('data-last') || 0);
+  animateEuro(dashRevenueEl, oldDashRev, totalRevenue, 600);
+  dashRevenueEl.setAttribute('data-last', totalRevenue);
+
+  const oldDashTot = parseFloat(dashTotalEl.getAttribute('data-last') || 0);
+  animateEuro(dashTotalEl, oldDashTot, totalBenefit, 600);
+  dashTotalEl.setAttribute('data-last', totalBenefit);
+
+  const oldDashCO2 = parseFloat(dashCO2El.getAttribute('data-last') || 0);
+  animateValue(dashCO2El, oldDashCO2, co2Reduction, 600);
+  dashCO2El.setAttribute('data-last', co2Reduction);
+
+  dashIndEl.textContent = Math.round(energyIndependence) + '%';
+  dashROIEl.textContent = fmtEuro(totalBenefit);
+
+  // Bar chart
+  const withoutCost = annualCost;
+  const withCost = Math.max(0, annualCost - totalSavings - totalRevenue);
+  const maxCost = Math.max(withoutCost, withCost || 1);
+  const withoutPct = 100;
+  const withPct = Math.max(0, (withCost / withoutCost) * 100);
+
+  document.getElementById('barWithout').style.width = '100%';
+  document.getElementById('barWithoutVal').textContent = fmtEuro(withoutCost);
+  document.getElementById('barWith').style.width = withPct + '%';
+  document.getElementById('barWithVal').textContent = fmtEuro(withCost);
+
+  // Projection
+  const projY1 = totalBenefit;
+  const projY5 = totalBenefit * 5 * 0.95; // slight degradation
+  const projY10 = totalBenefit * 10 * 0.85; // more degradation + maintenance
+  const oldProj1 = parseFloat(document.getElementById('projY1').getAttribute('data-last') || 0);
+  animateEuro(document.getElementById('projY1'), oldProj1, projY1, 500);
+  document.getElementById('projY1').setAttribute('data-last', projY1);
+  const oldProj5 = parseFloat(document.getElementById('projY5').getAttribute('data-last') || 0);
+  animateEuro(document.getElementById('projY5'), oldProj5, projY5, 500);
+  document.getElementById('projY5').setAttribute('data-last', projY5);
+  const oldProj10 = parseFloat(document.getElementById('projY10').getAttribute('data-last') || 0);
+  animateEuro(document.getElementById('projY10'), oldProj10, projY10, 500);
+  document.getElementById('projY10').setAttribute('data-last', projY10);
+
+  // ===== ENERGY FLOW DIAGRAM =====
+  const flowGrid = document.getElementById('flowGrid');
+  const flowHotel = document.getElementById('flowHotel');
+  const flowBattery = document.getElementById('flowBattery');
+  const flowSolar = document.getElementById('flowSolar');
+  const flowEV = document.getElementById('flowEV');
+
+  // Reset all
+  flowGrid.classList.remove('dim');
+  flowHotel.classList.remove('dim');
+  flowBattery.classList.remove('active', 'dim');
+  flowSolar.classList.remove('active', 'dim');
+  flowEV.classList.remove('active', 'dim');
+
+  if (essOn) {
+    flowBattery.classList.add('active');
+    flowBattery.classList.remove('dim');
+    flowBattery.querySelector('.fn-value').textContent = Math.round(essUnits * BATTERY_CAPACITY * DOD / 100) + '%';
+  } else {
+    flowBattery.classList.add('dim');
+    flowBattery.querySelector('.fn-value').textContent = '0%';
+  }
+
+  if (solarOn) {
+    flowSolar.classList.add('active');
+    flowSolar.classList.remove('dim');
+    const solarPct = Math.min(100, Math.round((solarKwp * SOLAR_HOURS) / consumption * 100));
+    flowSolar.querySelector('.fn-value').textContent = solarPct + '%';
+  } else {
+    flowSolar.classList.add('dim');
+    flowSolar.querySelector('.fn-value').textContent = '0%';
+  }
+
+  if (evOn && emsOn) {
+    flowEV.classList.add('active');
+    flowEV.classList.remove('dim');
+    flowEV.querySelector('.fn-value').textContent = evChargers + ' eenheden';
+  } else {
+    flowEV.classList.add('dim');
+    flowEV.querySelector('.fn-value').textContent = '0%';
+  }
+
+  // Grid percentage
+  const gridPct = Math.max(0, Math.round(100 - energyIndependence));
+  flowGrid.querySelector('.fn-value').textContent = gridPct + '%';
+}
+
+// ===== INPUT WIRING =====
+function onToggleChange() {
+  // Check EMS toggle restrictions
+  const evToggle = document.getElementById('evToggle');
+  const emsToggle = document.getElementById('emsToggle');
+  if (evToggle.checked && !emsToggle.checked) {
+    // EV requires EMS — auto-enable EMS
+    emsToggle.checked = true;
+    document.querySelector('.layer-card[data-layer="ems"]')?.classList.add('active');
+  }
+
+  calculate();
+
+  // Auto-expand active layer cards
+  document.querySelectorAll('.layer-card').forEach(card => {
+    const cb = card.querySelector('.layer-toggle input[type=checkbox]');
+    if (cb && cb.checked) {
+      card.classList.add('active');
+    } else if (cb && !cb.checked) {
+      card.classList.remove('active');
+    }
+  });
+}
+
+// Wire all inputs
+document.querySelectorAll('#profileForm input, .layer-card input, .layer-card select').forEach(el => {
+  el.addEventListener('input', onToggleChange);
+});
+
+// Also wire sliders in the layer bodies that use oninput
+document.querySelectorAll('.layer-card-body input[type=range]').forEach(el => {
+  el.addEventListener('input', onToggleChange);
+});
+
+// Has solar toggle
+document.getElementById('hasSolar').addEventListener('change', onToggleChange);
+document.getElementById('dynamicContract').addEventListener('change', onToggleChange);
+
+// ===== SCROLL PROGRESS =====
+window.addEventListener('scroll', () => {
+  const winScroll = document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = (winScroll / height) * 100;
+  document.getElementById('scrollBar').style.width = scrolled + '%';
+});
+
+// ===== SAFETY LAYER ANIMATION =====
+function animateSafetyLayers() {
+  const layers = document.querySelectorAll('.safety-layer');
+  layers.forEach((layer, i) => {
+    const rect = layer.getBoundingClientRect();
+    const isVisible = rect.top < window.innerHeight - 60;
+    if (isVisible) {
+      setTimeout(() => {
+        layer.classList.add('visible');
+      }, parseInt(layer.getAttribute('data-delay')) || 0);
+    }
+  });
+}
+
+window.addEventListener('scroll', animateSafetyLayers);
+window.addEventListener('load', () => {
+  setTimeout(animateSafetyLayers, 300);
+  // Initial calculation
+  calculate();
+});
+
+// ===== SLIDER VALUE BUBBLE UPDATES =====
+document.querySelectorAll('input[type=range]').forEach(slider => {
+  slider.addEventListener('input', function() {
+    // For sliders with a specific display, the calculate function handles it
+    // Just trigger calculate which updates all displays
+  });
+});
+
+// ===== KEYBOARD SUPPORT =====
+document.querySelectorAll('.layer-card-header').forEach(header => {
+  header.setAttribute('tabindex', '0');
+  header.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      toggleLayer(e.currentTarget.closest('.layer-card'));
+    }
+  });
+});
+
+// Initial load
+document.addEventListener('DOMContentLoaded', () => {
+  calculate();
+});
+
+// ===== SEND CONFIGURATION =====
+document.getElementById('sendConfigBtn').addEventListener('click', function() {
+  const r = id => document.getElementById(id);
+  const val = id => r(id) ? r(id).value : '';
+  const chk = id => r(id) ? r(id).checked : false;
+
+  const rooms = val('rooms');
+  const consumption = val('consumption');
+  const peak = val('peak');
+  const tariff = val('tariff');
+  const gridCap = val('gridCap');
+  const hasSolar = chk('hasSolar');
+  const existingSolar = hasSolar ? val('existingSolarKwp') + ' kWp' : 'Nee';
+  const dynamicContract = chk('dynamicContract') ? 'Ja' : 'Nee';
+
+  const essOn = chk('essToggle');
+  const emsOn = chk('emsToggle');
+  const solarOn = chk('solarToggle');
+  const evOn = chk('evToggle');
+
+  const configSummary = [
+    'HOTEL ENERGIE CONFIGURATIE AANVRAAG',
+    '=====================================',
+    '',
+    'HOTELPROFIEL',
+    '- Kamers: ' + rooms,
+    '- Jaarverbruik: ' + consumption + ' kWh',
+    '- Piekverbruik: ' + peak + ' kW',
+    '- Netaansluiting: ' + gridCap + ' kW',
+    '- Huidig tarief: EUR ' + tariff + '/kWh',
+    '- Bestaande zonnepanelen: ' + existingSolar,
+    '- Dynamisch contract: ' + dynamicContract,
+    '',
+    'GESELECTEERDE COMPONENTEN',
+    '- ESS-accu: ' + (essOn ? val('essUnits') + ' eenheid(en) (261 kWh elk)' : 'Niet geselecteerd'),
+    '- EMS-software: ' + (emsOn ? 'Ja' : 'Niet geselecteerd'),
+    '- Zonnepanelen / PV: ' + (solarOn ? val('solarKwp') + ' kWp' : 'Niet geselecteerd'),
+    '- EV-laden: ' + (evOn ? val('evChargers') + ' laadpa(a)l(en), ~' + val('evSessions') + ' sessies/dag elk' : 'Niet geselecteerd'),
+    '',
+    'INDICATIEVE RESULTATEN (van configurator)',
+    '- Jaarlijkse besparing: ' + (r('dashSavings') ? r('dashSavings').textContent : 'N/A'),
+    '- Jaarlijkse omzet: ' + (r('dashRevenue') ? r('dashRevenue').textContent : 'N/A'),
+    '- Totaal jaarlijks voordeel: ' + (r('dashTotal') ? r('dashTotal').textContent : 'N/A'),
+    '- CO2-reductie: ' + (r('dashCO2') ? r('dashCO2').textContent : 'N/A') + ' ton/jaar',
+    '- Energieonafhankelijkheid: ' + (r('dashIndependence') ? r('dashIndependence').textContent : '0%'),
+    '',
+    'Gegenereerd via opencpo.io/hotel-configurator.html',
+    'Opmerking: Dit zijn indicatieve schattingen.'
+  ].join('\n');
+
+  const subject = 'Hotel Energieconfiguratie — ' + rooms + ' kamers';
+  const body = encodeURIComponent(configSummary);
+
+  window.location.href = 'mailto:info@stroomlijnen.nl?subject=' + encodeURIComponent(subject) + '&body=' + body;
+});
+</script>
+
+</body>
+</html>

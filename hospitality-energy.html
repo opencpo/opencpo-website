@@ -1,0 +1,759 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hospitality Energy — Hotel ESS + EV Charging Intelligence</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#0a1929;color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;font-size:14px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 24px;border-bottom:1px solid #1e3a5f;background:#0a1628;position:sticky;top:0;z-index:200}
+.brand{display:flex;align-items:center;gap:10px}.logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#22c55e,#00B0E4);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:#0a1929}.brand-name{font-size:14px;font-weight:700;letter-spacing:-.2px}.brand-sub{font-size:9px;color:#64748b;letter-spacing:.6px;text-transform:uppercase;font-weight:600}
+.hdr-r{display:flex;align-items:center;gap:16px}
+.tabs{display:flex;gap:2px;background:#0d1f35;border-radius:8px;padding:3px}.tab{padding:7px 14px;font-size:12px;font-weight:600;color:#64748b;border-radius:6px;cursor:pointer;transition:all .15s;border:none;background:none}.tab:hover{color:#94a3b8}.tab.active{background:#1e3a5f;color:#f1f5f9}
+.live{display:flex;align-items:center;gap:5px;font-size:11px;color:#64748b;font-family:monospace}.dot-live{width:7px;height:7px;border-radius:50%;background:#22c55e;animation:pl 2s infinite}
+@keyframes pl{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.3)}50%{opacity:.5;box-shadow:0 0 0 5px transparent}}
+.wrap{padding:16px 24px;max-width:1200px;margin:0 auto}.view{display:none}.view.active{display:block}.sec-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:#475569;margin:6px 0 8px;font-weight:700}
+.card{background:#0d1f35;border:1px solid #1e3a5f;border-radius:10px;padding:18px 20px;margin-bottom:16px}
+.card.blue{border-top:3px solid #00B0E4}.card.green{border-top:3px solid #22c55e}.card.yellow{border-top:3px solid #f59e0b}.card.orange{border-top:3px solid #f97316}.card.purple{border-top:3px solid #a855f7}
+.card-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid #1e3a5f}.card-hdr h2{font-size:13px;font-weight:600;color:#e2e8f0}
+.badge{font-size:10px;padding:2px 8px;border-radius:5px;background:#1e3a5f;color:#64748b;font-weight:600}.badge-ok{background:#14532d;color:#86efac}
+.strat-strip{background:#0d2137;border:1px solid #1a3a5c;border-radius:8px;padding:8px 14px;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:36px}
+.strat-label{font-size:9px;color:#475569;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;margin-right:4px;font-weight:700}.strat-content{display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:12px;color:#64748b}.strat-sep{color:#1e3a5f;margin:0 6px}
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:16px}
+.kpi{background:#0d1f35;border:1px solid #1e3a5f;border-radius:8px;padding:14px;position:relative;overflow:hidden;transition:border-color .15s}.kpi:hover{border-color:#2d5080}
+.kpi-lbl{font-size:9px;color:#64748b;margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;font-weight:700}
+.kpi-val{font-size:24px;font-weight:800;letter-spacing:-.8px;line-height:1;font-family:'Courier New',monospace}.kpi-u{font-size:13px;font-weight:500;color:#64748b}.kpi-sub{margin-top:4px;font-size:11px}
+.up{color:#22c55e}.dn{color:#ef4444}.mu{color:#475569}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.stat-item{background:#091520;border:1px solid #1e3a5f;border-radius:8px;padding:10px 14px}.stat-item label{display:block;font-size:11px;color:#94a3b8;margin-bottom:4px}.stat-item .val{font-family:'Courier New',monospace;font-size:16px;color:#f1f5f9;font-weight:600}.stat-item .sub{font-size:10px;color:#475569;margin-top:2px}
+.meter-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+.meter{background:#0d1f35;border:1px solid #1e3a5f;border-radius:8px;padding:14px;text-align:center}.meter-lbl{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.4px;font-weight:700;margin-bottom:6px}.meter-val{font-size:20px;font-weight:800;letter-spacing:-.4px;font-family:'Courier New',monospace}.meter-u{font-size:11px;color:#64748b}.meter-bar{height:3px;background:#091520;border-radius:2px;margin-top:8px;overflow:hidden}.meter-fill{height:100%;border-radius:2px;transition:width .8s ease}.meter-sub{font-size:10px;color:#475569;margin-top:4px}
+.chart-box{position:relative;height:180px}.chart-svg{width:100%;height:100%}.ax{font-size:9px;fill:#475569}
+@keyframes emsDashFwd{to{stroke-dashoffset:-24}}@keyframes emsDashRev{to{stroke-dashoffset:24}}
+.fl-fwd{animation:emsDashFwd 1.2s linear infinite}.fl-rev{animation:emsDashRev 1.2s linear infinite}
+.status-pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.4px}.pill-green{background:#14532d;color:#86efac}.pill-red{background:#7f1d1d;color:#fca5a5}.pill-blue{background:#0c3460;color:#7dd3fc}.pill-gray{background:#1e293b;color:#94a3b8}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}.bar-lbl{width:110px;font-size:11px;color:#94a3b8;flex-shrink:0}.bar-trk{flex:1;height:20px;background:#091520;border-radius:5px;overflow:hidden}.bar-fl{height:100%;border-radius:5px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:10px;font-weight:700;transition:width .6s}.bar-amt{width:75px;font-size:12px;font-weight:700;text-align:right;flex-shrink:0;font-family:'Courier New',monospace}
+.ptable{width:100%;border-collapse:collapse;font-size:12px}.ptable th{text-align:left;padding:8px 10px;color:#475569;font-size:10px;text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid #1e3a5f;font-weight:700}.ptable td{padding:8px 10px;border-bottom:1px solid #0d1f35;font-family:'Courier New',monospace}.ptable tr:hover td{background:#0d1f35}.profit{color:#22c55e;font-weight:700}.loss{color:#ef4444;font-weight:700}
+.gauge{width:90px;height:90px;position:relative;flex-shrink:0}.gauge svg{width:100%;height:100%;transform:rotate(-90deg)}.g-bg{fill:none;stroke:#091520;stroke-width:8}.g-fl{fill:none;stroke:#a855f7;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s}.g-c{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}.g-v{font-size:22px;font-weight:800;letter-spacing:-.6px;font-family:'Courier New',monospace}.g-l{font-size:8px;color:#64748b;text-transform:uppercase;letter-spacing:.3px}
+.c2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px}.c3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px}
+.heat-g{display:grid;grid-template-columns:50px repeat(24,1fr);gap:2px;font-size:8px}.heat-cell{height:18px;border-radius:2px;min-width:0}.heat-lbl{display:flex;align-items:center;justify-content:flex-end;padding-right:4px;color:#475569;font-size:8px;font-weight:600}.heat-hdr{text-align:center;color:#334155;font-size:7px;padding:2px 0;font-weight:600}
+.rel-score{display:flex;align-items:center;gap:16px;margin-bottom:14px}.score-ring{width:80px;height:80px;position:relative;flex-shrink:0}.score-ring svg{width:100%;height:100%;transform:rotate(-90deg)}.score-c{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}.score-v{font-size:22px;font-weight:800;color:#22c55e}
+.ups-log-item{display:flex;gap:10px;padding:10px;background:#091520;border-radius:6px;margin-bottom:8px;border-left:3px solid #22c55e}.ups-txt{flex:1}.ups-t{font-size:12px;font-weight:600;color:#e2e8f0}.ups-d{font-size:10px;color:#64748b;margin-top:2px}.ups-dur{font-size:12px;font-weight:700;color:#22c55e;flex-shrink:0;font-family:'Courier New',monospace}
+.ev-row{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#091520;border-radius:6px;border-left:3px solid #00B0E4;margin-bottom:8px;transition:opacity .3s}
+.ev-port{font-size:12px;font-weight:600;color:#e2e8f0}.ev-det{font-size:10px;color:#64748b;margin-top:1px}.ev-pwr{font-size:16px;font-weight:800;color:#00B0E4;font-family:'Courier New',monospace}
+.ev-bar{height:4px;background:#1e3a5f;border-radius:2px;margin-top:5px;overflow:hidden}.ev-bar-f{height:100%;border-radius:2px;transition:width .8s}@keyframes evPulse{0%,100%{opacity:1}50%{opacity:.7}}.ev-row.active{animation:evPulse 2s infinite}
+.meter-card{background:#091520;border:1px solid #1e3a5f;border-radius:8px;padding:12px;text-align:center;border-top:3px solid #00B0E4}.meter-card .meter-val{font-size:28px;font-weight:800;font-family:'Courier New',monospace;margin:4px 0}.meter-card .meter-lbl{font-size:10px;color:#475569;margin-top:4px}.meter-card .meter-phase{display:flex;justify-content:center;gap:12px;margin-top:6px;font-size:10px;color:#64748b;font-family:monospace}
+.batt3-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}
+.batt3-unit{background:#091520;border:1px solid #1e3a5f;border-radius:8px;padding:12px;text-align:center}.batt3-unit .batt-label{font-size:9px;color:#475569;margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}.batt3-unit .batt-pwr{font-size:14px;font-weight:700;font-family:'Courier New',monospace}.batt3-bar{height:4px;background:#1e3a5f;border-radius:2px;margin-top:6px;overflow:hidden}.batt3-fill{height:100%;border-radius:2px;transition:width .8s}
+.soc-tag{display:inline-block;background:#0d2137;border:1px solid #1a3a5c;border-radius:4px;padding:1px 6px;font-size:10px;font-weight:600;font-family:monospace;margin-left:4px}
+@media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(3,1fr)}.meter-grid{grid-template-columns:repeat(3,1fr)}.batt3-grid{grid-template-columns:1fr}}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.meter-grid{grid-template-columns:repeat(2,1fr)}.c2,.c3{grid-template-columns:1fr}.heat-g{grid-template-columns:40px repeat(12,1fr)}.stat-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head><body>
+
+<div class="hdr">
+  <div class="brand"><div class="logo">HE</div><div><div class="brand-name">Hospitality Energy</div><div class="brand-sub">Hotel ESS + EV Charging Intelligence</div></div></div>
+  <div class="hdr-r">
+    <div class="tabs">
+      <button class="tab active" onclick="showView('overview',this)">Overview</button>
+      <button class="tab" onclick="showView('power',this)">Power</button>
+      <button class="tab" onclick="showView('ev',this)">EV Charging</button>
+      <button class="tab" onclick="showView('financial',this)">Financial</button>
+      <button class="tab" onclick="showView('reliability',this)">Reliability</button>
+    </div>
+    <div class="live"><span class="dot-live"></span><span id="liveTime">Live</span></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ===== OVERVIEW ===== -->
+<div class="view active" id="v-overview">
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-lbl">Solar Today</div><div class="kpi-val" style="color:#fbbf24">605<span class="kpi-u"> kWh</span></div><div class="kpi-sub up">38% renewable share</div></div>
+    <div class="kpi"><div class="kpi-lbl">Battery Throughput</div><div class="kpi-val" style="color:#a855f7">920<span class="kpi-u"> kWh</span></div><div class="kpi-sub up">3x 261kW units</div></div>
+    <div class="kpi"><div class="kpi-lbl">Peak Shaved</div><div class="kpi-val" style="color:#00B0E4">96<span class="kpi-u"> kW</span></div><div class="kpi-sub up">-34% grid peak</div></div>
+    <div class="kpi"><div class="kpi-lbl">EV Revenue Today</div><div class="kpi-val" style="color:#a855f7">EUR 482</div><div class="kpi-sub up">38 sessions</div></div>
+    <div class="kpi"><div class="kpi-lbl">Uptime</div><div class="kpi-val" style="color:#22c55e">99.97<span class="kpi-u">%</span></div><div class="kpi-sub mu">2 UPS events / mo</div></div>
+    <div class="kpi"><div class="kpi-lbl">Avg Power Cost</div><div class="kpi-val" style="color:#fbbf24">0.12<span class="kpi-u"> EUR/kWh</span></div><div class="kpi-sub dn">Grid: 0.28</div></div>
+  </div>
+
+  <!-- Strategy -->
+  <div class="strat-strip"><span class="strat-label">Strategy</span><div class="strat-content" id="stratContent"></div></div>
+
+  <!-- Flow Diagram — Hero -->
+  <div class="card blue" style="overflow:hidden;padding:14px">
+    <div class="card-hdr"><h2>Energy Flow — Real-Time</h2><span class="badge badge-ok">3x 261kW / 750kWh · 3x 120kW Chargers</span></div>
+    <div id="flowContainer" style="min-height:520px;display:flex;align-items:center;justify-content:center"></div>
+  </div>
+
+  <!-- Battery Cards + Main Meter below flow -->
+  <div class="c2" style="margin-bottom:12px">
+    <div>
+      <div style="font-size:10px;color:#475569;text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:6px">Battery Bank — 3x 261kW / 250kWh</div>
+      <div class="batt3-grid" id="batt3Grid"></div>
+    </div>
+    <div>
+      <div style="font-size:10px;color:#475569;text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:6px">Main Meter — Real-Time</div>
+      <div class="meter-card">
+        <div class="meter-lbl">Grid Connection 3x250A</div>
+        <div class="meter-val" id="meterMain" style="color:#22c55e">0.0 kW</div>
+        <div class="meter-phase">
+          <span>L1: <b id="meterL1">0</b>A</span>
+          <span>L2: <b id="meterL2">0</b>A</span>
+          <span>L3: <b id="meterL3">0</b>A</span>
+          <span>V: <b id="meterVolt">400</b>V</span>
+        </div>
+        <div style="font-size:9px;color:#475569;margin-top:4px">PF: <span style="color:#22c55e">0.97</span> · Freq: <span style="color:#22c55e">50.0</span>Hz</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Daily Stats -->
+  <div class="card green" style="margin-bottom:12px">
+    <div class="stat-grid" style="grid-template-columns:1fr 1fr 1fr;gap:0">
+      <div style="text-align:center;padding:10px;border-right:1px solid #1e3a5f">
+        <div style="font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Solar Generated</div>
+        <div id="ds-solar" style="font-size:22px;font-weight:800;color:#fbbf24;font-family:'Courier New',monospace;margin-top:4px">—</div>
+        <div style="font-size:10px;color:#475569">kWh today</div>
+      </div>
+      <div style="text-align:center;padding:10px;border-right:1px solid #1e3a5f">
+        <div style="font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Grid Import</div>
+        <div id="ds-import" style="font-size:22px;font-weight:800;color:#22c55e;font-family:'Courier New',monospace;margin-top:4px">—</div>
+        <div style="font-size:10px;color:#475569">kWh today</div>
+      </div>
+      <div style="text-align:center;padding:10px">
+        <div style="font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:.5px">Battery SOC</div>
+        <div id="ds-batt" style="font-size:22px;font-weight:800;color:#a855f7;font-family:'Courier New',monospace;margin-top:4px">—</div>
+        <div style="font-size:10px;color:#475569">% now</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Energy History — Full Width Hero -->
+  <div class="card blue">
+    <div class="card-hdr" style="flex-wrap:wrap;gap:6px">
+      <h2>Energy History — 24 Hours</h2>
+      <div id="eh-btns" style="display:flex;gap:4px;margin-left:auto">
+        <button class="eh-btn" data-range="24h" style="padding:3px 10px;border-radius:5px;border:1px solid #1e3a5f;font-size:11px;cursor:pointer;background:#1e3a5f;color:#e2e8f0">24h</button>
+        <button class="eh-btn" data-range="48h" style="padding:3px 10px;border-radius:5px;border:1px solid #1e3a5f;font-size:11px;cursor:pointer;background:transparent;color:#64748b">48h</button>
+        <button class="eh-btn" data-range="week" style="padding:3px 10px;border-radius:5px;border:1px solid #1e3a5f;font-size:11px;cursor:pointer;background:transparent;color:#64748b">Week</button>
+        <button class="eh-btn" data-range="month" style="padding:3px 10px;border-radius:5px;border:1px solid #1e3a5f;font-size:11px;cursor:pointer;background:transparent;color:#64748b">Month</button>
+      </div>
+    </div>
+    <div style="height:280px;position:relative"><canvas id="energyHistoryCanvas"></canvas></div>
+    <div id="eh-summary" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px"></div>
+  </div>
+
+  <!-- Economics + Sustainability (2-col below chart) -->
+  <div class="c2">
+    <div class="card green">
+      <div class="card-hdr"><h2>Today's Energy Economics</h2><span class="badge">Live</span></div>
+      <div class="bar-row"><div class="bar-lbl">Grid Import</div><div class="bar-trk"><div class="bar-fl" style="width:100%;background:#00B0E4;color:#0a1929">EUR 226.20</div></div></div>
+      <div class="bar-row"><div class="bar-lbl">Solar Offset</div><div class="bar-trk"><div class="bar-fl" style="width:67%;background:#fbbf24;color:#0a1929">-EUR 151.30</div></div></div>
+      <div class="bar-row"><div class="bar-lbl">Peak Shaving</div><div class="bar-trk"><div class="bar-fl" style="width:42%;background:#22c55e;color:#0a1929">-EUR 95.40</div></div></div>
+      <div class="bar-row"><div class="bar-lbl">Arbitrage</div><div class="bar-trk"><div class="bar-fl" style="width:20%;background:#8b5cf6;color:#fff">-EUR 45.20</div></div></div>
+      <div class="bar-row"><div class="bar-lbl">EV Revenue</div><div class="bar-trk"><div class="bar-fl" style="width:58%;background:#a855f7;color:#fff">+EUR 482.00</div></div></div>
+      <div style="border-top:1px solid #1e3a5f;padding-top:10px;margin-top:4px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;font-weight:700">Net Energy P&amp;L</span>
+        <span style="font-size:22px;font-weight:800;color:#22c55e;font-family:'Courier New',monospace">+EUR 255.80</span>
+      </div>
+    </div>
+    <div class="card purple" style="margin-bottom:0">
+      <div class="card-hdr"><h2>This Month — 30 Days</h2><span class="badge">Projected</span></div>
+      <div class="stat-grid" style="grid-template-columns:1fr 1fr">
+        <div style="text-align:center;padding:10px"><div class="val" style="font-size:20px;color:#22c55e">EUR 7,674</div><label style="margin-top:2px;font-size:10px;color:#94a3b8">Net P&L</label></div>
+        <div style="text-align:center;padding:10px"><div class="val" style="font-size:20px;color:#a855f7">EUR 14,460</div><label style="margin-top:2px;font-size:10px;color:#94a3b8">EV Revenue</label></div>
+        <div style="text-align:center;padding:10px"><div class="val" style="font-size:20px;color:#fbbf24">8.4 tons</div><label style="margin-top:2px;font-size:10px;color:#94a3b8">CO2 Avoided</label></div>
+        <div style="text-align:center;padding:10px"><div class="val" style="font-size:20px">18,150 kWh</div><label style="margin-top:2px;font-size:10px;color:#94a3b8">Solar Total</label></div>
+      </div>
+      <div style="margin-top:8px;padding:8px;background:#091520;border-radius:6px;font-size:11px;color:#64748b;text-align:center">Historical trend + projections — <span style="color:#22c55e;cursor:pointer" onclick="alert('Full financial projection graph in Financial tab')">view full</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== POWER ===== -->
+<div class="view" id="v-power">
+  <div class="sec-lbl">Multi-Meter Real-Time Readings</div>
+  <div class="meter-grid">
+    <div class="meter"><div class="meter-lbl">Solar (Meter 1)</div><div class="meter-val" style="color:#fbbf24" id="pm-solar">0<span class="meter-u"> kW</span></div><div class="meter-sub">85 kWp installed</div><div class="meter-bar"><div class="meter-fill" style="width:0%;background:#fbbf24" id="pm-solar-bar"></div></div></div>
+    <div class="meter"><div class="meter-lbl">Battery Bank (Meter 2)</div><div class="meter-val" style="color:#a855f7" id="pm-batt">0<span class="meter-u"> kW</span></div><div class="meter-sub">3x 261kW · 750kWh</div><div class="meter-bar"><div class="meter-fill" style="width:0%;background:#a855f7" id="pm-batt-bar"></div></div></div>
+    <div class="meter"><div class="meter-lbl">Hotel Main (Meter 3)</div><div class="meter-val" style="color:#94a3b8" id="pm-hotel">0<span class="meter-u"> kW</span></div><div class="meter-sub">Kitchen · HVAC · Spa</div><div class="meter-bar"><div class="meter-fill" style="width:0%;background:#94a3b8" id="pm-hotel-bar"></div></div></div>
+    <div class="meter"><div class="meter-lbl">EV Chargers (Meter 4)</div><div class="meter-val" style="color:#00B0E4" id="pm-ev">0<span class="meter-u"> kW</span></div><div class="meter-sub">3x 120kW DC Fast</div><div class="meter-bar"><div class="meter-fill" style="width:0%;background:#00B0E4" id="pm-ev-bar"></div></div></div>
+    <div class="meter"><div class="meter-lbl">Grid Import (Meter 5)</div><div class="meter-val" style="color:#22c55e" id="pm-grid">0<span class="meter-u"> kW</span></div><div class="meter-sub">3x250A connection</div><div class="meter-bar"><div class="meter-fill" style="width:0%;background:#22c55e" id="pm-grid-bar"></div></div></div>
+  </div>
+
+  <div class="c2">
+    <div class="card yellow">
+      <div class="card-hdr"><h2>Solar Production — 7 Days</h2><span class="badge">kWh/day</span></div>
+      <div class="chart-box"><svg class="chart-svg" id="solar7" viewBox="0 0 400 180" preserveAspectRatio="none"></svg></div>
+    </div>
+    <div class="card orange">
+      <div class="card-hdr"><h2>Hotel Consumption Breakdown</h2><span class="badge">Today</span></div>
+      <div class="stat-grid" style="margin-bottom:10px">
+        <div class="stat-item"><label>Total Hotel Load</label><div class="val" id="cb-total">—</div><div class="sub">kWh today</div></div>
+        <div class="stat-item"><label>Peak Demand</label><div class="val" id="cb-peak">—</div><div class="sub">kW at peak</div></div>
+        <div class="stat-item"><label>EV Charging</label><div class="val" id="cb-ev">—</div><div class="sub">kWh today</div></div>
+      </div>
+      <div class="bar-row"><div class="bar-lbl">HVAC</div><div class="bar-trk"><div class="bar-fl" style="width:35%;background:#f97316;color:#fff">390 kWh</div></div></div>
+      <div class="bar-row"><div class="bar-lbl">Kitchen</div><div class="bar-trk"><div class="bar-fl" style="width:25%;background:#fb923c;color:#fff">280 kWh</div></div></div>
+      <div class="bar-row"><div class="bar-lbl">Spa & Pool</div><div class="bar-trk"><div class="bar-fl" style="width:15%;background:#fdba74;color:#0a1929">165 kWh</div></div></div>
+      <div class="bar-row"><div class="bar-lbl">Lighting</div><div class="bar-trk"><div class="bar-fl" style="width:10%;background:#fed7aa;color:#0a1929">110 kWh</div></div></div>
+      <div class="bar-row"><div class="bar-lbl">Other</div><div class="bar-trk"><div class="bar-fl" style="width:15%;background:#475569;color:#fff">165 kWh</div></div></div>
+    </div>
+  </div>
+
+  <div class="card blue" style="overflow:visible">
+    <div class="card-hdr"><h2>Seven-Day Energy Totals</h2><span class="badge">Daily kWh</span></div>
+    <div class="chart-box" style="height:200px"><svg class="chart-svg" id="weekTotals" viewBox="0 0 420 200" preserveAspectRatio="none"></svg></div>
+    <div style="display:flex;gap:14px;margin-top:4px;font-size:10px;color:#475569">
+      <span style="color:#f87171">--</span> Hotel<span style="color:#a855f7">--</span> EV<span style="color:#fbbf24">--</span> Solar<span style="color:#22c55e">--</span> Grid
+    </div>
+  </div>
+</div>
+
+<!-- ===== EV CHARGING ===== -->
+<div class="view" id="v-ev">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-lbl">Sessions Today</div><div class="kpi-val">38</div><div class="kpi-sub up">+12 vs avg</div></div>
+    <div class="kpi"><div class="kpi-lbl">Energy Delivered</div><div class="kpi-val">985<span class="kpi-u"> kWh</span></div><div class="kpi-sub mu">25.9 kWh/sess avg</div></div>
+    <div class="kpi"><div class="kpi-lbl">Revenue Today</div><div class="kpi-val" style="color:#a855f7">EUR 482</div><div class="kpi-sub up">EUR 0.49/kWh avg</div></div>
+    <div class="kpi"><div class="kpi-lbl">Avg Session</div><div class="kpi-val">18<span class="kpi-u"> min</span></div><div class="kpi-sub mu">120kW fast charging</div></div>
+    <div class="kpi"><div class="kpi-lbl">Utilization</div><div class="kpi-val">55<span class="kpi-u">%</span></div><div class="kpi-sub up">Peak: 17:00-21:00</div></div>
+    <div class="kpi"><div class="kpi-lbl">Solar Powered</div><div class="kpi-val" style="color:#fbbf24">32<span class="kpi-u">%</span></div><div class="kpi-sub up">315 kWh from solar</div></div>
+  </div>
+
+  <div class="c2">
+    <div class="card blue">
+      <div class="card-hdr"><h2>Active Charging Sessions</h2><span class="badge badge-ok" id="evBadge">3 Active</span></div>
+      <div id="evSessions"></div>
+      <div style="margin-top:8px;font-size:10px;color:#475569;border-top:1px solid #1e3a5f;padding-top:8px">Charger 1-3 · 120kW DC Fast · CCS2</div>
+    </div>
+    <div class="card blue">
+      <div class="card-hdr"><h2>Hourly Utilization</h2><span class="badge">Today</span></div>
+      <div class="chart-box"><svg class="chart-svg" id="evUtil" viewBox="0 0 400 180" preserveAspectRatio="none"></svg></div>
+      <div style="margin-top:6px;font-size:11px;color:#475569">Peak: <b style="color:#00B0E4">17:00-21:00</b> (taxi shift change)</div>
+    </div>
+  </div>
+
+  <div class="card purple">
+    <div class="card-hdr"><h2>Utilization Heatmap — Chargers x Hour</h2><span class="badge">7-day avg</span></div>
+    <div class="heat-g" id="heatGrid"></div>
+    <div style="margin-top:8px;display:flex;align-items:center;gap:8px;font-size:10px;color:#475569"><span>Low</span><div style="width:80px;height:6px;background:linear-gradient(90deg,#0d1f35,#2563eb,#ef4444);border-radius:3px"></div><span>High</span></div>
+  </div>
+
+  <div class="card blue">
+    <div class="card-hdr"><h2>EV Revenue & Energy Source — 30 Days</h2><span class="badge">Trend</span></div>
+    <div class="chart-box" style="height:220px"><svg class="chart-svg" id="evRev30" viewBox="0 0 480 220" preserveAspectRatio="none"></svg></div>
+    <div style="display:flex;gap:14px;margin-top:4px;font-size:10px;color:#475569">
+      <span style="color:#a855f7">--</span> Revenue<span style="color:#fbbf24">--</span> Solar Energy<span style="color:#00B0E4">--</span> Grid Energy
+    </div>
+  </div>
+</div>
+
+<!-- ===== FINANCIAL ===== -->
+<div class="view" id="v-financial">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-lbl">Monthly Net P&L</div><div class="kpi-val" style="color:#22c55e">EUR 7,674</div><div class="kpi-sub up">+18% MoM</div></div>
+    <div class="kpi"><div class="kpi-lbl">EV Monthly Revenue</div><div class="kpi-val" style="color:#a855f7">EUR 14,460</div><div class="kpi-sub up">1,140 sessions</div></div>
+    <div class="kpi"><div class="kpi-lbl">Solar Savings</div><div class="kpi-val" style="color:#fbbf24">EUR 4,539</div><div class="kpi-sub up">18,150 kWh offset</div></div>
+    <div class="kpi"><div class="kpi-lbl">Arbitrage Profit</div><div class="kpi-val" style="color:#8b5cf6">EUR 1,356</div><div class="kpi-sub up">Night/day spread</div></div>
+  </div>
+
+  <div class="c2">
+    <div class="card green">
+      <div class="card-hdr"><h2>EV Charging Profitability Breakdown</h2><span class="badge">Per kWh</span></div>
+      <table class="ptable">
+        <thead><tr><th>Component</th><th>Rate</th><th>Per Session</th><th>Monthly</th></tr></thead>
+        <tbody>
+          <tr><td style="font-family:inherit">Selling price (taxi)</td><td>EUR 0.49/kWh</td><td>EUR 12.68</td><td class="profit">EUR 14,460</td></tr>
+          <tr><td style="font-family:inherit">Power procurement (EMS)</td><td class="loss">-EUR 0.12/kWh</td><td class="loss">-EUR 3.11</td><td class="loss">-EUR 3,541</td></tr>
+          <tr><td style="font-family:inherit">Payment processing</td><td class="loss">-EUR 0.32/sess</td><td class="loss">-EUR 0.32</td><td class="loss">-EUR 365</td></tr>
+          <tr><td style="font-family:inherit">Charger depreciation</td><td class="loss">-EUR 0.03/kWh</td><td class="loss">-EUR 0.78</td><td class="loss">-EUR 885</td></tr>
+          <tr style="border-top:2px solid #1e3a5f"><td style="font-weight:700;font-family:-apple-system,sans-serif">Net profit / session</td><td></td><td class="profit">EUR 8.47</td><td class="profit" style="font-size:14px">EUR 9,669</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:12px;padding:12px;background:#091520;border-radius:6px;font-size:12px;color:#94a3b8">
+        <b style="color:#22c55e">EMS Advantage:</b> Procurement cost EUR 0.12/kWh vs grid EUR 0.28 — <b style="color:#22c55e">57% cost reduction</b>
+      </div>
+    </div>
+    <div class="card green">
+      <div class="card-hdr"><h2>Average Price Paid for Power</h2><span class="badge">Daily, 30 days</span></div>
+      <div class="chart-box"><svg class="chart-svg" id="priceCompare" viewBox="0 0 400 180" preserveAspectRatio="none"></svg></div>
+      <div style="display:flex;gap:16px;margin-top:6px;font-size:10px;color:#475569"><span style="color:#ef4444">--</span> Grid rate<span style="color:#22c55e">--</span> EMS cost</div>
+      <div style="margin-top:8px;padding:10px;background:#091520;border-radius:6px;font-size:11px;line-height:1.6;color:#94a3b8">
+        <b>EMS optimization:</b><br>
+        Night (00-06): Charge at EUR 0.10/kWh<br>
+        Day (10-15): Free solar — battery + direct supply<br>
+        Peak (17-21): Battery discharge (avoids EUR 0.45/kWh peak)<br>
+        EV demand: Solar + battery first, grid backup only
+      </div>
+    </div>
+  </div>
+
+  <div class="card green">
+    <div class="card-hdr"><h2>Monthly Revenue Breakdown</h2><span class="badge">Last 3 months</span></div>
+    <div class="chart-box" style="height:200px"><svg class="chart-svg" id="revBreakdown" viewBox="0 0 400 200" preserveAspectRatio="none"></svg></div>
+    <div style="display:flex;gap:16px;margin-top:6px;font-size:10px;color:#475569">
+      <span style="color:#a855f7">--</span> EV Revenue<span style="color:#fbbf24">--</span> Solar Savings<span style="color:#22c55e">--</span> Peak Shaving<span style="color:#8b5cf6">--</span> Arbitrage
+    </div>
+  </div>
+
+  <div class="c2">
+    <div class="card green">
+      <div class="card-hdr"><h2>CapEx &amp; ROI Projection</h2></div>
+      <div class="stat-grid">
+        <div class="stat-item"><label>3x 120kW Chargers</label><div class="val">EUR 48,000</div></div>
+        <div class="stat-item"><label>3x 261kW ESS Units</label><div class="val">EUR 108,000</div></div>
+        <div class="stat-item"><label>Installation</label><div class="val">EUR 24,000</div></div>
+      </div>
+      <div style="margin-top:10px;padding:14px;background:#091520;border-radius:6px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;font-weight:600">Total CapEx</span><span style="font-size:18px;font-weight:800;font-family:'Courier New',monospace">EUR 180,000</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span style="font-size:13px;font-weight:600">Monthly net profit</span><span style="font-size:18px;font-weight:800;color:#22c55e;font-family:'Courier New',monospace">EUR 7,674</span></div>
+        <div style="display:flex;justify-content:space-between;border-top:1px solid #1e3a5f;padding-top:8px"><span style="font-size:15px;font-weight:800">Payback period</span><span style="font-size:24px;font-weight:800;color:#fbbf24;font-family:'Courier New',monospace">23 months</span></div>
+      </div>
+    </div>
+    <div class="card green">
+      <div class="card-hdr"><h2>Session History — Last 12</h2></div>
+      <div id="sessionHistory" style="max-height:280px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RELIABILITY ===== -->
+<div class="view" id="v-reliability">
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-lbl">Power Reliability</div><div class="kpi-val" style="color:#22c55e">A+</div><div class="kpi-sub up">99.97% uptime</div></div>
+    <div class="kpi"><div class="kpi-lbl">UPS Activations</div><div class="kpi-val">3</div><div class="kpi-sub mu">This month</div></div>
+    <div class="kpi"><div class="kpi-lbl">Guest Impact</div><div class="kpi-val" style="color:#22c55e">0</div><div class="kpi-sub up">Zero disruptions</div></div>
+    <div class="kpi"><div class="kpi-lbl">Backup Runtime</div><div class="kpi-val">3.5<span class="kpi-u"> hrs</span></div><div class="kpi-sub mu">Full hotel load</div></div>
+  </div>
+
+  <div class="c2">
+    <div class="card green">
+      <div class="card-hdr"><h2>Power Reliability Score</h2><span class="badge badge-ok">Excellent</span></div>
+      <div class="rel-score">
+        <div class="score-ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="#091520" stroke-width="8"/><circle cx="50" cy="50" r="42" fill="none" stroke="#22c55e" stroke-width="8" stroke-linecap="round" stroke-dasharray="264" stroke-dashoffset="8"/></svg><div class="score-c"><div class="score-v">A+</div></div></div>
+        <div style="flex:1"><div class="stat-grid">
+          <div class="stat-item"><label>30-day Uptime</label><div class="val" style="color:#22c55e">99.97%</div></div>
+          <div class="stat-item"><label>Avg Outage</label><div class="val">0s</div></div>
+          <div class="stat-item"><label>Grid Glitches</label><div class="val">3</div></div>
+          <div class="stat-item"><label>Switchover</label><div class="val">&lt;8ms</div></div>
+        </div></div>
+      </div>
+    </div>
+    <div class="card green">
+      <div class="card-hdr"><h2>UPS Event Log</h2><span class="badge">Last 30 days</span></div>
+      <div class="ups-log-item"><div class="ups-txt"><div class="ups-t">Grid blip — seamless battery switchover</div><div class="ups-d">Jun 24, 03:17 — Voltage dropped 12% for 2.1s. 3x batteries covered 24kW instantly.</div></div><div class="ups-dur">2.1s</div></div>
+      <div class="ups-log-item"><div class="ups-txt"><div class="ups-t">Frequency deviation — batteries held</div><div class="ups-d">Jun 19, 22:43 — Grid freq to 49.2Hz. Batteries provided 45kW for 4.8s.</div></div><div class="ups-dur">4.8s</div></div>
+      <div class="ups-log-item"><div class="ups-txt"><div class="ups-t">Planned maintenance switchover</div><div class="ups-d">Jun 12, 14:00 — Grid transfer test. 3x batteries held hotel for 30s.</div></div><div class="ups-dur">30s</div></div>
+      <div style="margin-top:10px;padding:12px;background:#091520;border-radius:6px;font-size:12px;color:#94a3b8">
+        <b style="color:#22c55e">Guest impact:</b> Zero disruptions. UPS invisible — no flicker, no reboots, no interruptions.
+      </div>
+    </div>
+  </div>
+
+  <div class="card blue">
+    <div class="card-hdr"><h2>Grid Quality Monitoring</h2><span class="badge">Last 24 hours</span></div>
+    <div class="chart-box" style="height:140px"><svg class="chart-svg" id="gridQuality" viewBox="0 0 400 140" preserveAspectRatio="none"></svg></div>
+    <div style="display:flex;gap:16px;margin-top:6px;font-size:10px;color:#475569"><span style="color:#00B0E4">--</span> Voltage L1<span style="color:#22c55e">--</span> Frequency</div>
+    <div class="stat-grid" style="margin-top:10px">
+      <div class="stat-item"><label>Voltage Stability</label><div class="val" style="color:#22c55e">+/- 2.1%</div></div>
+      <div class="stat-item"><label>Frequency Range</label><div class="val">49.8-50.2 Hz</div></div>
+      <div class="stat-item"><label>Power Factor</label><div class="val">0.97</div></div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+var DAILY=[{h:22,e:1,s:0,b:42,c:50.6,g:65},{h:20,e:0,s:0,b:38,c:55.7,g:58},{h:18,e:0,s:0,b:35,c:60.3,g:53},{h:17,e:0,s:0,b:32,c:64.6,g:49},{h:17,e:1,s:0,b:30,c:68.6,g:48},{h:20,e:4,s:2,b:28,c:72.3,g:50},{h:32,e:12,s:8,b:-8,c:71.3,g:28},{h:42,e:28,s:24,b:-22,c:68.3,g:24},{h:50,e:44,s:44,b:-38,c:63.3,g:12},{h:54,e:52,s:58,b:-32,c:59.0,g:16},{h:55,e:48,s:66,b:-18,c:56.6,g:19},{h:52,e:32,s:72,b:-8,c:55.5,g:4},{h:48,e:24,s:74,b:2,c:55.5,g:0},{h:45,e:18,s:68,b:5,c:56.2,g:0},{h:42,e:22,s:58,b:8,c:57.3,g:14},{h:40,e:30,s:48,b:10,c:58.6,g:32},{h:44,e:42,s:38,b:8,c:59.7,g:56},{h:50,e:55,s:26,b:-8,c:58.6,g:71},{h:58,e:65,s:14,b:-52,c:51.7,g:57},{h:62,e:68,s:5,b:-68,c:42.6,g:57},{h:58,e:56,s:0,b:-88,c:30.9,g:26},{h:50,e:38,s:0,b:-72,c:21.3,g:16},{h:44,e:20,s:0,b:-42,c:15.7,g:22},{h:35,e:8,s:0,b:-12,c:14.1,g:31}];
+
+var ehChart=null,ehRange='24h';
+function showView(id,btn){document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active')});document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active')});document.getElementById('v-'+id).classList.add('active');btn.classList.add('active')}
+function updateTime(){var d=new Date();document.getElementById('liveTime').textContent='Live '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0')}
+updateTime();setInterval(updateTime,1000);
+var NS='http://www.w3.org/2000/svg';
+function el(tag,attrs){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e}
+
+// Flow diagram
+function buildFlowSVG(){
+var svg='<svg viewBox="0 0 960 540" style="width:100%;height:auto"><defs><filter id="fgl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"/></filter></defs>';
+// AC Bus (segmented dashed paths for animation)
+var busSegs=['90,260','260,480','480,700','700,840'];
+for(var i=0;i<4;i++){var p=busSegs[i].split(',');svg+='<path id="fl-b'+i+'" d="M '+p[0]+',210 L '+p[1]+',210" stroke="#1e3a5f" stroke-width="4" fill="none" stroke-dasharray="8,12" stroke-linecap="round" opacity="0.4"/>'}
+svg+='<text x="480" y="200" text-anchor="middle" fill="#64748b" font-size="10" font-family="monospace" font-weight="700">AC BUS — 400V 3-PHASE</text>';
+// Flow paths from AC bus to each PCS
+for(var i=0;i<3;i++){var cx=260+i*220;
+  svg+='<path id="flp'+i+'" d="M '+cx+',210 L '+cx+',270" stroke="#1e3a5f" stroke-width="3" fill="none" stroke-dasharray="6,10" stroke-linecap="round" opacity="0.4"/>';
+  svg+='<path id="flb'+i+'" d="M '+cx+',340 L '+cx+',425" stroke="#1e3a5f" stroke-width="3" fill="none" stroke-dasharray="6,10" stroke-linecap="round" opacity="0.4"/>';
+}
+// Solar to MPPT paths
+svg+='<path id="flm0" d="M 480,50 L 260,115" stroke="#1e3a5f" stroke-width="3" fill="none" stroke-dasharray="6,10" stroke-linecap="round" opacity="0.4"/>';
+svg+='<path id="flm1" d="M 480,50 L 480,115" stroke="#1e3a5f" stroke-width="3" fill="none" stroke-dasharray="6,10" stroke-linecap="round" opacity="0.4"/>';
+svg+='<path id="flm2" d="M 480,50 L 700,115" stroke="#1e3a5f" stroke-width="3" fill="none" stroke-dasharray="6,10" stroke-linecap="round" opacity="0.4"/>';
+// MPPT to AC bus
+for(var i=0;i<3;i++){var cx=260+i*220;svg+='<path id="fla'+i+'" d="M '+cx+',165 L '+cx+',210" stroke="#1e3a5f" stroke-width="3" fill="none" stroke-dasharray="6,10" stroke-linecap="round" opacity="0.4"/>'}
+// Grid to AC bus
+svg+='<path id="fl-g" d="M 40,210 L 90,210" stroke="#1e3a5f" stroke-width="3" fill="none" stroke-dasharray="6,10" stroke-linecap="round" opacity="0.4"/>';
+// AC bus to Hotel
+svg+='<path id="fl-h" d="M 840,210 L 870,210 Q 900,210 900,175 L 900,55" stroke="#1e3a5f" stroke-width="3" fill="none" stroke-dasharray="6,10" stroke-linecap="round" opacity="0.4"/>';
+// AC bus to EV
+svg+='<path id="fl-e" d="M 840,210 L 870,210 Q 900,210 900,250 L 900,365" stroke="#1e3a5f" stroke-width="3" fill="none" stroke-dasharray="6,10" stroke-linecap="round" opacity="0.4"/>';
+// Dots
+svg+='<circle id="dg1" r="5" cx="40" cy="210" fill="#10b981" opacity="0" filter="url(#fgl)"/><circle id="dg2" r="5" cx="65" cy="210" fill="#10b981" opacity="0" filter="url(#fgl)"/>';
+// AC bus dots (flowing horizontally)
+svg+='<circle id="dbus1" r="5" cx="200" cy="210" fill="#10b981" opacity="0" filter="url(#fgl)"/>';
+svg+='<circle id="dbus2" r="5" cx="500" cy="210" fill="#10b981" opacity="0" filter="url(#fgl)"/>';
+// MPPT→AC bus dots
+svg+='<circle id="da0" r="5" cx="260" cy="165" fill="#fbbf24" opacity="0" filter="url(#fgl)"/>';
+svg+='<circle id="da1" r="5" cx="480" cy="165" fill="#fbbf24" opacity="0" filter="url(#fgl)"/>';
+svg+='<circle id="da2" r="5" cx="700" cy="165" fill="#fbbf24" opacity="0" filter="url(#fgl)"/>';
+// PCS→AC bus dots (upward when discharging)
+svg+='<circle id="du0" r="5" cx="260" cy="240" fill="#f59e0b" opacity="0" filter="url(#fgl)"/>';
+svg+='<circle id="du1" r="5" cx="480" cy="240" fill="#f59e0b" opacity="0" filter="url(#fgl)"/>';
+svg+='<circle id="du2" r="5" cx="700" cy="240" fill="#f59e0b" opacity="0" filter="url(#fgl)"/>';
+for(var i=0;i<3;i++){var cx=260+i*220;
+  svg+='<circle id="dm'+i+'" r="5" cx="480" cy="50" fill="#fbbf24" opacity="0" filter="url(#fgl)"/>';
+  svg+='<circle id="dp'+i+'" r="5" cx="'+cx+'" cy="210" fill="#10b981" opacity="0" filter="url(#fgl)"/>';
+  svg+='<circle id="db'+i+'" r="5" cx="'+cx+'" cy="350" fill="#10b981" opacity="0" filter="url(#fgl)"/>';
+}
+svg+='<circle id="dh1" r="5" cx="840" cy="210" fill="#94a3b8" opacity="0" filter="url(#fgl)"/>';
+svg+='<circle id="de1" r="5" cx="840" cy="210" fill="#00B0E4" opacity="0" filter="url(#fgl)"/>';
+// Solar node
+svg+='<rect x="400" y="8" width="160" height="44" rx="10" fill="#0d2137" stroke="#fbbf24" stroke-opacity="0.5" stroke-width="2"/>';
+svg+='<text x="480" y="28" text-anchor="middle" fill="#94a3b8" font-size="10" font-family="monospace" font-weight="700">SOLAR PV</text>';
+svg+='<text id="fvs" x="480" y="46" text-anchor="middle" fill="#fbbf24" font-size="18" font-family="monospace" font-weight="800">0 kW</text>';
+// MPPT 1-3
+for(var i=0;i<3;i++){var cx=260+i*220;
+  svg+='<rect x="'+(cx-60)+'" y="115" width="120" height="50" rx="8" fill="#0d2137" stroke="#fbbf24" stroke-opacity="0.3" stroke-width="1.5"/>';
+  svg+='<text x="'+cx+'" y="133" text-anchor="middle" fill="#64748b" font-size="9" font-family="monospace" font-weight="700">MPPT '+(i+1)+'</text>';
+  svg+='<text id="fm'+i+'" x="'+cx+'" y="155" text-anchor="middle" fill="#fbbf24" font-size="15" font-family="monospace" font-weight="700">0 kW</text>';
+}
+// Grid
+svg+='<rect x="8" y="190" width="50" height="40" rx="8" fill="#0d2137" stroke="#22c55e" stroke-opacity="0.4" stroke-width="2"/>';
+svg+='<text x="33" y="207" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="monospace" font-weight="700">GRID</text>';
+svg+='<text id="fvg" x="33" y="224" text-anchor="middle" fill="#22c55e" font-size="16" font-family="monospace" font-weight="800">0</text>';
+svg+='<text id="fvgd" x="75" y="196" text-anchor="middle" fill="#64748b" font-size="10" font-family="monospace">0 kW</text>';
+// PCS 1-3
+for(var i=0;i<3;i++){var cx=260+i*220;
+  svg+='<rect x="'+(cx-65)+'" y="270" width="130" height="70" rx="10" fill="#0d2137" stroke="#00B0E4" stroke-opacity="0.5" stroke-width="2"/>';
+  svg+='<text x="'+cx+'" y="290" text-anchor="middle" fill="#00B0E4" font-size="10" font-family="monospace" font-weight="700">PCS '+(i+1)+' INVERTER</text>';
+  svg+='<text id="fi'+i+'" x="'+cx+'" y="315" text-anchor="middle" fill="#e2e8f0" font-size="20" font-family="monospace" font-weight="800">0 kW</text>';
+  svg+='<text x="'+cx+'" y="332" text-anchor="middle" fill="#475569" font-size="9" font-family="monospace">125 kW</text>';
+}
+// Batteries 1-3
+for(var i=0;i<3;i++){var cx=260+i*220;
+  svg+='<rect x="'+(cx-55)+'" y="425" width="110" height="90" rx="10" fill="#0d2137" stroke="#a855f7" stroke-opacity="0.4" stroke-width="2"/>';
+  svg+='<text x="'+cx+'" y="452" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="monospace" font-weight="700">BATTERY '+(i+1)+'</text>';
+  svg+='<text id="fi'+i+'_pwr" x="'+cx+'" y="478" text-anchor="middle" fill="#a855f7" font-size="22" font-family="monospace" font-weight="800">0 kW</text>';
+  svg+='<text id="fi'+i+'_soc" x="'+cx+'" y="500" text-anchor="middle" fill="#a855f7" font-size="13" font-family="monospace" font-weight="600">0%</text>';
+}
+// Hotel
+svg+='<rect x="835" y="14" width="125" height="44" rx="10" fill="#0d2137" stroke="#f97316" stroke-opacity="0.4" stroke-width="2"/>';
+svg+='<text x="897" y="32" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="monospace" font-weight="700">HOTEL</text>';
+svg+='<text id="fvh" x="897" y="52" text-anchor="middle" fill="#f97316" font-size="18" font-family="monospace" font-weight="800">0 kW</text>';
+// EV Chargers
+svg+='<rect x="835" y="360" width="125" height="55" rx="10" fill="#0d2137" stroke="#00B0E4" stroke-opacity="0.4" stroke-width="2"/>';
+svg+='<text x="897" y="380" text-anchor="middle" fill="#94a3b8" font-size="9" font-family="monospace" font-weight="700">EV CHARGERS</text>';
+svg+='<text id="fve" x="897" y="402" text-anchor="middle" fill="#00B0E4" font-size="18" font-family="monospace" font-weight="800">0 kW</text>';
+svg+='<text x="897" y="414" text-anchor="middle" fill="#475569" font-size="9" font-family="monospace">3x 120kW DC Fast</text>';
+svg+='</svg>';
+document.getElementById('flowContainer').innerHTML=svg;
+}
+buildFlowSVG();
+
+function samplePath(p,n){var l=p.getTotalLength(),pts=[];for(var i=0;i<=n;i++){var pt=p.getPointAtLength((i/n)*l);pts.push({x:pt.x,y:pt.y})}return pts}
+var dots={};
+function initDots(){
+  var ids={g1:'dg1',g2:'dg2',dm0:'dm0',dm1:'dm1',dm2:'dm2',dp0:'dp0',dp1:'dp1',dp2:'dp2',db0:'db0',db1:'db1',db2:'db2',dh1:'dh1',de1:'de1',bus1:'dbus1',bus2:'dbus2',da0:'da0',da1:'da1',da2:'da2',du0:'du0',du1:'du1',du2:'du2'};
+  for(var k in ids)dots[k]={p:0,s:.3,d:1,a:false,c:'#10b981',el:document.getElementById(ids[k])};
+  var cx=[260,480,700];
+  dots.g1.path=[{x:40,y:210},{x:90,y:210}];dots.g2.path=[{x:40,y:210},{x:90,y:210}];
+  // AC bus: dots flow from grid side (x=90) toward loads (x=870)
+  dots.bus1.path=[{x:90,y:210},{x:870,y:210}];dots.bus2.path=[{x:200,y:210},{x:870,y:210}];
+  // MPPT→AC bus (downward)
+  dots.da0.path=[{x:260,y:165},{x:260,y:210}];dots.da1.path=[{x:480,y:165},{x:480,y:210}];dots.da2.path=[{x:700,y:165},{x:700,y:210}];
+  // PCS→AC bus (upward when discharging)
+  dots.du0.path=[{x:260,y:270},{x:260,y:210}];dots.du1.path=[{x:480,y:270},{x:480,y:210}];dots.du2.path=[{x:700,y:270},{x:700,y:210}];
+  dots.dm0.path=[{x:480,y:50},{x:260,y:115}];dots.dm1.path=[{x:480,y:50},{x:480,y:115}];dots.dm2.path=[{x:480,y:50},{x:700,y:115}];
+  for(var i=0;i<3;i++){
+    dots['dp'+i].path=[{x:cx[i],y:210},{x:cx[i],y:270}];
+    dots['db'+i].path=[{x:cx[i],y:350},{x:cx[i],y:425}];
+  }
+  var hl=document.getElementById('fl-h'),el=document.getElementById('fl-e');
+  dots.dh1.path=hl?samplePath(hl,20):[{x:840,y:210},{x:900,y:55}];
+  dots.de1.path=el?samplePath(el,20):[{x:840,y:210},{x:900,y:365}];
+  var lt=0;function anim(ts){var dt=lt?(ts-lt)/1000:0;lt=ts;for(var k in dots){var d=dots[k];if(!d.el||!d.a){if(d.el)d.el.setAttribute('opacity','0');continue}d.el.setAttribute('opacity','.9');d.el.setAttribute('fill',d.c);d.p+=d.s*d.d*dt;if(d.p>1)d.p-=1;if(d.p<0)d.p+=1;var idx=d.p*(d.path.length-1),i=Math.floor(idx),f=idx-i,a=d.path[Math.min(i,d.path.length-1)],b=d.path[Math.min(i+1,d.path.length-1)];d.el.setAttribute('cx',a.x+(b.x-a.x)*f);d.el.setAttribute('cy',a.y+(b.y-a.y)*f)}requestAnimationFrame(anim)}
+  requestAnimationFrame(anim);
+}
+initDots();
+
+function kwSp(kw){return Math.max(0.3,Math.min(1.2,0.3+(Math.abs(kw)/60)*.9))}
+function lw(kw){return Math.max(2,Math.min(5,2+Math.abs(kw||0)/30*3))}
+
+function upFlow(g,s,be,b1,b2,b3,bl,ev,soc,sc1,sc2,sc3){
+  var f=function(n){return typeof n==='number'?n.toFixed(1):'--'};
+  // Grid
+  var ga=Math.abs(g)>.5,gc=g>=0?'#10b981':'#ef4444';
+  var flg=document.getElementById('fl-g');if(flg){flg.setAttribute('stroke',ga?gc:'#1e3a5f');flg.setAttribute('stroke-width',ga?Math.max(2,Math.min(5,2+g/30*3)):'2');flg.setAttribute('opacity',ga?.85:.35);flg.classList.remove('fl-fwd','fl-rev');if(ga)flg.classList.add(g<0?'fl-rev':'fl-fwd')}
+  dots.g1.a=ga;dots.g2.a=ga;dots.g1.d=g>=0?1:-1;dots.g2.d=g>=0?1:-1;dots.g1.s=kwSp(g);dots.g2.s=kwSp(g);dots.g1.c=gc;dots.g2.c=gc;
+  var fvg=document.getElementById('fvg');if(fvg){fvg.textContent=f(g);fvg.setAttribute('fill',gc)}
+  var fvgd=document.getElementById('fvgd');if(fvgd)fvgd.textContent=f(g)+' kW';
+  // Solar
+  var sa=s>.5;
+  var fmPaths=['flm0','flm1','flm2'];for(var i=0;i<3;i++){var e=document.getElementById(fmPaths[i]);if(e){e.setAttribute('stroke',sa?'#fbbf24':'#1e3a5f');e.setAttribute('opacity',sa?.85:.35);e.classList.remove('fl-fwd','fl-rev');if(sa)e.classList.add('fl-fwd')}}
+  var dm=['dm0','dm1','dm2'];for(var i=0;i<3;i++){var dot=dots['dm'+i];if(dot){dot.a=sa;dot.s=kwSp(s)}}
+  var fvs=document.getElementById('fvs');if(fvs){fvs.textContent=f(s)+' kW';fvs.setAttribute('fill',sa?'#fbbf24':'#475569')}
+  // MPPT values
+  var mpptPower=Math.round(s/3);for(var i=0;i<3;i++){var fm=document.getElementById('fm'+i);if(fm)fm.textContent=mpptPower+' kW'}
+  // PCS + Battery columns
+  var bVals=[b1,b2,b3],sVals=[sc1,sc2,sc3];
+  // Activate dots (must come AFTER bVals and sa are defined)
+  var busActive=ga||sa;
+  dots.bus1.a=busActive;dots.bus2.a=busActive;dots.bus1.d=1;dots.bus2.d=1;
+  dots.bus1.s=kwSp(Math.max(1,g+s));dots.bus2.s=kwSp(Math.max(1,g+s));
+  // Animate bus segments
+  for(var i=0;i<4;i++){var bs=document.getElementById('fl-b'+i);if(bs){bs.setAttribute('stroke',busActive?'#2d5080':'#1e3a5f');bs.setAttribute('opacity',busActive?.7:.4);bs.classList.remove('fl-fwd','fl-rev');if(busActive)bs.classList.add('fl-fwd')}}
+  for(var i=0;i<3;i++){var d=dots['da'+i];if(d){d.a=sa;d.s=kwSp(s)}}
+  for(var i=0;i<3;i++){
+    var ba=Math.abs(bVals[i])>.5,bc=bVals[i]<0?'#f59e0b':'#10b981';
+    var d=dots['du'+i];if(d){d.a=ba&&bVals[i]<0;d.d=1;d.s=kwSp(Math.abs(bVals[i]));d.c=bc}}
+  for(var i=0;i<3;i++){
+    var ba=Math.abs(bVals[i])>.5,bc=bVals[i]<0?'#f59e0b':'#10b981';
+    // Flow path PCS→ACC bus
+    var fp=document.getElementById('flp'+i);if(fp){fp.setAttribute('stroke',ba?bc:'#1e3a5f');fp.setAttribute('opacity',ba?.85:.35);fp.classList.remove('fl-fwd','fl-rev');if(ba)fp.classList.add(bVals[i]<0?'fl-rev':'fl-fwd')}
+    // Flow path battery→PCS
+    var fb=document.getElementById('flb'+i);if(fb){fb.setAttribute('stroke',ba?bc:'#1e3a5f');fb.setAttribute('opacity',ba?.85:.35);fb.classList.remove('fl-fwd','fl-rev');if(ba)fb.classList.add(bVals[i]<0?'fl-fwd':'fl-rev')}
+    // Dot: AC bus→PCS
+    var dp=dots['dp'+i];if(dp){dp.a=ba;dp.d=bVals[i]<0?-1:1;dp.s=kwSp(bVals[i]);dp.c=bc}
+    // Dot: PCS→battery
+    var db=dots['db'+i];if(db){db.a=ba;db.d=bVals[i]<0?1:-1;db.s=kwSp(bVals[i]);db.c=bc}
+    // AC bus→MPPT
+    var da=document.getElementById('fla'+i);if(da){da.setAttribute('stroke',sa?'#fbbf24':'#1e3a5f');da.setAttribute('opacity',sa?.85:.35);da.classList.remove('fl-fwd','fl-rev');if(sa)da.classList.add('fl-fwd')}
+    // PCS value
+    var absP=Math.abs(bVals[i]);var pcs=document.getElementById('fi'+i);if(pcs){pcs.textContent=absP.toFixed(0)+' kW';pcs.setAttribute('fill',ba?bc:'#475569')}
+    // Battery power + SOC
+    var bp=document.getElementById('fi'+i+'_pwr');if(bp){bp.textContent=absP.toFixed(0)+' kW';bp.setAttribute('fill',ba?(bVals[i]<0?'#f59e0b':'#22c55e'):'#475569')}
+    var bs=document.getElementById('fi'+i+'_soc');if(bs){bs.textContent=Math.round(sVals[i])+'%'}
+  }
+  // Building
+  var bla=bl>.5;var flh=document.getElementById('fl-h');if(flh){flh.setAttribute('stroke',bla?'#94a3b8':'#1e3a5f');flh.setAttribute('stroke-width',bla?Math.max(2,Math.min(5,2+bl/30*3)):'2');flh.setAttribute('opacity',bla?.85:.35);flh.classList.remove('fl-fwd','fl-rev');if(bla)flh.classList.add('fl-fwd')}
+  dots.dh1.a=bla;dots.dh1.s=kwSp(bl);
+  var fvh=document.getElementById('fvh');if(fvh){fvh.textContent=f(bl)+' kW';fvh.setAttribute('fill',bla?'#94a3b8':'#475569')}
+  // EV
+  var ea=ev>.5;var fle=document.getElementById('fl-e');if(fle){fle.setAttribute('stroke',ea?'#00B0E4':'#1e3a5f');fle.setAttribute('stroke-width',ea?Math.max(2,Math.min(5,2+ev/30*3)):'2');fle.setAttribute('opacity',ea?.85:.35);fle.classList.remove('fl-fwd','fl-rev');if(ea)fle.classList.add('fl-fwd')}
+  dots.de1.a=ea;dots.de1.s=kwSp(ev);
+  var fve=document.getElementById('fve');if(fve){fve.textContent=f(ev)+' kW';fve.setAttribute('fill',ea?'#00B0E4':'#475569')}
+}
+
+function updateFromHour(h){
+  var d=DAILY[h];if(!d)return;
+  var s=d.s,be=d.b,g=d.g,ev=d.e,bl=d.h,sc=d.c;
+  var b1=be/3,b2=be/3,b3=be/3; // distribute across 3 batteries
+  var sc1=sc,sc2=sc+2,sc3=sc-1;
+  upFlow(g,s,be,b1,b2,b3,bl,ev,sc,sc1,sc2,sc3);
+  // Main meter
+  var mm=document.getElementById('meterMain');if(mm)mm.textContent=g.toFixed(1)+' kW';
+  var pm=document.getElementById('meterL1');if(pm){var amps=g*1.8;pm.textContent=Math.round(amps);document.getElementById('meterL2').textContent=Math.round(amps*.9);document.getElementById('meterL3').textContent=Math.round(amps*.85)}
+  // Battery cards
+  var bg='';var units=[['Battery 1',b1,sc1],['Battery 2',b2,sc2],['Battery 3',b3,sc3]];
+  for(var i=0;i<3;i++){
+    var u=units[i],p=u[1],ss=u[2],dir=p<0?'discharge':'charge',col=p<0?'#f59e0b':'#22c55e',absP=Math.abs(p);
+    var pct=Math.min(100,Math.round(absP/261*100));
+    bg+='<div class="batt3-unit"><div class="batt-label">'+u[0]+' <span class="soc-tag">'+Math.round(ss)+'%</span></div><div class="batt-pwr" style="color:'+col+'">'+absP.toFixed(0)+' kW</div><div style="font-size:9px;color:#475569;margin-top:2px">'+dir+'</div><div class="batt3-bar"><div class="batt3-fill" style="width:'+pct+'%;background:'+col+'"></div></div></div>';
+  }
+  document.getElementById('batt3Grid').innerHTML=bg;
+  // Daily stats
+  var solarTotal=0,gridTotal=0;for(var i=0;i<24;i++){solarTotal+=DAILY[i].s;gridTotal+=DAILY[i].g}
+  document.getElementById('ds-solar').textContent=solarTotal.toFixed(0);
+  document.getElementById('ds-import').textContent=gridTotal.toFixed(0);
+  document.getElementById('ds-batt').textContent=Math.round(sc);
+  // Power meters
+  document.getElementById('pm-solar').innerHTML=s.toFixed(1)+'<span class="meter-u"> kW</span>';
+  document.getElementById('pm-batt').innerHTML=Math.abs(be).toFixed(0)+'<span class="meter-u"> kW ('+(be<0?'discharge':'charge')+')</span>';
+  document.getElementById('pm-hotel').innerHTML=bl.toFixed(1)+'<span class="meter-u"> kW</span>';
+  document.getElementById('pm-ev').innerHTML=ev.toFixed(0)+'<span class="meter-u"> kW</span>';
+  document.getElementById('pm-grid').innerHTML=g.toFixed(1)+'<span class="meter-u"> kW</span>';
+  document.getElementById('pm-solar-bar').style.width=Math.min(100,s/85*100)+'%';
+  document.getElementById('pm-batt-bar').style.width=Math.min(100,Math.abs(be)/261*100)+'%';
+  document.getElementById('pm-hotel-bar').style.width=Math.min(100,bl/70*100)+'%';
+  document.getElementById('pm-ev-bar').style.width=Math.min(100,ev/120*100)+'%';
+  document.getElementById('pm-grid-bar').style.width=Math.min(100,g/80*100)+'%';
+  // Consumption breakdown
+  var hTotal=0;for(var i=0;i<24;i++)hTotal+=DAILY[i].h;
+  document.getElementById('cb-total').textContent=hTotal.toFixed(0);
+  var peakH=0;for(var i=0;i<24;i++)if(DAILY[i].h>peakH)peakH=DAILY[i].h;
+  document.getElementById('cb-peak').textContent=peakH.toFixed(0);
+  var evT=0;for(var i=0;i<24;i++)evT+=DAILY[i].e;
+  document.getElementById('cb-ev').textContent=evT.toFixed(0);
+  // Strategy
+  var scEl=document.getElementById('stratContent');
+  if(scEl){
+    var hl=g<15?'Grid near zero — solar + battery':'Battery assisting — reduced grid import';
+    if(be<0&&g<15)hl='Solar + battery covering load — GRID_ZERO';
+    else if(be>0&&s>0)hl='Solar surplus charging battery';
+    scEl.innerHTML='<span style="color:#e2e8f0;font-weight:600">'+hl+'</span><span class="strat-sep">|</span><span style="color:#22c55e;font-weight:600">GRID_ZERO</span><span class="strat-sep">|</span>Solar: <span style="color:#fbbf24;font-weight:600">'+s.toFixed(1)+' kW</span><span class="strat-sep">|</span>Batt: <span style="color:#a78bfa;font-weight:600">'+(be<0?Math.abs(be).toFixed(0)+' discharge':be.toFixed(0)+' charge')+'</span><span class="strat-sep">|</span>Grid: <span style="color:#22c55e;font-weight:600">'+g.toFixed(1)+' kW</span><span class="strat-sep">|</span>SoC: <span style="color:#a78bfa;font-weight:600">'+Math.round(sc)+'%</span>';
+  }
+}
+// Initialise with solar peak hour for demo impact
+var demoHour=11;
+updateFromHour(demoHour);
+setInterval(function(){demoHour=(demoHour+1)%24;updateFromHour(demoHour);},8000);
+
+// Energy History
+function genEH(r){
+  if(r==='24h'){var rows=[];var n=new Date();for(var i=0;i<24;i++){var dh=DAILY[i];rows.push({hour:new Date(n).setHours(i,0,0,0),building_kwh:dh.h,charger_kwh:dh.e,solar_kwh:dh.s,battery_discharge_kwh:Math.max(0,-dh.b),grid_import_kwh:dh.g,grid_export_kwh:0,avg_battery_soc:dh.c})}return{days:1,period:'hourly',rows:rows}}
+  var days=r==='48h'?2:r==='week'?7:30,hours=days*24,rows=[],dS=[[1,1,1],[.9,1.05,.9],[1.1,.9,1.05],[1.05,1.15,.95],[.95,.9,1.1],[.8,.6,.7],[.65,.5,.55]];
+  for(var i=0;i<hours;i++){var d=new Date();d.setHours(d.getHours()-(hours-1-i));var h24=d.getHours(),di=Math.floor(i/24)%7,hs=di<7?di:0,dh=DAILY[h24],hv=dh.h*(dS[hs][0]+(Math.random()-.5)*.1),evv=dh.e*(dS[hs][1]+(Math.random()-.5)*.1),sv=dh.s*(.8+Math.random()*.4),scv=dh.c+(Math.random()*8-4),bd=dh.b*(.8+Math.random()*.4),gr=Math.max(0,hv+evv+Math.max(0,bd)-sv-Math.max(0,-bd));rows.push({hour:d.toISOString(),building_kwh:hv,charger_kwh:evv,solar_kwh:sv,battery_discharge_kwh:Math.max(0,-bd),grid_import_kwh:gr,grid_export_kwh:Math.max(0,sv-Math.max(0,hv+evv-Math.max(0,-bd)))*.2,avg_battery_soc:Math.min(98,Math.max(15,scv))})}
+  return{days:days,period:'hourly',rows:rows}
+}
+
+function renEH(days,rows){
+  if(ehChart){try{ehChart.destroy()}catch(e){}ehChart=null}
+  var isL=rows.length>48,nh=new Date().getHours();
+  var lb=rows.map(function(r,i){var d=new Date(r.hour);if(isL&&i%6!==0&&i!==0)return '';return String(d.getHours()).padStart(2,'0')+':00'});
+  var cns=rows.map(function(r){return(r.building_kwh+r.charger_kwh).toFixed(2)}),sl=rows.map(function(r){return r.solar_kwh.toFixed(2)}),bd=rows.map(function(r){return r.battery_discharge_kwh.toFixed(2)}),gi=rows.map(function(r){return r.grid_import_kwh.toFixed(2)}),ge=rows.map(function(r){return(-r.grid_export_kwh).toFixed(2)}),soc=rows.map(function(r){return r.avg_battery_soc});
+  var ni=-1;rows.forEach(function(r,i){var h=new Date(r.hour).getHours();if(h===nh)ni=i});
+  var cv=document.getElementById('energyHistoryCanvas');if(!cv)return;
+  ehChart=new Chart(cv,{type:'bar',data:{labels:lb,datasets:[
+    {label:'Consumption',data:cns,backgroundColor:'rgba(248,113,113,0.6)',borderWidth:0,stack:'pos',yAxisID:'y'},
+    {label:'Solar',data:sl,backgroundColor:'rgba(251,191,36,0.7)',borderWidth:0,stack:'pos',yAxisID:'y'},
+    {label:'Battery',data:bd,backgroundColor:'rgba(129,140,248,0.7)',borderWidth:0,stack:'pos',yAxisID:'y'},
+    {label:'Grid Import',data:gi,backgroundColor:'rgba(16,185,129,0.55)',borderWidth:0,stack:'pos',yAxisID:'y'},
+    {label:'Grid Export',data:ge,backgroundColor:'rgba(239,68,68,0.4)',borderWidth:0,stack:'neg',yAxisID:'y'},
+    {label:'SoC',data:soc,borderColor:'#a855f7',backgroundColor:'rgba(168,85,247,0.10)',borderWidth:2,borderDash:[5,3],pointRadius:2,pointBackgroundColor:'#a855f7',tension:.3,fill:false,yAxisID:'y1',type:'line'},
+  ]},options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},
+  plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:8,font:{size:9,family:'monospace'},color:'#94a3b8',usePointStyle:true,boxHeight:4}},
+  tooltip:{backgroundColor:'#0f2035',borderColor:'#1e3a5f',borderWidth:1,titleColor:'#e2e8f0',bodyColor:'#94a3b8',callbacks:{label:function(ctx){var v=ctx.parsed.y;if(ctx.dataset.label==='SoC')return'SoC: '+(v!==null?v.toFixed(0)+'%':'--');return ctx.dataset.label+': '+(v!==null?v.toFixed(1)+' kWh':'--')}}}},
+  scales:{x:{stacked:true,grid:{color:'#1e3a5f33'},ticks:{color:'#475569',font:{size:8,family:'monospace'},maxRotation:0,autoSkip:true,maxTicksLimit:isL?24:12}},y:{stacked:true,position:'left',beginAtZero:true,grid:{color:'#1e3a5f33'},title:{display:true,text:'kWh',color:'#475569',font:{size:8}},ticks:{color:'#475569',font:{size:8,family:'monospace'}}},y1:{position:'right',min:0,max:100,grid:{display:false},title:{display:true,text:'SoC %',color:'#475569',font:{size:8}},ticks:{color:'#475569',font:{size:8,family:'monospace'},callback:function(v){return v+'%'},stepSize:25}}}},
+  plugins:[{id:'nm',afterDraw:function(chart){if(ni<0)return;var meta=chart.getDatasetMeta(0);if(!meta.data||!meta.data[ni])return;var bar=meta.data[ni],x=bar.x,ctx=chart.ctx;ctx.save();ctx.strokeStyle='rgba(255,255,255,0.35)';ctx.lineWidth=2;ctx.setLineDash([4,3]);ctx.beginPath();ctx.moveTo(x,chart.chartArea.top);ctx.lineTo(x,chart.chartArea.bottom);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='rgba(255,255,255,0.7)';ctx.font='10px monospace';ctx.fillText('now',x+4,chart.chartArea.top+12);ctx.restore()}}]});
+  var tg=0,fg=0,bu=0,st=0;rows.forEach(function(r){tg+=r.grid_export_kwh;fg+=r.grid_import_kwh;bu+=r.building_kwh+r.charger_kwh;st+=r.solar_kwh});
+  document.getElementById('eh-summary').innerHTML=[
+    {l:'To Grid',v:tg.toFixed(1)+' kWh',c:'#ef4444'},{l:'From Grid',v:fg.toFixed(1)+' kWh',c:'#22c55e'},{l:'Hotel + EV',v:bu.toFixed(1)+' kWh',c:'#f87171'},{l:'Solar Total',v:st.toFixed(1)+' kWh',c:'#fbbf24'}
+  ].map(function(c){return'<div style="background:#071421;border:1px solid #1e3a5f;border-radius:8px;padding:8px 10px;text-align:center"><div style="font-size:9px;color:#64748b;margin-bottom:3px">'+c.l+'</div><div style="font-size:14px;font-weight:700;color:'+c.c+'">'+c.v+'</div></div>'}).join('');
+}
+function ldEH(r){ehRange=r||ehRange;var d=genEH(ehRange);renEH(d.days,d.rows)}
+ldEH('24h');
+document.getElementById('eh-btns').addEventListener('click',function(e){var btn=e.target.closest('.eh-btn');if(!btn)return;document.querySelectorAll('.eh-btn').forEach(function(b){b.style.background='transparent';b.style.color='#64748b'});btn.style.background='#1e3a5f';btn.style.color='#e2e8f0';ldEH(btn.dataset.range)});
+
+// Solar 7
+function drawS7(){var svg=document.getElementById('solar7');if(!svg)return;svg.innerHTML='';
+var W=400,H=180,px=28,py=12,cw=W-px-8,ch=H-py*2;var days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];var vals=[540,605,470,620,530,280,240];var mx=700,bw=cw/7;
+vals.forEach(function(v,i){var bh=v/mx*ch,x=px+i*bw+bw*.15,y=py+ch-bh;svg.appendChild(el('rect',{x,y,width:bw*.7,height:bh,fill:'#fbbf24',rx:'3',opacity:.8}));var t=el('text',{x:x+bw*.35,y:py+ch+12,class:'ax','text-anchor':'middle'});t.textContent=days[i];svg.appendChild(t);var tv=el('text',{x:x+bw*.35,y:y-3,class:'ax','text-anchor':'middle',fill:'#fbbf24'});tv.textContent=v;svg.appendChild(tv)});
+for(var i=0;i<=4;i++){var y=py+ch/5*i;svg.appendChild(el('line',{x1:px,y1:y,x2:W-8,y2:y,stroke:'#1e3a5f','stroke-width':'.5',opacity:'.2'}));var t=el('text',{x:px-3,y:y+3,class:'ax','text-anchor':'end'});t.textContent=mx-i*Math.round(mx/4);svg.appendChild(t)}}
+drawS7();
+
+// Week totals
+function drawWT(){var svg=document.getElementById('weekTotals');if(!svg)return;svg.innerHTML='';
+var W=420,H=200,px=28,py=12,cw=W-px-8,ch=H-py*2;var days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];var dS=[[1,1,1],[.9,1.05,.9],[1.1,.9,1.05],[1.05,1.15,.95],[.95,.9,1.1],[.8,.6,.7],[.65,.5,.55]];var wk=[];
+for(var d=0;d<7;d++){var h=0,e=0,s=0,g=0;for(var hh=0;hh<24;hh++){var dh=DAILY[hh],hs=dS[d];var hv=dh.h*hs[0],evv=dh.e*hs[1],sv=dh.s*hs[2],b=dh.b*.9;h+=hv;e+=evv;s+=sv;g+=Math.max(0,hv+evv+Math.max(0,b)-sv-Math.max(0,-b))}wk.push({hotel:+h.toFixed(0),ev:+e.toFixed(0),solar:+s.toFixed(0),grid:+g.toFixed(0)})}
+var mx=0;wk.forEach(function(w){var t=w.hotel+w.ev+w.grid;if(t>mx)mx=t});mx=Math.ceil(mx/200)*200;var bw=cw/7,ws=bw*.7;
+for(var d=0;d<7;d++){var x=px+d*bw+bw*.15,acc=wk[d].grid/mx*ch;svg.appendChild(el('rect',{x,width:ws,y:py+ch-acc,height:acc,fill:'rgba(16,185,129,0.55)',rx:'1'}));acc+=wk[d].ev/mx*ch;svg.appendChild(el('rect',{x,width:ws,y:py+ch-acc,height:acc,fill:'rgba(168,85,247,0.7)',rx:'1'}));acc+=wk[d].hotel/mx*ch;svg.appendChild(el('rect',{x,width:ws,y:py+ch-acc,height:acc,fill:'rgba(248,113,113,0.6)',rx:'1'}));if(wk[d].solar>0)svg.appendChild(el('line',{x1:x,y1:py+ch-acc,x2:x+ws,y2:py+ch-acc,stroke:'#fbbf24','stroke-width':'2',opacity:'.5'}));var t=el('text',{x:x+ws/2,y:H-1,class:'ax','text-anchor':'middle'});t.textContent=days[d];svg.appendChild(t);var tv=el('text',{x:x+ws/2,y:py+ch-acc-4,class:'ax','text-anchor':'middle',fill:'#fbbf24','font-size':'9'});tv.textContent=wk[d].solar;svg.appendChild(tv)}
+for(var i=0;i<=4;i++){var y=py+ch/5*i;svg.appendChild(el('line',{x1:px,y1:y,x2:W-8,y2:y,stroke:'#1e3a5f','stroke-width':'.5',opacity:'.2'}));var t=el('text',{x:px-3,y:y+3,class:'ax','text-anchor':'end'});t.textContent=mx-i*Math.round(mx/4);svg.appendChild(t)}}
+drawWT();
+
+// EV sessions
+function renEV(){
+  var s=[
+    {p:'Charger 1',d:'Tesla Model Y',pw:88,pg:62,soc:72,eta:'10 min'},
+    {p:'Charger 2',d:'Hyundai Ioniq 5',pw:112,pg:78,soc:58,eta:'6 min'},
+    {p:'Charger 3',d:'BYD Atto 3',pw:96,pg:35,soc:25,eta:'22 min'},
+  ];
+  document.getElementById('evSessions').innerHTML=s.map(function(x){
+    var pct=x.pg,bar=x.pw/120*100;
+    return '<div class="ev-row active"><div style="flex:1"><div class="ev-port">'+x.p+'<span class="soc-tag">'+x.soc+'% SoC</span></div>'+
+    '<div class="ev-det">'+x.d+'</div>'+
+    '<div class="ev-bar"><div class="ev-bar-f" style="width:'+Math.min(100,bar)+'%;transition:width .8s"></div></div>'+
+    '<div style="display:flex;justify-content:space-between;font-size:9px;color:#475569;margin-top:2px"><span>'+x.d+'</span><span>ETA: '+x.eta+'</span></div></div>'+
+    '<div class="ev-pwr">'+x.pw+' kW</div></div>'
+  }).join('');
+  document.getElementById('evBadge').textContent='3 Active — 38 today';
+}
+renEV();
+
+// EV util
+function drawEVU(){var svg=document.getElementById('evUtil');if(!svg)return;svg.innerHTML='';
+var W=400,H=180,px=28,py=12,cw=W-px-8,ch=H-py*2;var data=DAILY.map(function(d){return d.e});var mx=100,bw=cw/24;
+data.forEach(function(v,h){var bh=v/mx*ch,x=px+h*bw;var color=v>60?'#00B0E4':v>30?'#2563eb':'#1e3a5f';svg.appendChild(el('rect',{x:x+1,y:py+ch-bh,width:bw-2,height:bh,fill:color,rx:'2',opacity:v>15?.9:.3}))});
+for(var i=0;i<=4;i++){var y=py+ch/4*i;svg.appendChild(el('line',{x1:px,y1:y,x2:W-8,y2:y,stroke:'#1e3a5f','stroke-width':'.5',opacity:'.2'}));var t=el('text',{x:px-3,y:y+3,class:'ax','text-anchor':'end'});t.textContent=(mx-i*25)+'%';svg.appendChild(t)}
+for(var h=0;h<24;h+=4){var t=el('text',{x:px+h*bw+bw/2,y:H-1,class:'ax','text-anchor':'middle'});t.textContent=h+':00';svg.appendChild(t)}}
+drawEVU();
+
+// Heatmap with blue→red gradient, varied daily
+function drawH(){var c=document.getElementById('heatGrid');var days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];var html='<div></div>';
+for(var h=0;h<24;h++)html+='<div class="heat-hdr">'+(h%6===0?h:'')+'</div>';
+var dayScales=[1,1.1,0.9,1.05,0.95,0.6,0.5];
+days.forEach(function(day,di){
+  html+='<div class="heat-lbl">'+day+'</div>';
+  for(var h=0;h<24;h++){
+    var base=DAILY[h].e*dayScales[di];var v=base*(0.7+Math.random()*0.6)+Math.random()*5;var intensity=Math.min(1,v/110);
+    // Blue (low) to red (high) gradient: rgb(37,99,235) -> rgb(239,68,68)
+    var r=Math.round(37+(239-37)*intensity),g=Math.round(99+(68-99)*intensity),b=Math.round(235+(68-235)*intensity);
+    html+='<div class="heat-cell" style="background:rgb('+r+','+g+','+b+');opacity:'+(.3+intensity*.7)+'"></div>';
+  }
+});
+c.innerHTML=html;}
+drawH();
+
+// EV revenue chart with solar/grid split
+function drawRev30(){var svg=document.getElementById('evRev30');if(!svg)return;svg.innerHTML='';
+var W=480,H=220,px=38,py=12,cw=W-px-8,ch=H-py*2;var rev=[],sl=[],gr=[];
+for(var d=0;d<30;d++){var r=200+Math.sin(d/7*Math.PI)*80+Math.random()*60;rev.push(r);var sp=50+Math.sin(d/7*0.8)*20+Math.random()*15;var gp=r-sp;sl.push(sp);gr.push(gp)}
+var mx=400,step=cw/29;
+// Solar area
+var sa='M '+px+' '+(py+ch);sl.forEach(function(v,d){sa+=' L '+(px+d*step)+' '+(py+ch-v/mx*ch)});sa+=' L '+(px+29*step)+' '+(py+ch)+' Z';
+svg.appendChild(el('path',{d:sa,fill:'#fbbf24',opacity:'.15'}));
+// Grid area
+var ga='M '+px+' '+(py+ch);rev.forEach(function(v,d){ga+=' L '+(px+d*step)+' '+(py+ch-v/mx*ch)});ga+=' L '+(px+29*step)+' '+(py+ch)+' Z';
+svg.appendChild(el('path',{d:ga,fill:'#00B0E4',opacity:'.1'}));
+// Revenue line
+var rl='M '+px+' '+(py+ch-rev[0]/mx*ch);rev.forEach(function(v,d){rl+=' L '+(px+d*step)+' '+(py+ch-v/mx*ch)});
+svg.appendChild(el('path',{d:rl,fill:'none',stroke:'#a855f7','stroke-width':'2'}));
+// Area between solar and total (grid portion)
+var areas='M '+px+' '+(py+ch-sl[0]/mx*ch);sl.forEach(function(v,d){areas+=' L '+(px+d*step)+' '+(py+ch-v/mx*ch)});rev.forEach(function(v,d){areas+=' L '+(px+d*step)+' '+(py+ch-v/mx*ch)});areas+=' Z';
+// Labels
+var lg=el('text',{x:px+15*step,y:py+ch-200/mx*ch-6,class:'ax',fill:'#a855f7','font-weight':'bold'});lg.textContent='Revenue';svg.appendChild(lg);
+var ls=el('text',{x:px+20*step,y:py+ch-60/mx*ch,class:'ax',fill:'#fbbf24'});ls.textContent='Solar';svg.appendChild(ls);
+for(var i=0;i<=4;i++){var y=py+ch/4*i;svg.appendChild(el('line',{x1:px,y1:y,x2:W-8,y2:y,stroke:'#1e3a5f','stroke-width':'.5',opacity:'.2'}));var t=el('text',{x:px-3,y:y+3,class:'ax','text-anchor':'end'});t.textContent='EUR '+(mx-i*100);svg.appendChild(t)}}
+drawRev30();
+
+// Price compare
+function drawPC(){var svg=document.getElementById('priceCompare');if(!svg)return;svg.innerHTML='';
+var W=400,H=180,px=28,py=12,cw=W-px-8,ch=H-py*2;var gr=28,ems=[];for(var d=0;d<30;d++)ems.push(10+Math.random()*4+Math.sin(d/7)*2);
+var mx=35,step=cw/29;var gy=py+ch-gr/mx*ch;
+svg.appendChild(el('line',{x1:px,y1:gy,x2:W-8,y2:gy,stroke:'#ef4444','stroke-width':'1.5','stroke-dasharray':'4 3'}));
+var gl=el('text',{x:W-12,y:gy-4,class:'ax',fill:'#ef4444','text-anchor':'end'});gl.textContent='Grid EUR 0.28';svg.appendChild(gl);
+var p='M '+px+' '+(py+ch-ems[0]/mx*ch);ems.forEach(function(v,d){p+=' L '+(px+d*step)+' '+(py+ch-v/mx*ch)});
+svg.appendChild(el('path',{d:p,fill:'none',stroke:'#22c55e','stroke-width':'2'}));
+var avg=ems.reduce(function(a,b){return a+b},0)/ems.length;var ay=py+ch-avg/mx*ch;
+svg.appendChild(el('line',{x1:px,y1:ay,x2:W-8,y2:ay,stroke:'#22c55e','stroke-width':'1','stroke-dasharray':'2 2',opacity:'.5'}));
+var al=el('text',{x:W-12,y:ay-4,class:'ax',fill:'#22c55e','text-anchor':'end'});al.textContent='EMS avg EUR 0.12';svg.appendChild(al);
+for(var i=0;i<=4;i++){var y=py+ch/4*i;svg.appendChild(el('line',{x1:px,y1:y,x2:W-8,y2:y,stroke:'#1e3a5f','stroke-width':'.5',opacity:'.15'}));var t=el('text',{x:px-3,y:y+3,class:'ax','text-anchor':'end'});t.textContent='EUR 0.'+(mx-i*Math.round(mx/4));svg.appendChild(t)}}
+drawPC();
+
+// Rev breakdown
+function drawRB(){var svg=document.getElementById('revBreakdown');if(!svg)return;svg.innerHTML='';
+var W=400,H=200,px=28,py=12,cw=W-px-8,ch=H-py*2-16;var ms=['April','May','June'];var ev=[9800,12400,14460],sl=[3200,3900,4539],pk=[2100,2600,2862],ab=[980,1200,1356];
+var tot=ev.map(function(_,i){return ev[i]+sl[i]+pk[i]+ab[i]});var mx=18000,bw=cw/3;var cs=['#a855f7','#fbbf24','#22c55e','#8b5cf6'];
+ms.forEach(function(m,i){var x=px+i*bw+bw*.2,w=bw*.6,acc=0;[ev[i],sl[i],pk[i],ab[i]].forEach(function(v,j){var bh=v/mx*ch,y=py+ch-bh-acc/mx*ch;svg.appendChild(el('rect',{x,y,width:w,height:bh,fill:cs[j]}));acc+=v});var t=el('text',{x:x+w/2,y:H-2,class:'ax','text-anchor':'middle'});t.textContent=m;svg.appendChild(t);var tv=el('text',{x:x+w/2,y:py+ch-acc/mx*ch-4,class:'ax','text-anchor':'middle',fill:'#e2e8f0','font-weight':'bold'});tv.textContent='EUR '+(tot[i]/1000).toFixed(1)+'k';svg.appendChild(tv)});
+for(var i=0;i<=4;i++){var y=py+ch/5*i;svg.appendChild(el('line',{x1:px,y1:y,x2:W-8,y2:y,stroke:'#1e3a5f','stroke-width':'.5',opacity:'.15'}));var t=el('text',{x:px-3,y:y+3,class:'ax','text-anchor':'end'});t.textContent='EUR '+(mx-i*Math.round(mx/4));svg.appendChild(t)}}
+drawRB();
+
+// Sessions
+function renSH(){var sessions=[{t:'14:32',v:'Tesla Model Y',e:28.5,d:'14 min',r:'EUR 13.97',c:'EUR 3.42',p:'EUR 10.55'},{t:'14:18',v:'Hyundai Ioniq 5',e:34.0,d:'17 min',r:'EUR 16.66',c:'EUR 4.08',p:'EUR 12.58'},{t:'13:45',v:'BYD Atto 3',e:42.2,d:'21 min',r:'EUR 20.68',c:'EUR 5.06',p:'EUR 15.62'},{t:'13:20',v:'Tesla Model 3',e:22.8,d:'12 min',r:'EUR 11.17',c:'EUR 2.74',p:'EUR 8.43'},{t:'12:55',v:'Kia EV6',e:38.3,d:'19 min',r:'EUR 18.77',c:'EUR 4.60',p:'EUR 14.17'},{t:'12:30',v:'Tesla Model Y',e:32.1,d:'16 min',r:'EUR 15.73',c:'EUR 3.85',p:'EUR 11.88'},{t:'12:05',v:'Hyundai Ioniq 5',e:29.5,d:'15 min',r:'EUR 14.46',c:'EUR 3.54',p:'EUR 10.92'},{t:'11:40',v:'BYD Atto 3',e:44.0,d:'22 min',r:'EUR 21.56',c:'EUR 5.28',p:'EUR 16.28'},{t:'11:15',v:'Tesla Model Y',e:36.2,d:'18 min',r:'EUR 17.74',c:'EUR 4.34',p:'EUR 13.40'},{t:'10:50',v:'Kia EV6',e:25.8,d:'13 min',r:'EUR 12.64',c:'EUR 3.10',p:'EUR 9.54'},{t:'10:25',v:'Tesla Model 3',e:31.0,d:'16 min',r:'EUR 15.19',c:'EUR 3.72',p:'EUR 11.47'},{t:'10:00',v:'Hyundai Ioniq 5',e:40.5,d:'20 min',r:'EUR 19.85',c:'EUR 4.86',p:'EUR 14.99'}];
+document.getElementById('sessionHistory').innerHTML='<table class="ptable"><thead><tr><th>Time</th><th>Vehicle</th><th>kWh</th><th>Dur</th><th>Revenue</th><th>Cost</th><th>Profit</th></tr></thead><tbody>'+sessions.map(function(x){return'<tr><td>'+x.t+'</td><td style="font-family:inherit">'+x.v+'</td><td>'+x.e+'</td><td>'+x.d+'</td><td>'+x.r+'</td><td class="loss">'+x.c+'</td><td class="profit">'+x.p+'</td></tr>'}).join('')+'</tbody></table>';}
+renSH();
+
+// Grid quality
+function drawGQ(){var svg=document.getElementById('gridQuality');if(!svg)return;svg.innerHTML='';
+var W=400,H=140,px=28,py=10,cw=W-px-8,ch=H-py*2;
+var vp='M '+px+' '+(py+ch/2);for(var h=0;h<24;h++){var v=230+(Math.sin(h/3)*3)+(Math.random()*4-2);vp+=' L '+(px+h*(cw/23))+' '+(py+ch/2-((v-230)*3))}
+svg.appendChild(el('path',{d:vp,fill:'none',stroke:'#00B0E4','stroke-width':'1.5'}));
+var fp='M '+px+' '+(py+ch-5);for(var h=0;h<24;h++){var f=5000+(Math.sin(h/4)*8)+(Math.random()*6-3);fp+=' L '+(px+h*(cw/23))+' '+(py+ch-5-((f-5000)*.8))}
+svg.appendChild(el('path',{d:fp,fill:'none',stroke:'#22c55e','stroke-width':'1.5'}));
+for(var h=0;h<24;h+=4){var t=el('text',{x:px+h*(cw/23),y:H-1,class:'ax','text-anchor':'middle'});t.textContent=h+':00';svg.appendChild(t)}}
+drawGQ();
+</script>
+</body></html>
